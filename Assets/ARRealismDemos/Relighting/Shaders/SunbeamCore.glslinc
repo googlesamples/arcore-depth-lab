@@ -1,0 +1,208 @@
+//-----------------------------------------------------------------------
+// <copyright file="SunbeamCore.glslinc" company="Google LLC">
+//
+// Copyright 2020 Google LLC. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+
+uniform vec3 _LightAnchorPosition;
+uniform float _GlobalAlphaValue;
+
+#define uTime (_Time.y)
+#define uResolution (_ScreenParams.xy)
+// Current anchor position, i.e., where the user touches.
+#define uTouch (_LightAnchorPosition)
+
+#define kEnabledArtificialRays 1
+
+const vec3 kSunlightColor = vec3(1.0, 0.8, 0.46);  // #FFCC75
+const int kRayMarchingSteps = 8;
+const float kRayMarchingStepsFloat = float(kRayMarchingSteps);
+
+const float kGlobalBrightness = 2.5;
+const float kLowerIntensity = 0.5;
+const float kHigherIntensity = 1.5;
+const float kMaxIntensity = 3.0;
+const float kEnergyDecayFactor = 0.995;
+
+const float kLightDepthPower = 16.0;
+const float kDepthWeight = 0.7;
+// The larger the gradient is, the brighter the light source is.
+const float kRadianceGradiant = 1.0 / 2.5;
+const float kRadianceCutoff = 1.06;
+const float kDistanceScale = 2.0;
+const float kRadianceOcclusionGradiant = 1.0 / 3.0;
+const float kRadianceOcclusionCutoff = 0.001;
+
+const float kMaxBrightness = 0.7;
+const float kMinBrightness = 0.05;
+const vec3 kGamma = vec3(1.0 / 2.2);
+
+const float kLightRadius = 0.02;
+const float kLightScale = 10.0;
+const float kLightSelfBrightness = 2.5;
+
+const float kShadow = 0.1;
+const float kFalloff = 0.001;
+const float kReduction = 0.15;
+
+const float kPi = 3.14159265359;
+
+// Returns the distance from the screen borders to the foveal.
+float GetFoveationFactor(in vec2 uv) {
+  const float kFoveatationFactor = 8.0;
+  float foveated_distance = uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y);
+  float powered_distance =
+      pow(kFoveatationFactor * foveated_distance, kHigherIntensity);
+  return kLowerIntensity * (1.0 + powered_distance);
+}
+
+vec2 GetScatterFactorOverTime(in vec2 uv) {
+  return 0.9 + 0.1 * Hash22(uv + uTime);
+}
+
+// Returns whether the user is touching the screen.
+bool IsTouching() { return uTouch.z > 0.5; }
+
+// Calculates depth texture UV given screen-space UV.
+vec2 ArCoreGetDepthUv(vec2 uv) {
+  vec2 uvTop = mix(_UvTopLeftRight.xy, _UvTopLeftRight.zw, uv.x);
+  vec2 uvBottom = mix(_UvBottomLeftRight.xy, _UvBottomLeftRight.zw, uv.x);
+  return mix(uvTop, uvBottom, uv.y);
+}
+
+// Brightens a given color by gamma value.
+vec3 Brighten(in vec3 color) {
+  return pow(smoothstep(0.0, kMaxBrightness, color + kMinBrightness), kGamma);
+}
+
+// Random samples generated for colors and intensity of sun rays.
+// See go/motionlights-doc.
+const vec3[] kSun = vec3[](
+    vec3(0.231373, 0.396078, 0.690196), vec3(0.141176, 0.301961, 0.588235),
+    vec3(0.184314, 0.337255, 0.607843), vec3(0.200000, 0.337255, 0.603922),
+    vec3(0.231373, 0.360784, 0.631373), vec3(0.286275, 0.423529, 0.709804),
+    vec3(0.149020, 0.298039, 0.603922), vec3(0.211765, 0.368627, 0.690196),
+    vec3(0.321569, 0.498039, 0.788235), vec3(0.109804, 0.286275, 0.572549),
+    vec3(0.149020, 0.309804, 0.596078), vec3(0.164706, 0.301961, 0.592157),
+    vec3(0.207843, 0.333333, 0.627451), vec3(0.219608, 0.356863, 0.647059),
+    vec3(0.203922, 0.341176, 0.631373), vec3(0.247059, 0.400000, 0.690196),
+    vec3(0.121569, 0.235294, 0.529412), vec3(0.231373, 0.321569, 0.619608),
+    vec3(0.298039, 0.388235, 0.686275), vec3(0.231373, 0.333333, 0.631373),
+    vec3(0.117647, 0.254902, 0.545098), vec3(0.121569, 0.282353, 0.568627),
+    vec3(0.227451, 0.380392, 0.670588), vec3(0.247059, 0.372549, 0.666667),
+    vec3(0.207843, 0.345098, 0.631373), vec3(0.156863, 0.294118, 0.560784),
+    vec3(0.160784, 0.301961, 0.552941), vec3(0.219608, 0.360784, 0.596078),
+    vec3(0.180392, 0.313725, 0.545098), vec3(0.141176, 0.274510, 0.505882),
+    vec3(0.200000, 0.321569, 0.560784), vec3(0.160784, 0.282353, 0.529412));
+const float kSunSize = 32.0;
+
+vec3 GetSun(in float theta) {
+  int i0 = int(floor(theta * kSunSize));
+  int i1 = int(ceil(theta * kSunSize));
+  return mix(kSun[i0], kSun[i1], fract(theta * kSunSize)).bgr;
+}
+
+// Relights a scene with distance in 3D, see go/motionlights-doc.
+vec3 RenderMotionLights(in vec2 uv, bool rotated_uv) {
+  float depth = GetDepth(uv);
+  vec2 aspect_ratio = vec2(0.0);
+  vec2 anchor_uv = vec2(0.0);
+  if (rotated_uv) {
+    aspect_ratio = CalculateAspectRatio(uResolution);
+    anchor_uv = ArCoreGetDepthUv(uTouch.xy / uResolution);
+  } else {
+    aspect_ratio = 1.0 / CalculateAspectRatio(uResolution);
+    anchor_uv = uTouch.xy / uResolution;
+  }
+  vec2 normalized_touch = NormalizeCoord(anchor_uv, aspect_ratio);
+
+  // Depth is reversed in this algorithm. 1.0 is the closest.
+  float light_depth = 1.0 - uTouch.z;
+  vec3 center = vec3(normalized_touch, light_depth);
+  vec2 normalized_uv = NormalizeCoord(uv, aspect_ratio);
+  vec3 pos = vec3(normalized_uv, depth);
+  float global_dist = mix(distance(pos.xy, center.xy),
+                          distance(pos.zz, center.zz), kDepthWeight);
+
+  vec2 light_direction = center.xy - normalized_uv;
+  float theta = fract(atan(light_direction.y, light_direction.x) + uTime * 0.2);
+  vec3 sun_color = GetSun(theta);
+  float sun_intensity = (sun_color.r + sun_color.g + sun_color.b) / 3.0;
+
+  float dist_factor =
+      mix(0.1, 3.0, 1.0 - clamp(global_dist * 0.5 + 0.02, 0.0, 1.0));
+  float photon_energy = 3.0;
+
+  vec2 photon_st = normalized_uv;
+  float photon_depth = GetDepth(photon_st);
+  photon_energy += sun_intensity * dist_factor;
+  float intensity = 0.0;
+
+  // Marches the ray to the light source.
+  for (int i = 0; i < kRayMarchingSteps; ++i) {
+    vec2 photon_uv = ReverseNormalizeCoord(photon_st, aspect_ratio);
+    float photon_depth = GetDepth(photon_uv);
+    float dist = mix(distance(photon_uv, center.xy),
+                     distance(vec2(photon_depth), center.zz), kDepthWeight);
+    intensity += (1.0 - dist) * photon_energy * kLowerIntensity;
+    intensity += (center.z - photon_depth) * photon_energy * kMaxIntensity;
+
+    photon_energy *= kEnergyDecayFactor;
+    vec2 photon_scatter = GetScatterFactorOverTime(photon_st);
+    photon_st += light_direction * photon_scatter / kRayMarchingStepsFloat;
+  }
+  intensity /= kRayMarchingStepsFloat * 6.0;
+  // More shadows in the faraway regions.
+  intensity *= depth * kHigherIntensity;
+  // Decrease the nearby sunshines.
+  intensity -= (1.0 - depth) * 0.4;
+
+  vec3 camera_color = GetColor(uv);
+  vec3 result = camera_color;
+
+  // The relighting pass.
+  result += kGlobalBrightness * abs(0.5 - intensity * kSunlightColor) *
+            (pow(result, vec3(1.5 - intensity * kSunlightColor)) - result);
+  result = clamp(result, 0.0, 1.0);
+
+  // The shadow pass.
+  result *=
+      smoothstep(kReduction, kFalloff, global_dist * (kShadow + kFalloff));
+
+  // Perceptual light radius propotional to percentage in the screen space.
+  float light_radius =
+      kLightScale * atan(kLightRadius, 2.0 * (1.01 - center.z));
+
+  float sun_dist = length(light_direction / (0.1 + light_radius));
+  float dist_multiplier = mix(0.8, 1.0, center.z);
+  float dist_to_sun = distance(center.xy, normalized_uv) * dist_multiplier;
+
+  if (dist_to_sun < light_radius && center.z > depth) {
+    intensity = smoothstep(1.0, 0.0, dist_to_sun / light_radius);
+    result = mix(result, sun_color / sun_dist, intensity);
+  }
+
+  result = mix(camera_color, result, _GlobalAlphaValue);
+  return result;
+}
+
+vec3 DebugDepth(in vec2 uv) {
+  vec3 color = GetColor(uv);
+  float depth = GetDepth(uv);
+  color = mix(color, VisualizeDepth(depth), 0.7);
+  return color;
+}

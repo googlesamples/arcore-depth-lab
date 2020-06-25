@@ -1,0 +1,118 @@
+﻿#pragma kernel VertexFromDepth
+#pragma kernel NormalFromVertex
+
+#define numThreadsX 8
+#define numThreadsY 8
+#define numThreadsZ 1
+
+#define FAR_DEPTH 10
+
+#define ARCORE_DEPTH_SCALE 0.001  // mm to m
+#define ARCORE_MAX_DEPTH_MM 8192.0
+#define ARCORE_FLOAT_TO_5BITS 31        // (0.0, 1.0) -> (0, 31)
+#define ARCORE_FLOAT_TO_6BITS 63        // (0.0, 1.0) -> (0, 63)
+#define ARCORE_RGB565_RED_SHIFT 2048    // left shift 11 bits
+#define ARCORE_RGB565_GREEN_SHIFT 32    // left shift 5 bits
+
+Texture2D depthTex;
+RWStructuredBuffer<float3> vertexBuffer;
+RWStructuredBuffer<float3> normalBuffer;
+
+uint DepthWidth;
+uint DepthHeight;
+float PrincipalX;
+float PrincipalY;
+float FocalLengthX;
+float FocalLengthY;
+
+uint NormalSamplingOffset = 1;
+uint DepthPixelSkippingX;
+uint DepthPixelSkippingY;
+uint MeshWidth;
+uint MeshHeight;
+float4x4 ModelTransform;
+
+bool ExtendEdges;
+float EdgeExtensionOffset;
+float EdgeExtensionDepthOffset;
+
+// Returns depth value in meters for a given depth texture UV.
+inline float ArCoreGetDepthMeters(uint3 id)
+{
+    float4 rawDepth = depthTex[id.xy];
+    float depth = (rawDepth.r * ARCORE_FLOAT_TO_5BITS * ARCORE_RGB565_RED_SHIFT)
+                + (rawDepth.g * ARCORE_FLOAT_TO_6BITS * ARCORE_RGB565_GREEN_SHIFT)
+                + (rawDepth.b * ARCORE_FLOAT_TO_5BITS);
+    depth = min(depth, ARCORE_MAX_DEPTH_MM);
+    depth *= ARCORE_DEPTH_SCALE;
+    return depth;
+}
+
+[numthreads(numThreadsX, numThreadsY, numThreadsZ)]
+void VertexFromDepth(uint3 id : SV_DispatchThreadID)
+{
+    int index = id.y * MeshWidth + id.x;
+    uint3 newID = int3(id.x * DepthPixelSkippingX, id.y * DepthPixelSkippingY, id.z);
+    float depth = ArCoreGetDepthMeters(newID);
+    float4 pos = 0;
+
+    // Makes sure that vertices of a connected mesh don't get pulled to the camera
+    // but rather pushed away to a far distance to be less disruptive.
+    if (depth == 0)
+    {
+        depth = FAR_DEPTH;
+    }
+
+    float x = (newID.x - PrincipalX) * depth / FocalLengthX;
+    float y = (newID.y - PrincipalY) * depth / FocalLengthY;
+
+    pos = float4(x, -y, depth, 1);
+
+    if (ExtendEdges)
+    {
+        bool offsetDepth = false;
+        if (id.x <= 1)
+        {
+            pos.x = pos.x - EdgeExtensionOffset;
+            offsetDepth = true;
+        } else if (id.x >= (MeshWidth - 1))
+        {
+            pos.x = pos.x + EdgeExtensionOffset;
+            offsetDepth = true;
+        }
+
+        if (id.y <= 1)
+        {
+            pos.y = pos.y + EdgeExtensionOffset;
+            offsetDepth = true;
+        } else if (id.y >= (MeshHeight - 1))
+        {
+            pos.y = pos.y - EdgeExtensionOffset;
+            offsetDepth = true;
+        }
+
+        if (offsetDepth)
+        {
+            pos.z = pos.z + EdgeExtensionDepthOffset;
+        }
+    }
+
+    pos = mul(ModelTransform, pos);
+
+    vertexBuffer[index] = pos.xyz;
+}
+
+[numthreads(numThreadsX, numThreadsY, numThreadsZ)]
+void NormalFromVertex(uint3 id : SV_DispatchThreadID)
+{
+    int indexA = id.y * (DepthWidth / DepthPixelSkippingX) + id.x;
+    int indexB = id.y * (DepthWidth / DepthPixelSkippingX) + (id.x + NormalSamplingOffset);
+    int indexC = (id.y + NormalSamplingOffset) * (DepthWidth / DepthPixelSkippingX) + id.x;
+    float3 posA = vertexBuffer[indexA];
+    float3 posB = vertexBuffer[indexB];
+    float3 posC = vertexBuffer[indexC];
+    float3 sideBA = posB - posA;
+    float3 sideCA = posC - posA;
+    float3 normal = normalize(cross(sideBA, sideCA));
+    normalBuffer[indexA] = normal;
+}

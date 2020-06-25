@@ -1,0 +1,97 @@
+//-----------------------------------------------------------------------
+// <copyright file="DGAA.glslinc" company="Google LLC">
+//
+// Copyright 2020 Google LLC. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+
+// DGAA: Depth-Guided Anti-Aliasing (go/dgaa-doc)
+// Smoothes aliasing artifacts in the depth map.
+//
+// Input parameters:
+// - vec2 uv: screen coordiantes.
+//
+// Input uniforms:
+// - Sampler2D uDepth: single-channel depth map.
+//
+// Output:
+// - Antialiased depth value of the current pixel at uv as a float.
+//
+// Dependencies (utilities.glslh):
+// - GetDepth(): gets the interpolated depth value of the current uv.
+// - Sum4(): returns the sum of a vec4.
+// - Min4(): returns the minimum of a vec4.
+// - Max4(): returns the maximum of a vec4.
+
+float DGAA(in vec2 uv) {
+    const float kInvalidThreshold = 0.001;
+    const float kTopLeftShift = -0.75;
+    const float kReduceMinimum = 0.008;
+    const float kReduceFactor = 0.03;
+    const float kNearMin = -0.2;
+    const float kNearMax = 0.2;
+    const float kFarMin = -0.5;
+    const float kFarMax = 0.5;
+    const float kHalf = 0.5;
+    const vec2 kMinSteps = vec2(4.0);
+    const vec2 kMaxSteps = vec2(10.0);
+
+    // Gets the current depth value.
+    float depth = GetDepth(uv);
+    if (depth < kInvalidThreshold)
+    return depth;
+
+    // Derivatives for the one-ring neighborhood.
+    float depth_factor = sqrt(1.0 - depth);
+    vec2 steps = mix(kMinSteps, kMaxSteps, depth_factor);
+    vec2 dXdY = steps / _ScreenParams.xy;
+    vec2 dX = vec2(dXdY.x, 0.0);
+    vec2 dY = vec2(0.0, dXdY.y);
+
+    // Gets the depth values in the one-ring neighborhood.
+    vec2 top_left = uv + dXdY * kTopLeftShift;
+    vec4 ring = vec4(GetDepth(top_left), GetDepth(top_left + dX),
+    GetDepth(top_left + dY), GetDepth(top_left + dXdY));
+
+    bvec4 neighbors_invalid = greaterThan(vec4(kInvalidThreshold), ring);
+    if (any(neighbors_invalid))
+    return depth;
+
+    // Computes the min and max values of the local neighborhood.
+    float local_min = min(depth, Min4(ring));
+    float local_max = max(depth, Max4(ring));
+
+    // Computes the horizontal and vertical directions of the current edge.
+    vec2 dir = vec2((ring.z + ring.w) - (ring.x + ring.y),
+    (ring.z + ring.x) - (ring.w + ring.y));
+
+    float dirReduce = max(Sum4(ring) * kReduceFactor, kReduceMinimum);
+    float dirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+
+    dir = clamp(dir * dirMin, -steps, steps) * dXdY;
+
+    // Computes the results in small and large receptive fields (near / far).
+    float near_mix =
+    mix(GetDepth(uv + dir * kNearMin), GetDepth(uv + dir * kNearMax), kHalf);
+    float far_mix =
+    mix(GetDepth(uv + dir * kFarMin), GetDepth(uv + dir * kFarMax), kHalf);
+    far_mix = mix(near_mix, far_mix, kHalf);
+
+    return mix(near_mix, far_mix,
+    step(local_min, far_mix) * step(far_mix, local_max));
+
+    return depth;
+}

@@ -1,0 +1,2463 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4063215640314197065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030185}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_upArm_twist_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030185
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197065}
+  m_LocalRotation: {x: -0.10837052, y: 0.00705838, z: 0.002152318, w: 0.9940832}
+  m_LocalPosition: {x: -0.000100652396, y: 0.15923789, z: -0.007217487}
+  m_LocalScale: {x: 1, y: 1.001243, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030187}
+  - component: {fileID: 4063215640308988121}
+  - component: {fileID: 4063215640314164092}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_redesign
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030187
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197067}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030587}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &4063215640308988121
+SkinnedMeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197067}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 4300000, guid: 73f864de663d34dadb97138f41084202, type: 3}
+  m_Bones:
+  - {fileID: 4063215640314030517}
+  - {fileID: 4063215640314030509}
+  - {fileID: 4063215640314030531}
+  - {fileID: 4063215640314030515}
+  - {fileID: 4063215640314030555}
+  - {fileID: 4063215640314030557}
+  - {fileID: 4063215640314030533}
+  - {fileID: 4063215640314030553}
+  - {fileID: 4063215640314030565}
+  - {fileID: 4063215640314030567}
+  - {fileID: 4063215640314030467}
+  - {fileID: 4063215640314030469}
+  - {fileID: 4063215640314030465}
+  - {fileID: 4063215640314030477}
+  - {fileID: 4063215640314030479}
+  - {fileID: 4063215640314030511}
+  - {fileID: 4063215640314030497}
+  - {fileID: 4063215640314030513}
+  - {fileID: 4063215640314030519}
+  - {fileID: 4063215640314030499}
+  - {fileID: 4063215640314030501}
+  - {fileID: 4063215640314030505}
+  - {fileID: 4063215640314030507}
+  - {fileID: 4063215640314030535}
+  - {fileID: 4063215640314030523}
+  - {fileID: 4063215640314030521}
+  - {fileID: 4063215640314030495}
+  - {fileID: 4063215640314030485}
+  - {fileID: 4063215640314030481}
+  - {fileID: 4063215640314030483}
+  - {fileID: 4063215640314030487}
+  - {fileID: 4063215640314030583}
+  - {fileID: 4063215640314030573}
+  - {fileID: 4063215640314030569}
+  - {fileID: 4063215640314030571}
+  - {fileID: 4063215640314030575}
+  - {fileID: 4063215640314030527}
+  - {fileID: 4063215640314030525}
+  - {fileID: 4063215640314030591}
+  - {fileID: 4063215640314030579}
+  - {fileID: 4063215640314030577}
+  - {fileID: 4063215640314030581}
+  - {fileID: 4063215640314030559}
+  - {fileID: 4063215640314030545}
+  - {fileID: 4063215640314030547}
+  - {fileID: 4063215640314030549}
+  - {fileID: 4063215640314030551}
+  - {fileID: 4063215640314030537}
+  - {fileID: 4063215640314030539}
+  - {fileID: 4063215640314030541}
+  - {fileID: 4063215640314030543}
+  - {fileID: 4063215640314030529}
+  - {fileID: 4063215640314030503}
+  - {fileID: 4063215640314030491}
+  - {fileID: 4063215640314030489}
+  - {fileID: 4063215640314030493}
+  - {fileID: 4063215640314030471}
+  - {fileID: 4063215640314030201}
+  - {fileID: 4063215640314030203}
+  - {fileID: 4063215640314030205}
+  - {fileID: 4063215640314030207}
+  - {fileID: 4063215640314030193}
+  - {fileID: 4063215640314030195}
+  - {fileID: 4063215640314030197}
+  - {fileID: 4063215640314030199}
+  - {fileID: 4063215640314030185}
+  - {fileID: 4063215640314030473}
+  - {fileID: 4063215640314030475}
+  - {fileID: 4063215640314030561}
+  - {fileID: 4063215640314030563}
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 4063215640314030517}
+  m_AABB:
+    m_Center: {x: -0.00047779083, y: 0.3321787, z: -0.0015853792}
+    m_Extent: {x: 0.21051511, y: 0.45119077, z: 0.21458907}
+  m_DirtyAABB: 0
+--- !u!114 &4063215640314164092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da3e4985fe542445c814ca78b87e6b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &4063215640314197073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030193}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_upArm_twist_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197073}
+  m_LocalRotation: {x: 0.07420105, y: -0.005986482, z: -0.0033779957, w: 0.9972196}
+  m_LocalPosition: {x: 4.4408918e-17, y: -1.065814e-16, z: 7.1054265e-17}
+  m_LocalScale: {x: 1, y: 1.001243, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030195}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_upArm_twist_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197075}
+  m_LocalRotation: {x: 0.0026908326, y: -0.0015849478, z: -0.0003546102, w: 0.99999505}
+  m_LocalPosition: {x: 0.0002352767, y: 0.039782617, z: 0.005954724}
+  m_LocalScale: {x: 1, y: 1.001243, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197077
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030197}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_upArm_twist_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197077}
+  m_LocalRotation: {x: -0.05880897, y: 0.0027566242, z: 0.0014617349, w: 0.9982644}
+  m_LocalPosition: {x: 0.0002634629, y: 0.080008514, z: 0.006171254}
+  m_LocalScale: {x: 1, y: 1.001243, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030199}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_upArm_twist_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197079}
+  m_LocalRotation: {x: -0.10837052, y: 0.00705838, z: 0.002152318, w: 0.9940832}
+  m_LocalPosition: {x: 0.0001330236, y: 0.1199566, z: 0.0014484329}
+  m_LocalScale: {x: 1, y: 1.001243, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030201}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_loArm_twist_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197081}
+  m_LocalRotation: {x: 0.043832928, y: -0.001555951, z: 0.000081854945, w: 0.9990377}
+  m_LocalPosition: {x: 0.000014150169, y: 0.0345493, z: -0.0025198038}
+  m_LocalScale: {x: 1, y: 0.9921547, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030203}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_loArm_twist_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197083}
+  m_LocalRotation: {x: 0.0138312625, y: -0.0007758772, z: 0.000043964348, w: 0.99990404}
+  m_LocalPosition: {x: 0.000004159097, y: 0.06772976, z: 0.0003973928}
+  m_LocalScale: {x: 1, y: 0.9921547, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030205}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_loArm_twist_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197085}
+  m_LocalRotation: {x: -0.019822378, y: -0.00000013690716, z: 0.000007745805, w: 0.99980354}
+  m_LocalPosition: {x: 0.0000005157195, y: 0.10102549, z: 0.0013186979}
+  m_LocalScale: {x: 1, y: 0.9921547, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030207}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_loArm_twist_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197087}
+  m_LocalRotation: {x: -0.019822378, y: -0.00000013690716, z: 0.000007745805, w: 0.99980354}
+  m_LocalPosition: {x: 5.3290707e-17, y: 0.1343078, z: -0.0000015478889}
+  m_LocalScale: {x: 1, y: 0.9921547, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030465}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Leg_Ankle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197089}
+  m_LocalRotation: {x: 0.7049298, y: 0.0763695, z: -0.0013823895, w: 0.7051523}
+  m_LocalPosition: {x: 0.0008257529, y: 0.04915911, z: 0.01189191}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030477}
+  - {fileID: 4063215640314030479}
+  m_Father: {fileID: 4063215640314030467}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030467}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Leg_Hip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197091}
+  m_LocalRotation: {x: 0.49068415, y: 0.4602655, z: -0.5158912, w: 0.5303216}
+  m_LocalPosition: {x: 0.0112881595, y: -0.01894904, z: -0.01336074}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030465}
+  - {fileID: 4063215640314030469}
+  m_Father: {fileID: 4063215640314030515}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030469}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Leg_Thigh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030469
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197093}
+  m_LocalRotation: {x: 0.72417635, y: 0.060038965, z: 0.012935421, w: 0.6868746}
+  m_LocalPosition: {x: -2.88658e-17, y: 0.049746267, z: -1.834088e-15}
+  m_LocalScale: {x: 1, y: 0.09208657, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030467}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197095
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030471}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_loArm_twist_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197095}
+  m_LocalRotation: {x: 0.07029943, y: -0.0023437303, z: 0.00013149595, w: 0.9975232}
+  m_LocalPosition: {x: 0.00003386433, y: 0.001570065, z: -0.0071913153}
+  m_LocalScale: {x: 1, y: 0.9921547, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030473}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_EyeWhite_Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197097}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.04350928, y: -0.06756589, z: 0.03873161}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030475}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_EyeWhite_HalfCircle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197099}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030477}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Foot_Ball
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197101}
+  m_LocalRotation: {x: -0.020205386, y: -0.021916099, z: 0.6660258, w: 0.74533284}
+  m_LocalPosition: {x: -0.06077002, y: 0.0068312446, z: -0.0036029927}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030465}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030479}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Foot_Toe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030479
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197103}
+  m_LocalRotation: {x: -0.020205386, y: -0.021916099, z: 0.6660258, w: 0.74533284}
+  m_LocalPosition: {x: -0.12740819, y: 0.014355579, z: -0.0075876247}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030465}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030481}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Eye_CurveDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030481
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197105}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030483}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Eye_CurveUp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197107}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030485}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Eye_HalfBall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197109}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030487}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Eye_Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197111}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030489}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Arm_Elbow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197113}
+  m_LocalRotation: {x: -0.21310957, y: 0.009091308, z: -0.0416406, w: 0.97609824}
+  m_LocalPosition: {x: -8.881784e-18, y: 0.16070628, z: 4.263256e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030493}
+  - {fileID: 4063215640314030471}
+  - {fileID: 4063215640314030201}
+  - {fileID: 4063215640314030203}
+  - {fileID: 4063215640314030205}
+  - {fileID: 4063215640314030207}
+  m_Father: {fileID: 4063215640314030491}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030491}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Arm_Shoulder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030491
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197115}
+  m_LocalRotation: {x: -0.5660827, y: -0.06956287, z: -0.028059196, w: 0.82092875}
+  m_LocalPosition: {x: 2.220446e-18, y: 0.100138195, z: -7.1054265e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030489}
+  - {fileID: 4063215640314030193}
+  - {fileID: 4063215640314030195}
+  - {fileID: 4063215640314030197}
+  - {fileID: 4063215640314030199}
+  - {fileID: 4063215640314030185}
+  m_Father: {fileID: 4063215640314030503}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030493}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Arm_Wrist
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197117}
+  m_LocalRotation: {x: -0.08929934, y: 0, z: -0, w: 0.9960048}
+  m_LocalPosition: {x: 1.776357e-17, y: 0.13428739, z: 2.4869e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030489}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197119
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030495}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Eye_Ball
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197119}
+  m_LocalRotation: {x: 0.21925625, y: -0.39619154, z: 0.45468375, w: 0.766956}
+  m_LocalPosition: {x: -0.04350928, y: -0.06756589, z: 0.03873161}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030497}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Tail_End
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197377}
+  m_LocalRotation: {x: 2.775558e-17, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.1748644, z: 1.776357e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030511}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030499}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_UpMidSpine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197379}
+  m_LocalRotation: {x: 0.1022522, y: 0.0061210287, z: -0.0015969959, w: 0.9947384}
+  m_LocalPosition: {x: 0.0002170857, y: 0.14994839, z: -0.0298121}
+  m_LocalScale: {x: 0.9633664, y: 1.023517, z: 0.9633664}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030531}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030501}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_UpSpine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197381}
+  m_LocalRotation: {x: 0.12794982, y: 0.0060641654, z: -0.0016352809, w: 0.9917608}
+  m_LocalPosition: {x: 0.001031688, y: 0.2373006, z: 0.001357536}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030591}
+  - {fileID: 4063215640314030505}
+  - {fileID: 4063215640314030503}
+  m_Father: {fileID: 4063215640314030531}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030503}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_R_SK_Arm_Clavical
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197383}
+  m_LocalRotation: {x: 0.5704204, y: 0.53494865, z: 0.42537537, w: -0.45552862}
+  m_LocalPosition: {x: 0.0266482, y: -0.004078128, z: 0.0069270907}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030491}
+  m_Father: {fileID: 4063215640314030501}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197385
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030505}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Neck_Lo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197385}
+  m_LocalRotation: {x: 0.70271486, y: -0.01404514, z: 0.71113265, w: -0.016880322}
+  m_LocalPosition: {x: -0.0044823247, y: 0.025278, z: 0.003601877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030507}
+  m_Father: {fileID: 4063215640314030501}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030507}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Neck_Mid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030507
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197387}
+  m_LocalRotation: {x: -8.940327e-16, y: -1.1449176e-16, z: -6.9388946e-17, w: 1}
+  m_LocalPosition: {x: 3.552714e-17, y: -0.08945652, z: 1.56819e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030535}
+  m_Father: {fileID: 4063215640314030505}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030509}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197389}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030531}
+  m_Father: {fileID: 4063215640314030517}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030511}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Tail_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197391}
+  m_LocalRotation: {x: 0.8775251, y: 0.004518928, z: 0.004362056, w: -0.47948968}
+  m_LocalPosition: {x: 0.0009058453, y: 0.04971846, z: -0.00944734}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030497}
+  m_Father: {fileID: 4063215640314030515}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030513}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_LoMidSpine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197393}
+  m_LocalRotation: {x: 0.011022627, y: 0.0062468713, z: -0.0010197249, w: 0.99991924}
+  m_LocalPosition: {x: -0.00036177548, y: -0.021214599, z: -0.018242968}
+  m_LocalScale: {x: 1.175015, y: 1.175015, z: 1.175015}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030531}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030515}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_LoSpine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197395}
+  m_LocalRotation: {x: 0.043135576, y: 0.0061812745, z: -0.00111359, w: 0.9990495}
+  m_LocalPosition: {x: -0.0005752994, y: -0.09791593, z: -0.016866699}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030555}
+  - {fileID: 4063215640314030533}
+  - {fileID: 4063215640314030511}
+  - {fileID: 4063215640314030467}
+  m_Father: {fileID: 4063215640314030531}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030517}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_MASTER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197397}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030509}
+  m_Father: {fileID: 4063215640314030589}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030519}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_MidSpine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197399}
+  m_LocalRotation: {x: 0.02973852, y: 0.0003018719, z: -0.0023905553, w: 0.9995548}
+  m_LocalPosition: {x: -0.0002328886, y: 0.05732716, z: -0.04090114}
+  m_LocalScale: {x: 1.092748, y: 1.134481, z: 1.092748}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030531}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030521}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Head_aimBack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197401}
+  m_LocalRotation: {x: -0.007844621, y: -0.0689037, z: -0.5819294, w: 0.81027704}
+  m_LocalPosition: {x: 2.131628e-16, y: -1.776357e-17, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197403
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030523}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Head_End
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197403}
+  m_LocalRotation: {x: -3.4694476e-17, y: -1.4745153e-17, z: -3.4694476e-17, w: 1}
+  m_LocalPosition: {x: -0, y: -0.1722773, z: -6.217249e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197405
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030525}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Jaw
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197405}
+  m_LocalRotation: {x: -0.1650476, y: -3.2213158e-16, z: 4.535205e-16, w: 0.9862856}
+  m_LocalPosition: {x: 8.881784e-18, y: 7.1054265e-17, z: 2.664535e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030527}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030527}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Jaw_translate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197407}
+  m_LocalRotation: {x: 0.5513507, y: -0.44273284, z: 0.5513507, w: 0.44273284}
+  m_LocalPosition: {x: -0.019708399, y: -0.098567314, z: 0.002700714}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030525}
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030529}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_upArm_twist_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030529
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197409}
+  m_LocalRotation: {x: -0.114211075, y: 0.008054301, z: 0.0032051494, w: 0.9934187}
+  m_LocalPosition: {x: 0.00007322601, y: -0.15974209, z: 0.0046324166}
+  m_LocalScale: {x: 1, y: 1.008916, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030531}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Cog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197411}
+  m_LocalRotation: {x: -0.051483862, y: -0.0056672473, z: 0.0041422937, w: 0.9986492}
+  m_LocalPosition: {x: -0, y: 0.1445576, z: -0.000390824}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030513}
+  - {fileID: 4063215640314030515}
+  - {fileID: 4063215640314030519}
+  - {fileID: 4063215640314030499}
+  - {fileID: 4063215640314030501}
+  m_Father: {fileID: 4063215640314030509}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030533}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Crotch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197413}
+  m_LocalRotation: {x: -0.08384116, y: -0.00613072, z: 0.001364737, w: 0.99645936}
+  m_LocalPosition: {x: 0.0017409199, y: -0.09096589, z: -0.002456212}
+  m_LocalScale: {x: 0.455209, y: 0.455209, z: 0.455209}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030515}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030535}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_M_SK_Head
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197415}
+  m_LocalRotation: {x: 0.007844608, y: 0.0689037, z: 0.5819294, w: 0.8102771}
+  m_LocalPosition: {x: -2.842171e-16, y: -0.07928296, z: -2.0233809e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030583}
+  - {fileID: 4063215640314030569}
+  - {fileID: 4063215640314030571}
+  - {fileID: 4063215640314030573}
+  - {fileID: 4063215640314030575}
+  - {fileID: 4063215640314030561}
+  - {fileID: 4063215640314030563}
+  - {fileID: 4063215640314030521}
+  - {fileID: 4063215640314030523}
+  - {fileID: 4063215640314030527}
+  - {fileID: 4063215640314030495}
+  - {fileID: 4063215640314030481}
+  - {fileID: 4063215640314030483}
+  - {fileID: 4063215640314030485}
+  - {fileID: 4063215640314030487}
+  - {fileID: 4063215640314030473}
+  - {fileID: 4063215640314030475}
+  m_Father: {fileID: 4063215640314030507}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030537}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_upArm_twist_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197417}
+  m_LocalRotation: {x: 0.109880954, y: -0.04395371, z: -0.009801063, w: 0.9929241}
+  m_LocalPosition: {x: -8.881784e-18, y: -7.1054265e-17, z: 1.776357e-16}
+  m_LocalScale: {x: 1, y: 1.008916, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030539}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_upArm_twist_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197419}
+  m_LocalRotation: {x: 0.011446616, y: -0.026360307, z: -0.0009918652, w: 0.99958646}
+  m_LocalPosition: {x: -0.00039740588, y: -0.03954816, z: -0.008879885}
+  m_LocalScale: {x: 1, y: 1.008916, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030541}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_upArm_twist_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197421}
+  m_LocalRotation: {x: -0.064822, y: -0.009105941, z: 0.0029877478, w: 0.99785084}
+  m_LocalPosition: {x: -0.00045332112, y: -0.08007222, z: -0.009809592}
+  m_LocalScale: {x: 1, y: 1.008916, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030543}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_upArm_twist_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197423}
+  m_LocalRotation: {x: -0.114211075, y: 0.008054301, z: 0.0032051494, w: 0.9934187}
+  m_LocalPosition: {x: -0.0002594789, y: -0.120265596, z: -0.004563593}
+  m_LocalScale: {x: 1, y: 1.008916, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030545}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_loArm_twist_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197425}
+  m_LocalRotation: {x: 0.036634736, y: -0.0017484028, z: 0.000043895678, w: 0.9993272}
+  m_LocalPosition: {x: -0.000010214239, y: -0.03428916, z: 0.0006491486}
+  m_LocalScale: {x: 1, y: 0.9947329, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030547}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_loArm_twist_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197427}
+  m_LocalRotation: {x: 0.005935732, y: -0.00087253324, z: 0.000034256766, w: 0.999982}
+  m_LocalPosition: {x: -0.0000030063648, y: -0.06759453, z: -0.001796035}
+  m_LocalScale: {x: 1, y: 0.9947329, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030549}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_loArm_twist_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197429}
+  m_LocalRotation: {x: -0.032881476, y: -0.00000018377436, z: 0.00000558597, w: 0.99945927}
+  m_LocalPosition: {x: -0.0000003724818, y: -0.100987196, z: -0.002192474}
+  m_LocalScale: {x: 1, y: 0.9947329, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030551}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_loArm_twist_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197431}
+  m_LocalRotation: {x: -0.032881476, y: -0.00000018377436, z: 0.00000558597, w: 0.99945927}
+  m_LocalPosition: {x: 1.065814e-16, y: -0.13430999, z: 0.0000024932451}
+  m_LocalScale: {x: 1, y: 0.9947329, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030553}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Leg_Ankle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197433}
+  m_LocalRotation: {x: 0.7008535, y: 0.08024718, z: 0.0018637682, w: 0.70877445}
+  m_LocalPosition: {x: -0.000053373467, y: -0.0517344, z: -0.011197669}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030565}
+  - {fileID: 4063215640314030567}
+  m_Father: {fileID: 4063215640314030555}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030555}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Leg_Hip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197435}
+  m_LocalRotation: {x: 0.5262063, y: 0.52014464, z: 0.46529084, w: -0.48586097}
+  m_LocalPosition: {x: -0.009771241, y: -0.01899036, z: -0.01338474}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030553}
+  - {fileID: 4063215640314030557}
+  m_Father: {fileID: 4063215640314030515}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030557}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Leg_Thigh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197437}
+  m_LocalRotation: {x: 0.64116275, y: 0.049924035, z: 0.038785372, w: 0.76479644}
+  m_LocalPosition: {x: 1.998401e-17, y: -0.049746267, z: -1.065814e-16}
+  m_LocalScale: {x: 1, y: 0.08774982, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030555}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030559}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_loArm_twist_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197439}
+  m_LocalRotation: {x: 0.059097577, y: -0.002634033, z: 0.000056666053, w: 0.99824876}
+  m_LocalPosition: {x: -0.00002438921, y: -0.001127414, z: 0.004589354}
+  m_LocalScale: {x: 1, y: 0.9947329, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030561}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_EyeWhite_Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030561
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197441}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.04350928, y: -0.06756589, z: -0.03332814}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030563}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_EyeWhite_HalfCircle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197443}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030565}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Foot_Ball
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030565
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197445}
+  m_LocalRotation: {x: -0.020205386, y: -0.021916099, z: 0.6660258, w: 0.74533284}
+  m_LocalPosition: {x: 0.06077002, y: -0.0068312446, z: 0.0036029927}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030553}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030567}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Foot_Toe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197447}
+  m_LocalRotation: {x: -0.020205386, y: -0.021916099, z: 0.6660258, w: 0.74533284}
+  m_LocalPosition: {x: 0.12740819, y: -0.014355579, z: 0.0075876247}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030553}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030569}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Eye_CurveDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197449}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030571}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Eye_CurveUp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197451}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030573}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Eye_HalfBall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197453}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197455
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030575}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Eye_Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197455}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.012058839, y: -0.01084249, z: 0.002700714}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030577}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Arm_Elbow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197457}
+  m_LocalRotation: {x: -0.23834862, y: 0.010168013, z: -0.041390855, w: 0.970244}
+  m_LocalPosition: {x: 9.7699626e-17, y: -0.16070628, z: -2.4869e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030581}
+  - {fileID: 4063215640314030559}
+  - {fileID: 4063215640314030545}
+  - {fileID: 4063215640314030547}
+  - {fileID: 4063215640314030549}
+  - {fileID: 4063215640314030551}
+  m_Father: {fileID: 4063215640314030579}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030579}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Arm_Shoulder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197459}
+  m_LocalRotation: {x: -0.56337976, y: -0.03941458, z: -0.05189392, w: 0.8236242}
+  m_LocalPosition: {x: -1.11022296e-17, y: -0.100138195, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030577}
+  - {fileID: 4063215640314030537}
+  - {fileID: 4063215640314030539}
+  - {fileID: 4063215640314030541}
+  - {fileID: 4063215640314030543}
+  - {fileID: 4063215640314030529}
+  m_Father: {fileID: 4063215640314030591}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030581}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Arm_Wrist
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030581
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197461}
+  m_LocalRotation: {x: -0.08929934, y: 1.1230651e-17, z: 1.0069125e-18, w: 0.9960048}
+  m_LocalPosition: {x: 1.065814e-16, y: -0.13428739, z: 3.552714e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030577}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030583}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Eye_Ball
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197463}
+  m_LocalRotation: {x: -0.45468336, y: 0.7669587, z: -0.21925722, w: -0.3961865}
+  m_LocalPosition: {x: -0.04350928, y: -0.06756589, z: -0.03332814}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4063215640314030535}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030585}
+  - component: {fileID: 4063215640304698905}
+  - component: {fileID: 4364592664543795038}
+  m_Layer: 0
+  m_Name: AndroidOcclusion
+  m_TagString: ThePenguin
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197465}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.05, z: 0}
+  m_LocalScale: {x: 1.174701, y: 1.174701, z: 1.174701}
+  m_Children:
+  - {fileID: 4063215640314030587}
+  - {fileID: 4063215640314030589}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4063215640304698905
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197465}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 73f864de663d34dadb97138f41084202, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4364592664543795038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e92f8c0fed36f85b8d1a75616495ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BaseSpeed: 0.1
+  EnableAvatarManipulation: 0
+--- !u!1 &4063215640314197467
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030587}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Peguin_MESH
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197467}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030187}
+  m_Father: {fileID: 4063215640314030585}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030589}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_BONES
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197469}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030517}
+  m_Father: {fileID: 4063215640314030585}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063215640314197471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4063215640314030591}
+  m_Layer: 0
+  m_Name: Penguin_RIG:Penguin_L_SK_Arm_Clavical
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4063215640314030591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063215640314197471}
+  m_LocalRotation: {x: 0.46031195, y: 0.42021012, z: -0.5273072, w: 0.5774803}
+  m_LocalPosition: {x: -0.030061718, y: -0.0042906837, z: 0.006247131}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4063215640314030579}
+  m_Father: {fileID: 4063215640314030501}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

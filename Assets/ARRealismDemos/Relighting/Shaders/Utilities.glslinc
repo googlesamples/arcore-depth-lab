@@ -1,0 +1,67 @@
+//-----------------------------------------------------------------------
+// <copyright file="Utilities.glslinc" company="Google LLC">
+//
+// Copyright 2020 Google LLC. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+
+// Returns the component-wise summation of a vec4.
+float Sum4(in vec4 v) { return v.x + v.y + v.z + v.w; }
+
+// Returns the component-wise minimum value of a vec4.
+float Min4(in vec4 v) { return min(min(v.x, v.y), min(v.z, v.w)); }
+
+// Returns the component-wise maximum value of a vec4.
+float Max4(in vec4 v) { return max(max(v.x, v.y), max(v.z, v.w)); }
+
+// Computes the radiance from the distance dist.
+float Radiance(in float dist, in float gradient, in float cutoff) {
+  float x = dist + gradient;
+  float y = x * step(cutoff, x) / gradient;
+  return exp(1.0 - y) * y;
+}
+
+// Computes the aspect ratio for portait and landscape modes.
+vec2 CalculateAspectRatio(in vec2 size) {
+  return pow(size.yy / size, vec2(step(size.x, size.y) * 2.0 - 1.0));
+}
+
+// Normalizes a coordinate system from [0, 1] to [-1, 1].
+vec2 NormalizeCoord(in vec2 coord, in vec2 aspect_ratio) {
+  return (2.0 * coord - vec2(1.0)) * aspect_ratio;
+}
+
+// Reverts a coordinate system from [-1, 1] to [0, 1].
+vec2 ReverseNormalizeCoord(in vec2 pos, in vec2 aspect_ratio) {
+  return (pos / aspect_ratio + 1.0) * 0.5;
+}
+
+const float kHash1 = 47510.5358;
+const vec2 kHash2 = vec2(25.5359, 77.1053);
+const vec3 kHash3 = vec3(55.9973, 65.9157, 31.3163);
+
+// GPU Hashing: float in, float out.
+float Hash11(in float p) { return fract(cos(p) * kHash1); }
+
+// GPU Hashing: vec2 in, float out.
+float Hash12(in vec2 p) { return fract(cos(dot(p.xy, kHash2)) * kHash1); }
+
+// GPU Hashing: vec2 in, vec2 out.
+vec2 Hash22(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * kHash3);
+  p3 += dot(p3, p3.yzx + kHash2.x);
+  return fract((p3.xx + p3.yz) * p3.zy);
+}

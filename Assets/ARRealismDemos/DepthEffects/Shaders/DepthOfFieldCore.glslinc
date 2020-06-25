@@ -1,0 +1,206 @@
+//-----------------------------------------------------------------------
+// <copyright file="DepthOfFieldCore.glslinc" company="Google LLC">
+//
+// Copyright 2020 Google LLC. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+#define kPi (3.14159265358979324)
+#define kPi2 (kPi * 2.0)
+#define kOneOverSqrtTwoPi (1.0 / sqrt(2.0 * kPi))
+#define kEnableDiscontinuity 1
+#define kDebugDiscontinuity 0
+#define kFocusOnWorldAnchor 0
+#define kFocusOnScreenPoint 1
+#define kFocusOnProjectedPoint 2
+
+uniform int _RenderMode;
+uniform int _GreyscalePheripheral;
+uniform float _MinDepth;
+uniform float _DepthRange;
+// The larger the aperture is, the more blurry the peripheral region is.
+uniform float _Aperture;
+uniform vec2 _AspectRatio;
+uniform vec3 _TouchPosition;
+
+uniform sampler2D _CurrentDepthTexture;
+const float kArCoreMMToM = 0.001;
+const float kArCoreFloatToShort = 65535.0;
+const float kArCoreMaxDepthMM = 8192.0;
+
+// Calculates depth texture UV given screen-space UV.
+vec2 ArCoreGetDepthUv(vec2 uv) {
+    vec2 uvTop = mix(_UvTopLeftRight.xy, _UvTopLeftRight.zw, uv.x);
+    vec2 uvBottom = mix(_UvBottomLeftRight.xy, _UvBottomLeftRight.zw, uv.x);
+    return mix(uvTop, uvBottom, uv.y);
+}
+
+float ArCoreGetRawDepth(in vec2 uv) {
+    return texture(_CurrentDepthTexture, uv).r;
+}
+
+// Returns depth value in meters for a given depth texture UV.
+float ArCoreGetDepthMeters(in vec2 uv) {
+    float depth = ArCoreGetRawDepth(uv) * kArCoreFloatToShort;
+    depth = min(depth, kArCoreMaxDepthMM);
+    depth *= kArCoreMMToM;
+    return depth;
+}
+
+float SampleDepth(in vec2 uv) {
+    vec2 depth_uv = ArCoreGetDepthUv(uv);
+    return (ArCoreGetDepthMeters(depth_uv) - _MinDepth) / _DepthRange;
+}
+
+// Returns if this is the final pass of the Gaussian blur (vertical pass).
+bool IsFinalPass(in vec2 stepDir) {
+    return stepDir.x == 0.0 && _RenderMode != kFocusOnWorldAnchor;
+}
+
+// Normalizes a coordinate system from [0, 1] to [-1, 1].
+vec2 NormalizeCoord(in vec2 coord, in vec2 aspect_ratio) {
+    return (2.0 * coord - vec2(1.0, 1.0)) * aspect_ratio;
+}
+
+// Raises the results slowly over x by a factor of slope.
+// Cuts off the function at x < shift.
+float SlowRaise(float x, float shift, float slope) {
+    return (step(0.0, x - shift) * (1.0 - cos(slope * (x - shift))));
+}
+
+// Gaussian function of x with kernel size sigma.
+float Gaussian(in float x, in float sigma) {
+    return kOneOverSqrtTwoPi / sigma * exp(-0.5 * x * x / (sigma * sigma));
+}
+
+// Computes a smooth decaying curve from 1.0 to 0.0 as
+// the distance increases from 0.0 to 1.0.
+float Decay(in float dist, in float gradient, in float cutoff) {
+    float x = dist + gradient;
+    float y = x * step(cutoff, x) / gradient;
+    return exp(1.0 - y) * y;
+}
+
+// Turns sRGB color into greyscale.
+vec3 GetGreyscale(in vec3 col) {
+    float intensity = dot(col, vec3(0.3, 0.59, 0.11));
+    return vec3(intensity, intensity, intensity);
+}
+
+float saturate(in float x) {
+    return clamp(x, 0.0, 1.0);
+}
+
+// Renders the depth-of-field effect.
+vec3 Render(in vec2 uv) {
+    const int kKernelSize = 5;
+    const int kKernelHalfSize = (kKernelSize - 1) / 2;
+    const float kGammaValue = 2.2;
+    const vec3 kGamma = vec3(kGammaValue, kGammaValue, kGammaValue);
+    const vec3 kInversedGamma = vec3(1.0, 1.0, 1.0) / kGamma;
+
+    // The larger the shift is, the clearer the focus region is.
+    const float kShift = 0.1;
+    const float kSlope = 3.0;
+
+    // Initial sigma with the sharpest value.
+    // When sigma = 35 for kKernelSize = 21,
+    // the Gaussian filter degrades to a box filter.
+    // See go/gaussian-blur for a Python script to experiment this.
+    const float kInitialSigma = 0.1;
+
+    // The smaller the kOcclusionDecaySigma is,
+    // the sharper the depth of field preserves the edges.
+    const float kOcclusionDecaySigma = 0.05;
+    const float kOcclusionDecayCutoff = kOcclusionDecaySigma;
+    const float kEpsilon = 0.00001;
+
+    vec2 normalized_uv = NormalizeCoord(uv, _AspectRatio);
+    vec2 normalized_touch = NormalizeCoord(_TouchPosition.xy, _AspectRatio);
+
+    float depth = SampleDepth(uv);
+    float focus = SampleDepth(_TouchPosition.xy);
+
+    if (_RenderMode == kFocusOnWorldAnchor) {
+        focus = _TouchPosition.z;
+    }
+
+    // Kernel size of the Gaussian blur.
+    float blur_sigma = saturate(abs(depth - focus) * _Aperture * 2.0);
+
+    // Curve the sigma in a Sigmoid-like function from [0, 1] to [0, 2].
+    float normalized_sigma = SlowRaise(blur_sigma, kShift, kSlope);
+
+    // Amplifies the sigma with aperture.
+    blur_sigma = kInitialSigma + normalized_sigma * _Aperture;
+
+    // Kernel weights for computing the Gassian blur.
+    float kernels[kKernelHalfSize + 1];
+
+    // Computes the Gaussian kernels with different weights.
+    kernels[0] = Gaussian(0.0, blur_sigma);
+
+    // [unroll]
+    for (int i = 1; i <= kKernelHalfSize; ++i) {
+        float weight = Gaussian(float(i), blur_sigma);
+        kernels[i] = weight;
+    }
+
+    vec3 sum_color = vec3(0.0, 0.0, 0.0);
+    float sum_weights = 0.0;
+
+    #if kDebugDiscontinuity
+        float sum_discontinuity = 0.0;
+    #endif
+    float discontinuity = 1.0;
+
+    // Conducts linear Gaussian blur.
+    // [unroll]
+    for (int i = -kKernelHalfSize; i <= kKernelHalfSize; ++i) {
+        vec2 sample_uv = uv + _BlurDirStep * vec2(float(i), float(i));
+        float sample_depth = SampleDepth(sample_uv);
+
+        #if kEnableDiscontinuity
+            float discontinuity = abs(depth - sample_depth);
+            discontinuity = Decay(discontinuity, kOcclusionDecaySigma, kOcclusionDecayCutoff);
+        #endif
+
+        vec3 texel = SampleColor(sample_uv);
+        float weight = kernels[abs(i)];
+
+        #if kEnableDiscontinuity
+            weight *= discontinuity;
+        #endif
+
+        sum_color += weight * pow(texel, kGamma);
+        sum_weights += weight;
+
+        #if kDebugDiscontinuity
+            sum_discontinuity += 0.05 * (1.0 - discontinuity);
+        #endif
+    }
+
+    vec3 res = pow(sum_color / sum_weights, kInversedGamma);
+
+    #if kDebugDiscontinuity
+        res = vec3(sum_discontinuity, sum_discontinuity, sum_discontinuity);
+    #endif
+
+    if (_GreyscalePheripheral == 1) {
+        res = mix(res, GetGreyscale(res), saturate(normalized_sigma * 0.5));
+    }
+
+    return res;
+}
