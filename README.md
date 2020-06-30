@@ -2,14 +2,24 @@
 
 Copyright 2020 Google LLC.  All rights reserved.
 
-**ARCore Depth Lab** is a set of Depth API samples that provides assets using
+**Depth Lab** is a set of ARCore Depth API samples that provides assets using
 depth for advanced geometry-aware features in AR interaction and rendering. Some
 of these features have been used in this
 [Depth API overview](https://www.youtube.com/watch?v=VOVhCTb-1io) video.
 
+[**ARCore Depth API**](https://developers.google.com/ar/develop/unity/depth/overview)
+is enabled on a subset of ARCore-certified Android devices. **iOS devices
+(iPhone, iPad) are not supported**. Find the list of
+devices with Depth API support (marked with **Supports Depth API**) here:
+[https://developers.google.com/ar/discover/supported-devices](https://developers.google.com/ar/discover/supported-devices).
+See the [ARCore developer documentation](https://developers.google.com/ar) for
+more information.
+
 Download the pre-built ARCore Depth Lab app on
 [Google Play Store](https://play.google.com/store/apps/details?id=com.google.ar.unity.arcore_depth_lab)
 today.
+
+[<img alt="Get ARCore Depth Lab on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />](https://play.google.com/store/apps/details?id=com.google.ar.unity.arcore_depth_lab)
 
 ## Sample Features
 
@@ -36,20 +46,23 @@ coordinates (CPU).
   * False-color depth map
 
 ## Building and Running Samples
-These samples require
+These samples target [Unity 2018.4.16f1](https://unity3d.com) and require
 [ARCore SDK for Unity](https://github.com/google-ar/arcore-unity-sdk) v1.18.0 or
 newer. Download and import
 [`arcore-unity-sdk-1.18.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
 or newer into the sample project. Close and reopen the project and reimport all
-demo shaders to resolve any dependency issues in the Unity editor.
+demo shaders to resolve any dependency issues in the Unity editor. This project
+only builds with the Build Platform **Android**. **Instant Preview** is not
+enabled for Depth API yet. Build the project to an Android device instead of
+using the **Play** button in the Unity editor.
 
 Individual scenes can be built and run by just enabling a particular scene, e.g.
 `FogEffect` to try out the depth-aware fog filter.
 
 We also provide a demo user interface that allows users to seamlessly switch
-between examples. Please make sure to set the Build Platform to **Android** and
-verify that the main `DemoCarousel` scene is the first enabled scene in the
-`Scenes In Build` list under `Build Settings`. Enable all scenes that are
+between examples. Please make sure to set the **Build Platform** to **Android**
+and verify that the main `DemoCarousel` scene is the first enabled scene in the
+**Scenes In Build** list under **Build Settings**. Enable all scenes that are
 part of the demo user interface.
 
 `Assets/ARRealismDemos/DemoCarousel/Scenes/DemoCarousel.unity
@@ -75,7 +88,7 @@ build an `ARM64` app. You may be prompted to locate the Android NDK folder.
 You can download the `NDK` by navigating to
 `Unity > Preferences > External Tools > NDK` and clicking the `Download` button.
 
-In **August 2020**, _Google Play Services for AR_ (ARCore) will remove support
+In **August 2020**, **Google Play Services for AR** (ARCore) will remove support
 for 32-bit-only ARCore-enabled apps running on 64-bit devices. Support for
 32-bit apps running on 32-bit devices is unaffected.
 
