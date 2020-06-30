@@ -21,7 +21,7 @@ today.
 
 [<img alt="Get ARCore Depth Lab on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />](https://play.google.com/store/apps/details?id=com.google.ar.unity.arcore_depth_lab)
 
-## Sample Features
+## Sample features
 
 The sample scenes demonstrate three different ways to access depth:
 
@@ -45,10 +45,10 @@ coordinates (CPU).
   * Environment relighting
   * False-color depth map
 
-## Building and Running Samples
-These samples target [Unity 2018.4.16f1](https://unity3d.com) and require
-[ARCore SDK for Unity](https://github.com/google-ar/arcore-unity-sdk) v1.18.0 or
-newer. Download and import
+## Unity project setup
+These samples target [**Unity 2018.4.16f1**](https://unity3d.com) and require
+[**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
+**v1.18.0** or newer. Download and import
 [`arcore-unity-sdk-1.18.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
 or newer into the sample project. Close and reopen the project and reimport all
 demo shaders to resolve any dependency issues in the Unity editor. This project
@@ -56,6 +56,15 @@ only builds with the Build Platform **Android**. **Instant Preview** is not
 enabled for Depth API yet. Build the project to an Android device instead of
 using the **Play** button in the Unity editor.
 
+In **Unity 2019 or newer** you may see code errors associated with
+`SpatialTracking`, `NetworkBehaviour`, and scripts in
+`Assets/GoogleARCore/*`. In `Unity > Window > Package Manager` add the following
+packages to resolve the issue:
+
+* **Multiplayer HLAPI** (com.unity.multiplayer-hlapi)
+* **XR Legacy Input Helpers** (com.unity.xr.legacyinputhelpers)
+
+## Building samples
 Individual scenes can be built and run by just enabling a particular scene, e.g.
 `FogEffect` to try out the depth-aware fog filter.
 
@@ -81,7 +90,7 @@ Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
 Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
 Assets/ARRealismDemos/Water/Scenes/Water.unity`
 
-## Upcoming breaking change affecting previously published 32-bit-only apps
+## Upcoming breaking change affecting 32-bit-only apps
 
 The project is set up to use the `IL2CPP` scripting backend instead of `Mono` to
 build an `ARM64` app. You may be prompted to locate the Android NDK folder.
@@ -101,7 +110,7 @@ may crash when attempting to start an augmented reality (AR) session.
 To learn more about this breaking change, and for instructions on how to update
 your app, see https://developers.google.com/ar/64bit.
 
-## Sample Project Structure
+## Sample project structure
 
 The main sample assets are placed inside the `Assets/ARRealismDemos` folder.
 Each subfolder contains sample features or helper components.
@@ -203,7 +212,7 @@ environment.
 This sample uses a modified GPU occlusion shader to create a
 flooding effect with artificial water in the physical environment.
 
-## Developing your own ARCore Depth-enabled Unity Experiences
+## Developing your own ARCore Depth-enabled Unity experiences
 Please make sure that the Unity scene is properly set up to run ARCore. Provide
 depth data by attaching the `ARCoreSession` to the appropriate configuration.
 Please see the example provided in the
@@ -224,7 +233,7 @@ customized in the editor when `DepthSource` is explicitly placed in the scene.
 the `DepthTarget` script is attached to a `GameObject` with a `Meshrenderer`
 component.
 
-## Helper Classes
+## Helper classes
 
 ### `DepthSource`
 A singleton instance of this class contains references to the CPU array and GPU
@@ -242,7 +251,7 @@ scene in order for `DepthSource` to provide depth data.
 This class contains low-level operations and access to the depth data. It should
 only be use by advanced developers.
 
-## User Privacy Requirements
+## User privacy requirements
 
 You must prominently disclose the use of Google Play Services for AR (ARCore)
 and how it collects and processes data in your application. This information
@@ -266,7 +275,7 @@ If you use ARCore Depth Lab in your research, please reference it as:
       series = {UIST},
     }
 
-## Additional Information
+## Additional information
 
 You may use this software under the
 [Apache 2.0 License](https://github.com/googlesamples/arcore-depth-lab/blob/master/LICENSE).
