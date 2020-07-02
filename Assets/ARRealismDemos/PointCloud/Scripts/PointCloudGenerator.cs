@@ -28,6 +28,8 @@ using UnityEngine;
 /// </summary>
 public class PointCloudGenerator : MonoBehaviour
 {
+    private const float k_MaxVisualizationDistanceM = 7;
+    private const float k_MinVisualizationDistanceM = 0.4f;
     private bool m_Initialized;
     private CameraIntrinsics m_CameraIntrinsics;
     private Mesh m_Mesh;
@@ -63,8 +65,9 @@ public class PointCloudGenerator : MonoBehaviour
 
                 vertex = DepthSource.TransformVertexToWorldSpace(vertex);
 
-                float depthColor = depthInM / 5.0f;
-                Color color = ColorRampGenerator.Turbo(depthColor);
+                float depthRange = k_MaxVisualizationDistanceM - k_MinVisualizationDistanceM;
+                float normalizedDepth = (depthInM - k_MinVisualizationDistanceM) / depthRange;
+                Color color = ColorRampGenerator.Turbo(normalizedDepth);
                 vertices.Add(vertex);
                 indices.Add(vertexCounter++);
                 colors.Add(color);

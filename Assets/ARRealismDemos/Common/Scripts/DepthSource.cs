@@ -678,6 +678,7 @@ public class DepthSource : MonoBehaviour
                 updateDepth = true;
             }
 
+
             if (target.DepthTargetMaterial != null)
             {
                 SetDepthTexture(target);

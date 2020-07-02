@@ -215,7 +215,7 @@ public class OrientedReticle : MonoBehaviour
         float slope_x = neighbor_corr_x / (pixel_width_m * neighbor_sum_confidences_x);
         float slope_y = neighbor_corr_y / (pixel_width_m * neighbor_sum_confidences_y);
 
-        // The normal points towards the camera, so its z-component is negative.
+        // Negatives convert the normal to Unity's coordinate system.
         Vector3 normal = new Vector3(-slope_y, -slope_x, -1.0f);
         normal.Normalize();
 

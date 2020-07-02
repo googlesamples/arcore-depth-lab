@@ -1524,7 +1524,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 9b87a7a93ebd7463cbd205e44836a96c, type: 2}
 --- !u!1 &1576287124

@@ -9,22 +9,22 @@ EditorBuildSettings:
     path: Assets/ARRealismDemos/DemoCarousel/Scenes/DemoCarousel.unity
     guid: 766c2ceaa8d1c494a8bb92af31d1959a
   - enabled: 1
+    path: Assets/ARRealismDemos/OrientedReticle/Scenes/OrientedReticle.unity
+    guid: e4d4899cf4162600b96557cbcb92f659
+  - enabled: 1
     path: Assets/ARRealismDemos/DepthEffects/Scenes/DepthEffects.unity
     guid: 65365f54d55fd4b5eb22f167405f3a0b
   - enabled: 1
     path: Assets/ARRealismDemos/MaterialWrap/Scenes/MaterialWrap.unity
     guid: a145e80fd4c6248c6b9cf41c70129d3e
   - enabled: 1
-    path: Assets/ARRealismDemos/Collider/Scenes/Collider.unity
-    guid: d8bd5809be756448b85d842695697f2e
-  - enabled: 1
     path: Assets/ARRealismDemos/Splat/Scenes/OrientedSplat.unity
     guid: d627e1c2dd5f20f66a737c2c7624c36b
   - enabled: 1
-    path: Assets/ARRealismDemos/OrientedReticle/Scenes/OrientedReticle.unity
-    guid: e4d4899cf4162600b96557cbcb92f659
+    path: Assets/ARRealismDemos/Collider/Scenes/Collider.unity
+    guid: d8bd5809be756448b85d842695697f2e
   - enabled: 1
-    path: Assets/ARRealismDemos/LaserTag/Scenes/LaserBeam.unity
+    path: Assets/ARRealismDemos/LaserBeam/Scenes/LaserBeam.unity
     guid: 8c45641d85ddfb50c953d51093447a46
   - enabled: 1
     path: Assets/ARRealismDemos/AvatarLocomotion/Scenes/AvatarLocomotion.unity
@@ -45,9 +45,15 @@ EditorBuildSettings:
     path: Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
     guid: 9373538466501613186a0ab16338893e
   - enabled: 1
+    path: Assets/ARRealismDemos/Water/Scenes/Water.unity
+    guid: 76c3df5411363440a9475316a0afccd5
+  - enabled: 1
     path: Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
     guid: 397f92f02a4e94873801c207019db033
   - enabled: 1
-    path: Assets/ARRealismDemos/Water/Scenes/Water.unity
-    guid: 76c3df5411363440a9475316a0afccd5
+    path: Assets/ARRealismDemos/PointCloud/Scenes/PointCloud.unity
+    guid: 008ed2ce099c346a3a90fc6b07347ae3
+  - enabled: 1
+    path: Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity
+    guid: ebae1b433e48c41cc98f689ad56558b8
   m_configObjects: {}

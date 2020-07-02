@@ -103,7 +103,7 @@ MonoBehaviour:
   CollisionPercentageLowBound: 0.1
   VertexCollisionThresholdInMeters: 0.12
   CollisionDetectionFps: 30
-  CheckReticleUpVector: 0
+  CheckReticleUpVector: 1
 --- !u!114 &552505588
 MonoBehaviour:
   m_ObjectHideFlags: 0

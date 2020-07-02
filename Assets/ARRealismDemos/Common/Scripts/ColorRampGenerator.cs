@@ -28,19 +28,19 @@ using UnityEngine;
 public class ColorRampGenerator
 {
     private static readonly Vector4 k_TurboRedVec4 = new Vector4(
-        -0.04055352f, 2.99182795f, -25.61337602f, 98.59276138f);
+        0.13572138f, 4.61539260f, -42.66032258f, 132.13108234f);
 
     private static readonly Vector4 k_TurboGreenVec4 = new Vector4(
-        0.05766247f, -2.96213607f, 36.10218175f, -75.68669889f);
+        0.09140261f, 2.19418839f, 4.84296658f, -14.18503333f);
 
     private static readonly Vector4 k_TurboBlueVec4 = new Vector4(
-        -0.08097428f, 4.73175779f, 7.22769359f, -60.61628371f);
+        0.10667330f, 12.64194608f, -60.58204836f, 110.36276771f);
 
-    private static readonly Vector2 k_TurboRedVec2 = new Vector2(-133.13583994f, 57.30010939f);
+    private static readonly Vector2 k_TurboRedVec2 = new Vector2(-152.94239396f, 59.28637943f);
 
-    private static readonly Vector2 k_TurboGreenVec2 = new Vector2(50.48734173f, -7.85878422f);
+    private static readonly Vector2 k_TurboGreenVec2 = new Vector2(4.27729857f, 2.82956604f);
 
-    private static readonly Vector2 k_TurboBlueVec2 = new Vector2(82.75631656f, -34.06506997f);
+    private static readonly Vector2 k_TurboBlueVec2 = new Vector2(-89.90310912f, 27.34824973f);
 
     /// <summary>
     /// Calculates a polynomial color based on a linear input value x and four co-efficients.
@@ -75,7 +75,7 @@ public class ColorRampGenerator
     public static Color Turbo(float x)
     {
         return GetPolynomialColor(
-            x, k_TurboRedVec4, k_TurboGreenVec4, k_TurboBlueVec4,
+            1 - x, k_TurboRedVec4, k_TurboGreenVec4, k_TurboBlueVec4,
             k_TurboRedVec2, k_TurboGreenVec2, k_TurboBlueVec2);
     }
 }

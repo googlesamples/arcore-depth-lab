@@ -75,20 +75,22 @@ and verify that the main `DemoCarousel` scene is the first enabled scene in the
 part of the demo user interface.
 
 `Assets/ARRealismDemos/DemoCarousel/Scenes/DemoCarousel.unity
+Assets/ARRealismDemos/OrientedReticle/Scenes/OrientedReticle.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/DepthEffects.unity
 Assets/ARRealismDemos/MaterialWrap/Scenes/MaterialWrap.unity
-Assets/ARRealismDemos/Collider/Scenes/Collider.unity
 Assets/ARRealismDemos/Splat/Scenes/OrientedSplat.unity
-Assets/ARRealismDemos/OrientedReticle/Scenes/OrientedReticle.unity
-Assets/ARRealismDemos/LaserTag/Scenes/LaserBeam.unity
+Assets/ARRealismDemos/Collider/Scenes/Collider.unity
+Assets/ARRealismDemos/LaserBeam/Scenes/LaserBeam.unity
 Assets/ARRealismDemos/AvatarLocomotion/Scenes/AvatarLocomotion.unity
 Assets/ARRealismDemos/Relighting/Scenes/PointsRelighting.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/FogEffect.unity
 Assets/ARRealismDemos/SnowParticles/Scenes/ArCoreSnowParticles.unity
 Assets/ARRealismDemos/RainParticles/Scenes/RainParticlesScene.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
+Assets/ARRealismDemos/Water/Scenes/Water.unity
 Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
-Assets/ARRealismDemos/Water/Scenes/Water.unity`
+Assets/ARRealismDemos/PointCloud/Scenes/PointCloud.unity
+Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity`
 
 ## Upcoming breaking change affecting 32-bit-only apps
 
@@ -182,6 +184,10 @@ through touch. This uses depth meshes.
 This sample uses depth hit testing to obtain the raycasted
 3D position and surface normal of a raycasted screen point.
 
+### `PointCloud`
+This samples computes a point cloud on the CPU using the depth array. Press the
+**Update** button to compute a point cloud based on the latest depth data.
+
 ### `RainParticles`
 This sample uses the GPU depth texture to compute collisions
 between rain particles and the physical environment.
@@ -193,10 +199,11 @@ physical environment close to the artifical light sources are lit, while areas
 farther away are darkened.
 
 ### `ScreenSpaceDepthMesh`
-This sample uses depth meshes. A template mesh containing a
-regular grid of triangle is created once on the CPU. The GPU shader displaces
-each vertex of the regular grid based on the reprojection of the depth values
-provided by the GPU depth texture.
+This sample uses depth meshes. A template mesh containing a regular grid of
+triangles is created once on the CPU. The GPU shader displaces each vertex of
+the regular grid based on the reprojection of the depth values provided by the
+GPU depth texture. Press **Freeze** to take a snapshot of the mesh and press
+**Unfreeze** to revert back to the live updating mesh.
 
 ### `SnowParticles`
 This sample uses the GPU depth texture to compute collisions

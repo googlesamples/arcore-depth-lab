@@ -70,6 +70,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         }
     }
 
+
     /// <summary>
     /// Gets the focal length in pixels.
     /// Focal length is conventionally represented in pixels. For a detailed
@@ -132,6 +133,10 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         _UpdateDepthArray(ref m_DepthArray, _AcquireDepthImage);
         return m_DepthArray;
     }
+
+
+
+
 
     /// <summary>
     /// Queries and correctly scales camera intrinsics for depth to vertex reprojection.
@@ -357,12 +362,18 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         return true;
     }
 
+
+
     private struct ExternApi
     {
 #pragma warning disable 626
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
         public static extern ApiArStatus ArFrame_acquireDepthImage(
             IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
+
+
+
+
 
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
         public static extern void ArImage_getWidth(

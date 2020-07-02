@@ -651,7 +651,7 @@ Transform:
   m_Children:
   - {fileID: 1870237059}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: -9, z: 0}
 --- !u!1 &173370281
 GameObject:
@@ -1397,7 +1397,7 @@ Transform:
   m_Children:
   - {fileID: 320397818}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 11
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -31.5, z: 0}
 --- !u!1 &357518218
 GameObject:
@@ -2836,7 +2836,7 @@ Transform:
   m_Children:
   - {fileID: 847836301}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: -4.5, z: 0}
 --- !u!1 &976722703
 GameObject:
@@ -3433,7 +3433,7 @@ GameObject:
   - component: {fileID: 1077304737}
   - component: {fileID: 1077304740}
   m_Layer: 5
-  m_Name: Quad
+  m_Name: quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3484,7 +3484,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f02064dcb3024444a9f62fe31fdfa8d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3524,8 +3524,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b4727c64edd4d308db7f301a8b86f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: 
-  SceneLabel: 
+  SceneName: ScreenSpaceDepthMesh
+  SceneLabel: Mesh
 --- !u!1 &1111545222
 GameObject:
   m_ObjectHideFlags: 0
@@ -3722,7 +3722,7 @@ Transform:
   m_Children:
   - {fileID: 250337958}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: -13.5, z: 0}
 --- !u!1 &1165339725
 GameObject:
@@ -4340,15 +4340,15 @@ Transform:
   - {fileID: 58614826}
   - {fileID: 1420144588}
   - {fileID: 2023280782}
-  - {fileID: 1773190579}
+  - {fileID: 341912061}
   - {fileID: 538818093}
+  - {fileID: 1773190579}
   - {fileID: 1413317880}
   - {fileID: 1156627235}
   - {fileID: 146988601}
   - {fileID: 925144832}
   - {fileID: 1687487005}
   - {fileID: 1800759840}
-  - {fileID: 341912061}
   - {fileID: 1449252201}
   - {fileID: 499449493}
   - {fileID: 1283412926}
@@ -4633,7 +4633,7 @@ Transform:
   m_Children:
   - {fileID: 1030710867}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -18, z: 0}
 --- !u!1 &1420144587
 GameObject:
@@ -4645,12 +4645,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1420144588}
   m_Layer: 5
-  m_Name: Quad_offset (16)
+  m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1420144588
 Transform:
   m_ObjectHideFlags: 0
@@ -4658,14 +4658,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420144587}
-  m_LocalRotation: {x: -0, y: -0.030538544, z: -0, w: 0.99953365}
+  m_LocalRotation: {x: 0, y: -0.34611708, z: 0, w: 0.93819135}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1077304736}
   m_Father: {fileID: 1353696389}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: -3.5, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -40.5, z: 0}
 --- !u!1 &1449252200
 GameObject:
   m_ObjectHideFlags: 0
@@ -5051,7 +5051,7 @@ Transform:
   m_Children:
   - {fileID: 1296483589}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1707748816
 GameObject:
@@ -5278,7 +5278,7 @@ Transform:
   m_Children:
   - {fileID: 2112197749}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -22.5, z: 0}
 --- !u!1 &1800759839
 GameObject:
@@ -5309,7 +5309,7 @@ Transform:
   m_Children:
   - {fileID: 757363041}
   m_Father: {fileID: 1353696389}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 4.5, z: 0}
 --- !u!1 &1870237058
 GameObject:
@@ -5612,12 +5612,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2023280782}
   m_Layer: 5
-  m_Name: Quad_offset (15)
+  m_Name: Point Cloud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2023280782
 Transform:
   m_ObjectHideFlags: 0
@@ -5625,14 +5625,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023280781}
-  m_LocalRotation: {x: -0, y: -0.21217771, z: -0, w: 0.97723114}
+  m_LocalRotation: {x: 0, y: -0.3090171, z: 0, w: 0.95105654}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2059024533}
   m_Father: {fileID: 1353696389}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: -24.5, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -36, z: 0}
 --- !u!1 &2046632415
 GameObject:
   m_ObjectHideFlags: 0
@@ -5678,7 +5678,7 @@ GameObject:
   - component: {fileID: 2059024534}
   - component: {fileID: 2059024537}
   m_Layer: 5
-  m_Name: Quad
+  m_Name: quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5729,7 +5729,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9c34d0ba5b1f3450b8dabcf04c17eebe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5769,8 +5769,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b4727c64edd4d308db7f301a8b86f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: 
-  SceneLabel: 
+  SceneName: PointCloud
+  SceneLabel: Point Cloud
 --- !u!1 &2070783660
 GameObject:
   m_ObjectHideFlags: 0

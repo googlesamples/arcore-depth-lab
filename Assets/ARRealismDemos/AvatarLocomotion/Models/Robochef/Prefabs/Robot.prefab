@@ -1890,7 +1890,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!1 &1423166906558835678
@@ -1935,7 +1934,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!114 &8431923411226762904
@@ -1950,7 +1948,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!1 &4041119800268225867

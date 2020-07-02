@@ -336,7 +336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 0afc45de06dc8ef5fa0bd1d3e6167c75, type: 2}
 --- !u!114 &1615725212
@@ -351,7 +350,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 61d68f5d2b3914ee5aea59d7b38484a3, type: 2}
 --- !u!114 &1615725213
@@ -366,7 +364,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: a9d34fbe26a2e4bb0a7b4a4e512daf45, type: 2}
 --- !u!114 &1615725214
@@ -381,7 +378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 4e398b230efca478eb887d85a8c01fee, type: 2}
 --- !u!114 &1615725215
@@ -396,7 +392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 904f80227be51c03992d289a0aae1347, type: 2}
 --- !u!114 &1615725216
@@ -411,7 +406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: d48d4760378f6032ea85af6bfd6a5abd, type: 2}
 --- !u!114 &1615725217
@@ -426,7 +420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: e69246411a530fe14b2eec033fa1f31b, type: 2}
 --- !u!114 &1615725218
@@ -441,7 +434,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 41e2d8f8a32f44f628ec8df244e3d74b, type: 2}
 --- !u!114 &1615725219
@@ -456,7 +448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: b00e89ce107da43a3978fe0e41210508, type: 2}
 --- !u!114 &1615725220
@@ -471,7 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: f8927d65b02e146b0ba1cc00a3de41be, type: 2}
 --- !u!114 &1615725221
@@ -486,7 +476,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 2100000, guid: 935cc25e1a2ea45b89bdd246152fc799, type: 2}
 --- !u!1001 &1676632399

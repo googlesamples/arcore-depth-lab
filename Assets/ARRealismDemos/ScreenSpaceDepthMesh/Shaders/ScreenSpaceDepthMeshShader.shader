@@ -24,7 +24,6 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _PseudoColorTex ("Pseudo Color", 2D) = "white" {}
         _CurrentDepthTexture("Current Depth Texture", 2D) = "" {}
 
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
@@ -40,14 +39,14 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
         LOD 200
 
         CGPROGRAM
-        #pragma surface surf Standard addshadow vertex:vert
+        #pragma surface surf Standard vertex:vert
 
         #pragma target 3.0
 
+        #include "Assets/ARRealismDemos/Common/Shaders/TurboColormap.cginc"
         #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
 
         sampler2D _MainTex;
-        sampler2D _PseudoColorTex;
 
         struct Input
         {
@@ -172,8 +171,7 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
                 OUT.customColor = float4((v.normal + 1) * 0.5, 1);
 
                 float depthRange = _NormalizedDepthMax - _NormalizedDepthMin;
-                OUT.normalizedDepth = 1 - (depths[0] - _NormalizedDepthMin) /
-                depthRange;
+                OUT.normalizedDepth = (depths[0] - _NormalizedDepthMin) / depthRange;
             }
         }
 
@@ -181,8 +179,7 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
         {
             clip(IN.clipValue);
 
-            fixed4 color = tex2D (_PseudoColorTex,
-            float2(0.5, IN.normalizedDepth)) * _Color;
+            fixed4 color = fixed4(TurboColormap(IN.normalizedDepth * 0.95), 1);
             o.Albedo = color;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;

@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0.5
+  bundleVersion: 1.0.6
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -161,8 +161,8 @@ PlayerSettings:
     Standalone: com.google.ar.unity.arcore_depth_lab
     iOS: com.google.ar.unity.arcore_depth_lab
   buildNumber:
-    iOS: 1.0.5
-  AndroidBundleVersionCode: 5
+    iOS: 1.0.6
+  AndroidBundleVersionCode: 6
   AndroidMinSdkVersion: 28
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
