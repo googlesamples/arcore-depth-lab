@@ -47,17 +47,17 @@ Shader "ARRealism/Shadow Receiver Mesh Shader"
 
         #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
 
-        float _GlobalShadowIntensity;
-        float _MinimumMeshDistance;
-        float _MaximumMeshDistance;
+        uniform float _GlobalShadowIntensity;
+        uniform float _MinimumMeshDistance;
+        uniform float _MaximumMeshDistance;
 
-        float _FocalLengthX;
-        float _FocalLengthY;
-        float _PrincipalPointX;
-        float _PrincipalPointY;
-        int _ImageDimensionsX;
-        int _ImageDimensionsY;
-        float4x4 _VertexModelTransform;
+        uniform float _FocalLengthX;
+        uniform float _FocalLengthY;
+        uniform float _PrincipalPointX;
+        uniform float _PrincipalPointY;
+        uniform int _ImageDimensionsX;
+        uniform int _ImageDimensionsY;
+        uniform float4x4 _VertexModelTransform;
 
         struct Input
         {

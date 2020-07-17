@@ -1,5 +1,5 @@
-//-----------------------------------------------------------------------
-// <copyright file="ScreenSpaceDepthMeshShader.shader" company="Google LLC">
+﻿//-----------------------------------------------------------------------
+// <copyright file="StereoPhotoShader.shader" company="Google LLC">
 //
 // Copyright 2020 Google LLC. All Rights Reserved.
 //
@@ -18,17 +18,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-Shader "ARRealism/Screen Space Depth Mesh Shader"
+Shader "ARRealism/StereoPhotoShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _CurrentDepthTexture("Current Depth Texture", 2D) = "" {}
-
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
-
+        _CurrentDepthTexture("Static Depth Texture", 2D) = "" {}
         _NormalizedDepthMin ("Normalized Depth Min", Range(0,5)) = 0.3
         _NormalizedDepthMax ("Normalized Depth Max", Range(0,10)) = 4
     }
@@ -39,24 +34,19 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
         LOD 200
 
         CGPROGRAM
-        #pragma surface surf Standard vertex:vert
-
+        #pragma surface surf NoLighting vertex:vert
         #pragma target 3.0
 
         #include "Assets/ARRealismDemos/Common/Shaders/TurboColormap.cginc"
         #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
 
-        sampler2D _MainTex;
-
         struct Input
         {
-            float4 customColor;
-            float normalizedDepth;
             int clipValue;
-            float2 depthTexuv;
+            float4 modelViewPosition;
         };
 
-        struct VInput
+        struct VertexInput
         {
             float4 vertex : POSITION;
             float3 normal : NORMAL;
@@ -64,9 +54,7 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
         };
 
         static const float kClipOutValue = -10000000;
-        uniform half _Glossiness;
-        uniform half _Metallic;
-        uniform fixed4 _Color;
+        uniform sampler2D _MainTex;
         uniform float _FocalLengthX;
         uniform float _FocalLengthY;
         uniform float _PrincipalPointX;
@@ -77,15 +65,8 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
         uniform float _NormalizedDepthMin;
         uniform float _NormalizedDepthMax;
         uniform float4x4 _VertexModelTransform;
-
-        // Adds instancing support for this shader. You need to check
-        // 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more
-        // information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-        // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
+        uniform float4x4 _CameraViewMatrix;
+        uniform float4x4 _TextureProjectionMatrix;
 
         float4 GetVertex(float tex_x, float tex_y, float z)
         {
@@ -103,7 +84,7 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
             return vertex;
         }
 
-        void vert(inout VInput v, out Input OUT)
+        void vert(inout VertexInput v, out Input OUT)
         {
             UNITY_INITIALIZE_OUTPUT(Input, OUT);
 
@@ -112,9 +93,6 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
             float2 depthTexuv1 = float2((texID.x + 1) / (float)_ImageDimensionsX, texID.y / (float)_ImageDimensionsY);
             float2 depthTexuv2 = float2(texID.x / (float)_ImageDimensionsX, texID.y / (float)(_ImageDimensionsY + 1));
             float2 depthTexuv3 = float2((texID.x + 1) / (float)_ImageDimensionsX, texID.y / (float)(_ImageDimensionsY + 1));
-
-            OUT.depthTexuv = depthTexuv0;
-
             float4 depths;
 
             // Skips this vertex if it doesn't have a depth value.
@@ -124,8 +102,6 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
                 v.vertex = 0;
                 v.normal = 0;
                 OUT.clipValue = kClipOutValue;
-                OUT.customColor = float4(0, 0, 0, 1);
-                OUT.normalizedDepth = 0;
                 return;
             }
 
@@ -133,8 +109,7 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
             depths[2] = ArCoreDepth_GetMeters(depthTexuv2);
             depths[3] = ArCoreDepth_GetMeters(depthTexuv3);
 
-            // Tests the difference between each of the depth values and the
-            // average.
+            // Tests the difference between each of the depth values and the average.
             // If any deviates by the cutoff or more, don't render this triangle.
             float4 averageDepth = (depths[0] +
             depths[1] +
@@ -149,8 +124,6 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
                 v.vertex = 0;
                 v.normal = 0;
                 OUT.clipValue = kClipOutValue;
-                OUT.customColor = float4(0, 0, 0, 1);
-                OUT.normalizedDepth = 0;
             }
             else
             {
@@ -166,25 +139,35 @@ Shader "ARRealism/Screen Space Depth Mesh Shader"
 
                 v.normal = normal;
                 OUT.clipValue = 0;
-
-                // Normal mapped to color value range.
-                OUT.customColor = float4((v.normal + 1) * 0.5, 1);
-
-                float depthRange = _NormalizedDepthMax - _NormalizedDepthMin;
-                OUT.normalizedDepth = (depths[0] - _NormalizedDepthMin) / depthRange;
+                OUT.modelViewPosition = mul(_CameraViewMatrix, v.vertex);
             }
         }
 
-        void surf(Input IN, inout SurfaceOutputStandard o)
+        void surf(Input IN, inout SurfaceOutput o)
         {
             clip(IN.clipValue);
 
-            fixed4 color = fixed4(TurboColormap(IN.normalizedDepth * 0.95), 1);
-            o.Albedo = color;
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
+            // Computes the homogeneous coordinates and the uvs of the frozen texture.
+            float4 homogeneous_coordinates = mul(_TextureProjectionMatrix, IN.modelViewPosition);
+            float2 uv = homogeneous_coordinates.xy / homogeneous_coordinates.w * 0.5 + 0.5;
+
+            if (uv.x < 0 || uv.y < 0 || uv.x > 1 || uv.y > 1)
+            {
+                o.Emission = float3(0, 0, 0);
+            }
+            else
+            {
+                o.Emission = tex2D(_MainTex, uv).rgb;
+            }
+
             o.Alpha = 1;
         }
+
+        fixed4 LightingNoLighting(SurfaceOutput s, fixed3 lightDir, fixed atten)
+        {
+            return fixed4(s.Albedo, s.Alpha);
+        }
+
         ENDCG
     }
     FallBack "Diffuse"

@@ -205,6 +205,13 @@ the regular grid based on the reprojection of the depth values provided by the
 GPU depth texture. Press **Freeze** to take a snapshot of the mesh and press
 **Unfreeze** to revert back to the live updating mesh.
 
+### `StereoPhoto`
+This sample uses depth meshes and `ScreenSpaceDepthMesh`. After freezing the
+mesh, we cache the current camera's projection and view matrices, circulate the
+camera around a circle, and perform projection mapping onto the depth mesh with
+the cached camera image. Press **Capture** to create the animated 3D photo and
+press **Preview** to go back to camera preview mode.
+
 ### `SnowParticles`
 This sample uses the GPU depth texture to compute collisions
 between snow particles, the physical environment, and the orientation of each

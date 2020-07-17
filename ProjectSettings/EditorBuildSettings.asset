@@ -56,4 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity
     guid: ebae1b433e48c41cc98f689ad56558b8
+  - enabled: 1
+    path: Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/StereoPhoto.unity
+    guid: 81b2fbb4dab6c479b9b424ec84facefa
   m_configObjects: {}
