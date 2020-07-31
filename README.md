@@ -46,7 +46,7 @@ coordinates (CPU).
   * False-color depth map
 
 ## Unity project setup
-These samples target [**Unity 2018.4.16f1**](https://unity3d.com) and require
+These samples target [**Unity 2018.4.24f1**](https://unity3d.com) and require
 [**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
 **v1.18.0** or newer. Download and import
 [`arcore-unity-sdk-1.18.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
@@ -90,7 +90,8 @@ Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
 Assets/ARRealismDemos/Water/Scenes/Water.unity
 Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
 Assets/ARRealismDemos/PointCloud/Scenes/PointCloud.unity
-Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity`
+Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity
+Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/StereoPhoto.unity`
 
 ## Upcoming breaking change affecting 32-bit-only apps
 
@@ -181,8 +182,8 @@ This experience allows the user to change the material of real-world surfaces
 through touch. This uses depth meshes.
 
 ### `OrientedReticle`
-This sample uses depth hit testing to obtain the raycasted
-3D position and surface normal of a raycasted screen point.
+This sample uses depth hit testing to obtain the raycasted 3D position and
+surface normal of a raycasted screen point.
 
 ### `PointCloud`
 This samples computes a point cloud on the CPU using the depth array. Press the
@@ -193,10 +194,9 @@ This sample uses the GPU depth texture to compute collisions
 between rain particles and the physical environment.
 
 ### `Relighting`
-This sample uses the GPU depth texture to computationally
-re-light the physical environment through the AR camera. Areas of the
-physical environment close to the artifical light sources are lit, while areas
-farther away are darkened.
+This sample uses the GPU depth texture to computationally re-light the physical
+environment through the AR camera. Areas of the physical environment close to
+the artificial light sources are lit, while areas farther away are darkened.
 
 ### `ScreenSpaceDepthMesh`
 This sample uses depth meshes. A template mesh containing a regular grid of
@@ -206,11 +206,12 @@ GPU depth texture. Press **Freeze** to take a snapshot of the mesh and press
 **Unfreeze** to revert back to the live updating mesh.
 
 ### `StereoPhoto`
-This sample uses depth meshes and `ScreenSpaceDepthMesh`. After freezing the
-mesh, we cache the current camera's projection and view matrices, circulate the
-camera around a circle, and perform projection mapping onto the depth mesh with
-the cached camera image. Press **Capture** to create the animated 3D photo and
-press **Preview** to go back to camera preview mode.
+This sample uses depth meshes and
+[`ScreenSpaceDepthMesh`](#ScreenSpaceDepthMesh). After freezing the mesh, we
+cache the current camera's projection and view matrices, circulate the camera
+around a circle, and perform projection mapping onto the depth mesh with the
+cached camera image. Press **Capture** to create the animated 3D photo and press
+**Preview** to go back to camera preview mode.
 
 ### `SnowParticles`
 This sample uses the GPU depth texture to compute collisions
@@ -218,7 +219,7 @@ between snow particles, the physical environment, and the orientation of each
 snowflake.
 
 ### `Splat`
-This sample uses the [`Oriented Reticle`](#oriented-reticle) and
+This sample uses the [`Oriented Reticle`](#orientedreticle) and
 the depth mesh in placing a surface-aligned texture decal within the physical
 environment.
 
@@ -275,19 +276,27 @@ text on your main menu or notice screen: "This application runs on
 which is provided by Google LLC and governed by the
 [Google Privacy Policy](//policies.google.com/privacy)".
 
+## Related Publication
+
+Please refer to https://augmentedperception.github.io/depthlab/ for our paper published in ACM UIST 2020: "DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality".
+
 ## References
 
 If you use ARCore Depth Lab in your research, please reference it as:
 
     @inproceedings{Du2020DepthLab,
       title = {{DepthLab: Real-time 3D Interaction with Depth Maps for Mobile Augmented Reality}},
-      author = {Du, Ruofei and Turner, Eric and Dzitsiuk, Max and Prasso, Luca and Duarte, Ivo and Dourgarian, Jason and Afonso, Joao and Pascoal, Jose and Gladstone, Josh and Cruces, Nuno and Izadi, Shahram and Kowdle, Adarsh and Tsotsos, Konstantine and Kim, David},
+      author = {Du, Ruofei and Turner, Eric and Dzitsiuk, Maksym and Prasso, Luca and Duarte, Ivo and Dourgarian, Jason and Afonso, Joao and Pascoal, Jose and Gladstone, Josh and Cruces, Nuno and Izadi, Shahram and Kowdle, Adarsh and Tsotsos, Konstantine and Kim, David},
       booktitle = {Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology},
       year = {2020},
       publisher = {ACM},
-      numpages = {14},
+      numpages = {15},
       series = {UIST},
     }
+
+or
+
+    Ruofei Du, Eric Turner, Maksym Dzitsiuk, Luca Prasso, Ivo Duarte, Jason Dourgarian, Joao Afonso, Jose Pascoal, Josh Gladstone, Nuno Cruces, Shahram Izadi, Adarsh Kowdle, Konstantine Tsotsos, and David Kim. 2020. DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality. Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology, pp. 15.
 
 ## Additional information
 
