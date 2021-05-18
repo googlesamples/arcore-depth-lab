@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PointsRelightingController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,17 +47,17 @@ public class PointsRelightingController : MonoBehaviour
     /// </summary>
     public Transform FocusPoint;
 
-    private const int k_MaxNumPointlights = 3;
-    private static readonly string k_AspectRatioPropertyName = "_AspectRatio";
-    private static readonly string k_TouchPositionPropertyName = "_TouchPosition";
-    private static readonly Vector3 k_LightOffset = new Vector3(0, 0.4f, 0);
-    private Vector4[] m_PointlightPositions = new Vector4[k_MaxNumPointlights];
-    private float[] m_PointlightIntensities = new float[k_MaxNumPointlights];
-    private Vector4[] m_PointlightColors = new Vector4[k_MaxNumPointlights];
-    private Vector3 m_ScreenAnchorPosition = new Vector3(0.5f, 0.5f, 1f);
-    private float m_GlobalDarkness = 0.9f;
-    private bool m_EnableColorDepthMode = true;
-    private RelightingMode m_RenderMode = RelightingMode.LightsFollowScreenCenter;
+    private const int _maxNumPointlights = 3;
+    private static readonly string _aspectRatioPropertyName = "_AspectRatio";
+    private static readonly string _touchPositionPropertyName = "_TouchPosition";
+    private static readonly Vector3 _lightOffset = new Vector3(0, 0.4f, 0);
+    private Vector4[] _pointlightPositions = new Vector4[_maxNumPointlights];
+    private float[] _pointlightIntensities = new float[_maxNumPointlights];
+    private Vector4[] _pointlightColors = new Vector4[_maxNumPointlights];
+    private Vector3 _screenAnchorPosition = new Vector3(0.5f, 0.5f, 1f);
+    private float _globalDarkness = 0.9f;
+    private bool _enableColorDepthMode = true;
+    private RelightingMode _renderMode = RelightingMode.LightsFollowScreenCenter;
 
     /// <summary>
     /// Relighting mode of the demo scene:
@@ -79,10 +79,10 @@ public class PointsRelightingController : MonoBehaviour
     /// </summary>
     public void SwitchMode()
     {
-        // Enables full modes when m_EnableColorDepthMode = True, otherwise the first two modes.
+        // Enables full modes when _enableColorDepthMode = True, otherwise the first two modes.
         var numModes =
-            m_EnableColorDepthMode ? System.Enum.GetValues(typeof(RelightingMode)).Length : 2;
-        m_RenderMode = (RelightingMode)(((int)m_RenderMode + 1) % numModes);
+            _enableColorDepthMode ? System.Enum.GetValues(typeof(RelightingMode)).Length : 2;
+        _renderMode = (RelightingMode)(((int)_renderMode + 1) % numModes);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class PointsRelightingController : MonoBehaviour
     /// <param name="slider">An UI slider in the scene.</param>
     public void ChangeRelightingIntensity(Slider slider)
     {
-        m_GlobalDarkness = slider.value;
+        _globalDarkness = slider.value;
     }
 
     /// <summary>
@@ -115,26 +115,26 @@ public class PointsRelightingController : MonoBehaviour
 
     private void UpdateShaderVariables()
     {
-        if (m_RenderMode == RelightingMode.LightsFollowScreenCenter)
+        if (_renderMode == RelightingMode.LightsFollowScreenCenter)
         {
             FocusPoint.position = DepthSource.GetVertexInWorldSpaceFromScreenXY(
                                     Screen.width / 2, Screen.height / 2,
                                     DepthSource.DepthArray);
         }
 
-        m_ScreenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
-        m_ScreenAnchorPosition.x /= Screen.width;
-        m_ScreenAnchorPosition.y /= Screen.height;
+        _screenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
+        _screenAnchorPosition.x /= Screen.width;
+        _screenAnchorPosition.y /= Screen.height;
 
-        RelitMaterial.SetVector(k_TouchPositionPropertyName, m_ScreenAnchorPosition);
+        RelitMaterial.SetVector(_touchPositionPropertyName, _screenAnchorPosition);
         Vector2 aspectRatio = new Vector2(1f, Screen.height / Screen.width);
-        RelitMaterial.SetVector(k_AspectRatioPropertyName, aspectRatio);
+        RelitMaterial.SetVector(_aspectRatioPropertyName, aspectRatio);
 
         string DebugMessage = string.Empty;
 
         for (int i = 0; i < PointLights.Length; ++i)
         {
-            PointLights[i].transform.position = FocusPoint.position + k_LightOffset;
+            PointLights[i].transform.position = FocusPoint.position + _lightOffset;
 
             var light = PointLights[i];
             Vector3 offset;
@@ -171,20 +171,20 @@ public class PointsRelightingController : MonoBehaviour
             local.x /= Screen.width;
             local.y /= Screen.height;
 
-            m_PointlightPositions[i] = new Vector4(local.x, local.y, local.z, 1);
+            _pointlightPositions[i] = new Vector4(local.x, local.y, local.z, 1);
 
             var color = light.GetComponent<Light>().color;
-            m_PointlightColors[i] = color;
+            _pointlightColors[i] = color;
 
             var intensity = light.GetComponent<Light>().intensity;
-            m_PointlightIntensities[i] = intensity;
+            _pointlightIntensities[i] = intensity;
         }
 
-        RelitMaterial.SetVectorArray("_PointLightPositions", m_PointlightPositions);
-        RelitMaterial.SetFloatArray("_PointLightIntensities", m_PointlightIntensities);
-        RelitMaterial.SetVectorArray("_PointLightColors", m_PointlightColors);
-        RelitMaterial.SetFloat("_GlobalDarkness", m_GlobalDarkness);
-        RelitMaterial.SetFloat("_RenderMode", (int)m_RenderMode);
+        RelitMaterial.SetVectorArray("_PointLightPositions", _pointlightPositions);
+        RelitMaterial.SetFloatArray("_PointLightIntensities", _pointlightIntensities);
+        RelitMaterial.SetVectorArray("_PointLightColors", _pointlightColors);
+        RelitMaterial.SetFloat("_GlobalDarkness", _globalDarkness);
+        RelitMaterial.SetFloat("_RenderMode", (int)_renderMode);
 
         // Updates the values related to DepthSource.
         if (!DepthSource.Initialized)

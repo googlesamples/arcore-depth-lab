@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ObjectCollisionAwarePlacementManager.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
     /// </summary>
     public GameObject[] ObjectPrefabs;
 
-    private const float k_AvatarOffsetMeters = 0.015f;
-    private ObjectViewerInteractionController m_InteractionController;
-    private int m_CurrentPrefabId = 0;
-    private GameObject m_Root;
+    private const float _avatarOffsetMeters = 0.015f;
+    private ObjectViewerInteractionController _interactionController;
+    private int _currentPrefabId = 0;
+    private GameObject _root;
 
     /// <summary>
     /// Places the object in the current position.
@@ -50,11 +50,11 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
         var currentTransform = GetCurrentModel().transform;
         var newPosition = currentTransform.position;
         var newModel = Instantiate(GetCurrentModel(), newPosition, currentTransform.rotation,
-            m_Root.transform);
+            _root.transform);
 
-        if (m_InteractionController != null)
+        if (_interactionController != null)
         {
-            m_InteractionController.SetManipulatedObject(newModel);
+            _interactionController.SetManipulatedObject(newModel);
         }
 
         newModel.GetComponent<ObjectCollisionController>().enabled = false;
@@ -70,7 +70,7 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
             newRenderers[i].gameObject.AddComponent(typeof(DepthTarget));
         }
 
-        SetPrefabVisibility(m_CurrentPrefabId, false);
+        SetPrefabVisibility(_currentPrefabId, false);
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
     /// </summary>
     public void SwitchToNextModel()
     {
-        m_CurrentPrefabId = (m_CurrentPrefabId + 1) % ObjectPrefabs.Length;
+        _currentPrefabId = (_currentPrefabId + 1) % ObjectPrefabs.Length;
         HideInactiveModels();
 
         var placeText = GameObject.Find("PlaceButton").gameObject.GetComponentInChildren<Text>();
@@ -100,21 +100,21 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
     /// </summary>
     public void ClearModels()
     {
-        if (m_Root != null)
+        if (_root != null)
         {
-            foreach (Transform child in m_Root.transform)
+            foreach (Transform child in _root.transform)
             {
                 Destroy(child.gameObject);
             }
         }
 
-        SetPrefabVisibility(m_CurrentPrefabId, true);
+        SetPrefabVisibility(_currentPrefabId, true);
     }
 
     private void Start()
     {
-        m_Root = new GameObject("Colliders");
-        m_InteractionController = GetComponent<ObjectViewerInteractionController>();
+        _root = new GameObject("Colliders");
+        _interactionController = GetComponent<ObjectViewerInteractionController>();
 
         HideInactiveModels();
     }
@@ -123,7 +123,7 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
     {
         for (int i = 0; i < ObjectPrefabs.Length; ++i)
         {
-            SetPrefabVisibility(i, i == m_CurrentPrefabId);
+            SetPrefabVisibility(i, i == _currentPrefabId);
         }
 
         // Updates the vertices list for faster collision checking.
@@ -144,7 +144,7 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
 
     private GameObject GetCurrentModel()
     {
-        return ObjectPrefabs[m_CurrentPrefabId];
+        return ObjectPrefabs[_currentPrefabId];
     }
 
     private void Update()
@@ -153,16 +153,16 @@ public class ObjectCollisionAwarePlacementManager : MonoBehaviour
         toCamera.Normalize();
 
         GetCurrentModel().transform.position = DepthCursor.transform.position +
-            (toCamera * k_AvatarOffsetMeters);
+            (toCamera * _avatarOffsetMeters);
     }
 
     private void OnDestroy()
     {
-        if (m_Root != null)
+        if (_root != null)
         {
-            Destroy(m_Root);
+            Destroy(_root);
         }
 
-        m_Root = null;
+        _root = null;
     }
 }

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthSnowParticlesController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ public class DepthSnowParticlesController : MonoBehaviour
     /// </summary>
     public MeshRenderer ParticlesRenderer;
 
-    private bool m_ParticlesEnabled = true;
-    private bool m_ParticleStateChanged = true;
+    private bool _particlesEnabled = true;
+    private bool _particleStateChanged = true;
 
     /// <summary>
     /// Activates or deactivates the snow particle system.
@@ -56,8 +56,8 @@ public class DepthSnowParticlesController : MonoBehaviour
     /// <param name="particlesEnabled">Enable particles.</param>
     public void EnableParticles(bool particlesEnabled)
     {
-        m_ParticleStateChanged = true;
-        m_ParticlesEnabled = particlesEnabled;
+        _particleStateChanged = true;
+        _particlesEnabled = particlesEnabled;
     }
 
     /// <summary>
@@ -76,16 +76,16 @@ public class DepthSnowParticlesController : MonoBehaviour
 
     private void Update()
     {
-        if (ParticleVelocityMaterial != null && m_ParticleStateChanged)
+        if (ParticleVelocityMaterial != null && _particleStateChanged)
         {
-            ParticleVelocityMaterial.SetFloat("_EmitParticles", m_ParticlesEnabled ? 1 : 0);
-            if (m_ParticlesEnabled)
+            ParticleVelocityMaterial.SetFloat("_EmitParticles", _particlesEnabled ? 1 : 0);
+            if (_particlesEnabled)
             {
                 ParticlesVelocityState.Reset();
                 ParticlesPositionState.Reset();
             }
 
-            m_ParticleStateChanged = false;
+            _particleStateChanged = false;
         }
     }
 }

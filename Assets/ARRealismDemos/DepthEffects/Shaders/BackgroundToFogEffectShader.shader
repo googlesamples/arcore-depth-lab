@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="BackgroundToFogEffectShader.shader" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ Shader "ARRealism/Background To Fog Effect Shader"
         _FogDensityFactor("Fog Density Factor", Range(0.0, 1.0)) = 0.0
         _FogColor("Fog color", Color) = (1,1,1,1)
         _ShowColorOnly("Only Render Camera", Range(0.0, 1.0)) = 0.0
+        _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}
     }
 
     // For GLES3 or GLES2 on device
@@ -120,7 +121,7 @@ Shader "ARRealism/Background To Fog Effect Shader"
                 if (_ShowColorOnly > 0.0) {
                     return color;
                 }
-                
+
                 fixed4 grey = dot(color.rgb, float3(0.3, 0.59, 0.11));
 
                 float depthInMt = ArCoreDepth_GetMeters(i.duv);

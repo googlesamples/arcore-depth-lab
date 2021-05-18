@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PointCloudGenerator.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,11 +28,16 @@ using UnityEngine;
 /// </summary>
 public class PointCloudGenerator : MonoBehaviour
 {
-    private const float k_MaxVisualizationDistanceM = 7;
-    private const float k_MinVisualizationDistanceM = 0.4f;
-    private bool m_Initialized;
-    private CameraIntrinsics m_CameraIntrinsics;
-    private Mesh m_Mesh;
+    /// <summary>
+    /// Type of depth texture to attach to the material.
+    /// </summary>
+    public bool UseRawDepth = false;
+
+    private const float _maxVisualizationDistanceM = 7;
+    private const float _minVisualizationDistanceM = 0.4f;
+    private bool _initialized;
+    private CameraIntrinsics _cameraIntrinsics;
+    private Mesh _mesh;
 
     /// <summary>
     /// Computes 3D vertices from the depth map and creates a Mesh() object with the Point primitive
@@ -40,7 +45,7 @@ public class PointCloudGenerator : MonoBehaviour
     /// </summary>
     public void ComputePointCloud()
     {
-        if (!m_Initialized)
+        if (!_initialized)
         {
             return;
         }
@@ -55,7 +60,8 @@ public class PointCloudGenerator : MonoBehaviour
             for (int x = 0; x < DepthSource.DepthWidth; x++)
             {
                 int depthIndex = (y * DepthSource.DepthWidth) + x;
-                float depthInM = DepthSource.DepthArray[depthIndex] * DepthSource.MillimeterToMeter;
+                float depthInM = (UseRawDepth ? DepthSource.RawDepthArray[depthIndex] :
+                    DepthSource.DepthArray[depthIndex]) * DepthSource.MillimeterToMeter;
 
                 Vector3 vertex = DepthSource.ComputeVertex(x, y, depthInM);
                 if (vertex == Vector3.negativeInfinity)
@@ -65,8 +71,8 @@ public class PointCloudGenerator : MonoBehaviour
 
                 vertex = DepthSource.TransformVertexToWorldSpace(vertex);
 
-                float depthRange = k_MaxVisualizationDistanceM - k_MinVisualizationDistanceM;
-                float normalizedDepth = (depthInM - k_MinVisualizationDistanceM) / depthRange;
+                float depthRange = _maxVisualizationDistanceM - _minVisualizationDistanceM;
+                float normalizedDepth = (depthInM - _minVisualizationDistanceM) / depthRange;
                 Color color = ColorRampGenerator.Turbo(normalizedDepth);
                 vertices.Add(vertex);
                 indices.Add(vertexCounter++);
@@ -74,27 +80,27 @@ public class PointCloudGenerator : MonoBehaviour
             }
         }
 
-        m_Mesh.SetVertices(vertices);
-        m_Mesh.SetIndices(indices.ToArray(), MeshTopology.Points, 0);
-        m_Mesh.SetColors(colors);
-        m_Mesh.RecalculateBounds();
+        _mesh.SetVertices(vertices);
+        _mesh.SetIndices(indices.ToArray(), MeshTopology.Points, 0);
+        _mesh.SetColors(colors);
+        _mesh.RecalculateBounds();
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.mesh = m_Mesh;
+        meshFilter.mesh = _mesh;
     }
 
     private void Start()
     {
-        m_Mesh = new Mesh();
-        m_Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        _mesh = new Mesh();
+        _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
     private void Update()
     {
         // Waits until MotionStereo provides real data.
-        if (!m_Initialized && DepthSource.Initialized)
+        if (!_initialized && DepthSource.Initialized)
         {
-            m_Initialized = true;
+            _initialized = true;
         }
     }
 }

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="LowPassFilter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ using UnityEngine;
 /// </summary>
 public class LowPassFilter
 {
-    private float m_OutputSmoothed;
-    private float m_Weight;
-    private float m_InputData;
-    private bool m_IsInitialized;
+    private float _outputSmoothed;
+    private float _weight;
+    private float _inputData;
+    private bool _isInitialized;
 
     /// <summary>
     /// Creates an instance of the filter with a weight and initial value.
@@ -39,10 +39,10 @@ public class LowPassFilter
     /// <param name="initialValue">Initial value of the filter.</param>
     public LowPassFilter(float weight, float initialValue)
     {
-        m_Weight = weight;
-        m_InputData = initialValue;
-        m_OutputSmoothed = initialValue;
-        m_IsInitialized = false;
+        _weight = weight;
+        _inputData = initialValue;
+        _outputSmoothed = initialValue;
+        _isInitialized = false;
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class LowPassFilter
     /// <param name="weight">Updates the weight.</param>
     public void SetWeight(float weight)
     {
-        m_Weight = weight;
+        _weight = weight;
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class LowPassFilter
     /// <returns>Returns the raw input data.</returns>
     public float GetRawInput()
     {
-        return m_InputData;
+        return _inputData;
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class LowPassFilter
     /// <returns>Returns the initialization state.</returns>
     public bool GetIsInitialized()
     {
-        return m_IsInitialized;
+        return _isInitialized;
     }
 
     /// <summary>
@@ -82,21 +82,21 @@ public class LowPassFilter
         // Checks for not a value or infinity.
         if (System.Single.IsNaN(val) || System.Single.IsInfinity(val))
         {
-            return m_OutputSmoothed;
+            return _outputSmoothed;
         }
 
-        if (m_IsInitialized)
+        if (_isInitialized)
         {
-            m_OutputSmoothed = (m_Weight * val) + ((1f - m_Weight) * m_OutputSmoothed);
+            _outputSmoothed = (_weight * val) + ((1f - _weight) * _outputSmoothed);
         }
         else
         {
-            m_OutputSmoothed = val;
-            m_IsInitialized = true;
+            _outputSmoothed = val;
+            _isInitialized = true;
         }
 
-        m_InputData = val;
-        return m_OutputSmoothed;
+        _inputData = val;
+        return _outputSmoothed;
     }
 
     /// <summary>

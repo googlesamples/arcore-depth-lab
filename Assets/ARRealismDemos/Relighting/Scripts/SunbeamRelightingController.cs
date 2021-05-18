@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SunbeamRelightingController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,22 +44,22 @@ public class SunbeamRelightingController : MonoBehaviour
     /// <summary>
     /// Type of depth texture to attach to the material.
     /// </summary>
-    public bool UseSparseDepth = false;
+    public bool UseRawDepth = false;
 
-    private static readonly string k_LightAnchorPositionName = "_LightAnchorPosition";
-    private static readonly string k_GlobalAlphaValueName = "_GlobalAlphaValue";
-    private static readonly string k_NormalizedDepthMinName = "_NormalizedDepthMin";
-    private static readonly string k_NormalizedDepthMaxName = "_NormalizedDepthMax";
+    private static readonly string _lightAnchorPositionName = "_LightAnchorPosition";
+    private static readonly string _globalAlphaValueName = "_GlobalAlphaValue";
+    private static readonly string _normalizedDepthMinName = "_NormalizedDepthMin";
+    private static readonly string _normalizedDepthMaxName = "_NormalizedDepthMax";
 
     // Relative position of the light to the anchor placed on a surface.
-    private static readonly Vector3 k_LightRelativePosition = new Vector3(0, 0.5f, 0);
+    private static readonly Vector3 _lightRelativePosition = new Vector3(0, 0.5f, 0);
 
-    private Vector3 m_LightAnchorPosition = Vector3.zero;
-    private Vector3 m_SunPosition = k_LightRelativePosition;
-    private Vector2 m_LastTouchPosition;
-    private bool m_Initialized = false;
-    private bool m_FollowScreenCenter = false;
-    private float m_GlobalAlphaValue = 1.0f;
+    private Vector3 _lightAnchorPosition = Vector3.zero;
+    private Vector3 _sunPosition = _lightRelativePosition;
+    private Vector2 _lastTouchPosition;
+    private bool _initialized = false;
+    private bool _followScreenCenter = false;
+    private float _globalAlphaValue = 1.0f;
 
     /// <summary>
     /// Initializes the sun position.
@@ -67,7 +67,7 @@ public class SunbeamRelightingController : MonoBehaviour
     private void Start()
     {
         Vector2 screenCenter = new Vector2(0.5f, 0.5f);
-        m_SunPosition = DepthSource.GetVertexInWorldSpaceFromScreenUV(screenCenter);
+        _sunPosition = DepthSource.GetVertexInWorldSpaceFromScreenUV(screenCenter);
         Camera.main.depthTextureMode = DepthTextureMode.Depth;
     }
 
@@ -87,9 +87,9 @@ public class SunbeamRelightingController : MonoBehaviour
                                (int)touch.position.x, (int)touch.position.y,
                                DepthSource.DepthArray);
 
-        m_SunPosition = worldPosition + k_LightRelativePosition;
-        m_LastTouchPosition = touch.position;
-        m_Initialized = true;
+        _sunPosition = worldPosition + _lightRelativePosition;
+        _lastTouchPosition = touch.position;
+        _initialized = true;
     }
 
     /// <summary>
@@ -97,24 +97,24 @@ public class SunbeamRelightingController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (m_FollowScreenCenter)
+        if (_followScreenCenter)
         {
             var worldPosition = DepthSource.GetVertexInWorldSpaceFromScreenXY(
                                 Screen.width / 2, Screen.height / 2,
                                 DepthSource.DepthArray);
-            m_SunPosition = worldPosition + k_LightRelativePosition;
+            _sunPosition = worldPosition + _lightRelativePosition;
         }
 
         UpdateTouch();
-        m_LightAnchorPosition = Camera.main.WorldToScreenPoint(m_SunPosition);
-        float depthMin = RelightingMaterial.GetFloat(k_NormalizedDepthMinName);
-        float depthMax = RelightingMaterial.GetFloat(k_NormalizedDepthMaxName);
+        _lightAnchorPosition = Camera.main.WorldToScreenPoint(_sunPosition);
+        float depthMin = RelightingMaterial.GetFloat(_normalizedDepthMinName);
+        float depthMax = RelightingMaterial.GetFloat(_normalizedDepthMaxName);
         float depthRange = depthMax - depthMin;
-        float zLightAnchorPosition = (m_LightAnchorPosition.z - depthMin) / depthRange;
-        m_LightAnchorPosition.z = Mathf.Clamp01(zLightAnchorPosition);
+        float zLightAnchorPosition = (_lightAnchorPosition.z - depthMin) / depthRange;
+        _lightAnchorPosition.z = Mathf.Clamp01(zLightAnchorPosition);
 
-        RelightingMaterial.SetVector(k_LightAnchorPositionName, m_LightAnchorPosition);
-        RelightingMaterial.SetFloat(k_GlobalAlphaValueName, m_GlobalAlphaValue);
+        RelightingMaterial.SetVector(_lightAnchorPositionName, _lightAnchorPosition);
+        RelightingMaterial.SetFloat(_globalAlphaValueName, _globalAlphaValue);
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public class SunbeamRelightingController : MonoBehaviour
     [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
     {
-        if (RelightingMaterial != null && m_Initialized)
+        if (RelightingMaterial != null && _initialized)
         {
             Graphics.Blit(sourceTexture, destTexture, RelightingMaterial);
         }

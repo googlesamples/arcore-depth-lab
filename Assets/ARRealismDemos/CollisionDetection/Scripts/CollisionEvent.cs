@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CollisionEvent.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,14 +41,14 @@ public class CollisionEvent : MonoBehaviour
     /// </summary>
     public float RotationNumCircles = 3f;
 
-    private const float k_DegreesPerCircle = 360f;
+    private const float _degreesPerCircle = 360f;
 
     // The current manipulated object.
-    private GameObject m_ManipulatedObject;
+    private GameObject _manipulatedObject;
 
     // Progress in precentage of the collision animation.
     // Rotates the model when value smaller than 1.
-    private float m_CollisionAnimationProgress = 1f;
+    private float _collisionAnimationProgress = 1f;
 
     /// <summary>
     /// Returns whether the selected object is in collision.
@@ -56,7 +56,7 @@ public class CollisionEvent : MonoBehaviour
     /// <returns>Whether the object is being collided with the environment.</returns>
     public bool IsTriggering()
     {
-        return m_CollisionAnimationProgress < 1f;
+        return _collisionAnimationProgress < 1f;
     }
 
     /// <summary>
@@ -65,8 +65,8 @@ public class CollisionEvent : MonoBehaviour
     /// <param name="collidedObject">The object collided with the environment.</param>
     public void Trigger(GameObject collidedObject)
     {
-        m_ManipulatedObject = collidedObject;
-        m_CollisionAnimationProgress = 0f;
+        _manipulatedObject = collidedObject;
+        _collisionAnimationProgress = 0f;
     }
 
     /// <summary>
@@ -74,17 +74,17 @@ public class CollisionEvent : MonoBehaviour
     /// </summary>
     protected void Update()
     {
-        if (!IsTriggering() || m_ManipulatedObject == null)
+        if (!IsTriggering() || _manipulatedObject == null)
         {
             return;
         }
 
-        m_CollisionAnimationProgress += Time.deltaTime / AnimationInSeconds;
+        _collisionAnimationProgress += Time.deltaTime / AnimationInSeconds;
 
-        if (m_ManipulatedObject != null && EnableAnimation)
+        if (_manipulatedObject != null && EnableAnimation)
         {
-            float rotationDegrees = Time.deltaTime * k_DegreesPerCircle * RotationNumCircles;
-            m_ManipulatedObject.transform.Rotate(0, rotationDegrees, 0, Space.Self);
+            float rotationDegrees = Time.deltaTime * _degreesPerCircle * RotationNumCircles;
+            _manipulatedObject.transform.Rotate(0, rotationDegrees, 0, Space.Self);
         }
     }
 }

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="AvatarPathController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,38 +42,38 @@ public class AvatarPathController : MonoBehaviour
     /// </summary>
     public GameObject Waypoint;
 
-    private const float k_AvatarOffset = 0.9f;
+    private const float _avatarOffset = 0.9f;
 
-    private const float k_WaypointYOffset = 0.05f;
+    private const float _waypointYOffset = 0.05f;
 
-    private GameObject m_Root;
+    private GameObject _root;
 
-    private AvatarController m_AvatarController;
+    private AvatarController _avatarController;
 
-    private bool m_FirstWaypointPlaced;
+    private bool _firstWaypointPlaced;
 
     /// <summary>
     /// Sets a waypoint for the avatar.
     /// </summary>
     public void DropWaypoint()
     {
-        if (m_Root == null)
+        if (_root == null)
         {
-            m_Root = new GameObject("Waypoints");
+            _root = new GameObject("Waypoints");
         }
 
         Vector3 pos = DepthCursor.transform.position;
-        pos.y += k_WaypointYOffset;
+        pos.y += _waypointYOffset;
 
         GameObject marker = Instantiate(Waypoint, pos, Quaternion.identity);
-        marker.transform.parent = m_Root.transform;
+        marker.transform.parent = _root.transform;
 
-        if (m_AvatarController != null)
+        if (_avatarController != null)
         {
-            m_AvatarController.AddNewCubeObject(marker);
+            _avatarController.AddNewCubeObject(marker);
         }
 
-        m_FirstWaypointPlaced = true;
+        _firstWaypointPlaced = true;
     }
 
     /// <summary>
@@ -81,9 +81,9 @@ public class AvatarPathController : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        if (m_Root != null)
+        if (_root != null)
         {
-            foreach (Transform child in m_Root.transform)
+            foreach (Transform child in _root.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -92,23 +92,23 @@ public class AvatarPathController : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(m_Root);
-        m_Root = null;
+        Destroy(_root);
+        _root = null;
     }
 
     private void Start()
     {
-        m_AvatarController = Andy.GetComponent<AvatarController>();
+        _avatarController = Andy.GetComponent<AvatarController>();
     }
 
     private void Update()
     {
-        if (!m_FirstWaypointPlaced)
+        if (!_firstWaypointPlaced)
         {
             Vector3 toCamera = Camera.main.transform.position - DepthCursor.transform.position;
 
             Andy.transform.position = DepthCursor.transform.position +
-                (toCamera.normalized * k_AvatarOffset);
+                (toCamera.normalized * _avatarOffset);
         }
     }
 }

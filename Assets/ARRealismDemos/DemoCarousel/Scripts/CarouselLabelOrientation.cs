@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CarouselLabelOrientation.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,14 +49,14 @@ public class CarouselLabelOrientation : MonoBehaviour
     /// </summary>
     public CarouselMovement CarouselMovement;
 
-    private DeviceOrientation m_DeviceOrientationInit;
+    private DeviceOrientation _deviceOrientationInit;
 
     // Start is called before the first frame update
     private void Start()
     {
-        m_DeviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
+        _deviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
 
-        if (m_DeviceOrientationInit == DeviceOrientation.Unknown)
+        if (_deviceOrientationInit == DeviceOrientation.Unknown)
         {
             StartCoroutine(GetValidDeviceOrientation());
         }
@@ -75,14 +75,14 @@ public class CarouselLabelOrientation : MonoBehaviour
         else
         {
             DeviceOrientationInit.DeviceOrientationInstance = Input.deviceOrientation;
-            m_DeviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
+            _deviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
             RotateCarouselLabel();
         }
     }
 
     private void RotateCarouselLabel()
     {
-        switch (m_DeviceOrientationInit)
+        switch (_deviceOrientationInit)
         {
             case DeviceOrientation.LandscapeLeft:
                 CarouselMovement.ButtonLabel = SceneLabelLandscapeLeft.GetComponent<Text>();

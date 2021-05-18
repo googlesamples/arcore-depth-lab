@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="HapticManager.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ using UnityEngine;
 public class HapticManager : MonoBehaviour
 {
     // Cache the Manager for performance.
-    private static HapticFeedbackManager s_HapticFeedbackManager;
+    private static HapticFeedbackManager _hapticFeedbackManager;
 
     /// <summary>
     /// Run the haptic feedback.
@@ -34,12 +34,12 @@ public class HapticManager : MonoBehaviour
     /// <returns>Returns HapticFeedback execute.</returns>
     public static bool HapticFeedback()
     {
-        if (s_HapticFeedbackManager == null)
+        if (_hapticFeedbackManager == null)
         {
-            s_HapticFeedbackManager = new HapticFeedbackManager();
+            _hapticFeedbackManager = new HapticFeedbackManager();
         }
 
-        return s_HapticFeedbackManager.Execute();
+        return _hapticFeedbackManager.Execute();
     }
 
     private class HapticFeedbackManager

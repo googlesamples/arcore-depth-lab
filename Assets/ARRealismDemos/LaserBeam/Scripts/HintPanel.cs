@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="HintPanel.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,18 +34,18 @@ public class HintPanel : MonoBehaviour
     /// </summary>
     public GameObject Panel;
 
-    private const float k_WaitTimeS = 10;
-    private const float k_ShowHintTimeS = 5;
+    private const float _waitTimeS = 10;
+    private const float _showHintTimeS = 5;
 
-    private UnityEngine.UI.Image m_PanelImage;
-    private UnityEngine.UI.Text m_PanelText;
+    private UnityEngine.UI.Image _panelImage;
+    private UnityEngine.UI.Text _panelText;
 
-    private float m_HintTimer = k_ShowHintTimeS - 1.0f;
-    private LaserBeam m_LaserBeam;
+    private float _hintTimer = _showHintTimeS - 1.0f;
+    private LaserBeam _laserBeam;
 
-    private HintState m_CurrentState = HintState.Show;
-    private HintState m_NextState = HintState.Show;
-    private bool m_StopShowing = false;
+    private HintState _currentState = HintState.Show;
+    private HintState _nextState = HintState.Show;
+    private bool _stopShowing = false;
 
     private enum HintState
     {
@@ -55,58 +55,58 @@ public class HintPanel : MonoBehaviour
 
     private void Start()
     {
-         LaserBeam[] laserBeams = Object.FindObjectsOfType<LaserBeam>();
-         if (laserBeams.Length > 0)
-         {
-            m_LaserBeam = laserBeams[0];
-         }
+        LaserBeam[] laserBeams = Object.FindObjectsOfType<LaserBeam>();
+        if (laserBeams.Length > 0)
+        {
+            _laserBeam = laserBeams[0];
+        }
 
-        m_PanelImage = Panel.GetComponent<Image>();
-        m_PanelText = Panel.GetComponentInChildren<Text>();
+        _panelImage = Panel.GetComponent<Image>();
+        _panelText = Panel.GetComponentInChildren<Text>();
         SetPanelAlpha(1.0f);
     }
 
     private void Update()
     {
-        m_StopShowing = m_LaserBeam.HasLaserBeenTriggered();
-        if (m_StopShowing)
+        _stopShowing = _laserBeam.HasLaserBeenTriggered();
+        if (_stopShowing)
         {
             SetPanelAlpha(0.0f);
-            m_CurrentState = HintState.Hide;
-            m_NextState = HintState.Hide;
-            m_HintTimer = k_WaitTimeS - 1.0f;
+            _currentState = HintState.Hide;
+            _nextState = HintState.Hide;
+            _hintTimer = _waitTimeS - 1.0f;
             return;
         }
 
-        m_HintTimer -= Time.deltaTime;
-        m_HintTimer = m_HintTimer < 0 ? 0 : m_HintTimer;
+        _hintTimer -= Time.deltaTime;
+        _hintTimer = _hintTimer < 0 ? 0 : _hintTimer;
 
-        if (m_CurrentState != m_NextState)
+        if (_currentState != _nextState)
         {
-            switch (m_NextState)
+            switch (_nextState)
             {
                 case HintState.Show:
-                m_HintTimer = k_ShowHintTimeS;
+                _hintTimer = _showHintTimeS;
                 break;
                 case HintState.Hide:
-                m_HintTimer = k_WaitTimeS;
+                _hintTimer = _waitTimeS;
                 break;
             }
 
-            m_CurrentState = m_NextState;
+            _currentState = _nextState;
         }
 
-        switch (m_CurrentState)
+        switch (_currentState)
         {
             case HintState.Show:
             {
-                float panelAlpha = k_ShowHintTimeS - m_HintTimer;
+                float panelAlpha = _showHintTimeS - _hintTimer;
                 panelAlpha = Mathf.Clamp(panelAlpha, 0.0f, 1.0f);
                 SetPanelAlpha(panelAlpha);
 
-                if (m_HintTimer == 0)
+                if (_hintTimer == 0)
                 {
-                    m_NextState = HintState.Hide;
+                    _nextState = HintState.Hide;
                 }
 
                 break;
@@ -114,13 +114,13 @@ public class HintPanel : MonoBehaviour
 
             case HintState.Hide:
             {
-                float panelAlpha = k_WaitTimeS - m_HintTimer;
+                float panelAlpha = _waitTimeS - _hintTimer;
                 panelAlpha = 1.0f - Mathf.Clamp(panelAlpha, 0.0f, 1.0f);
                 SetPanelAlpha(panelAlpha);
 
-                if (m_HintTimer == 0)
+                if (_hintTimer == 0)
                 {
-                    m_NextState = HintState.Show;
+                    _nextState = HintState.Show;
                 }
 
                 break;
@@ -130,12 +130,12 @@ public class HintPanel : MonoBehaviour
 
     private void SetPanelAlpha(float alpha)
     {
-        Color imageColor = m_PanelImage.color;
+        Color imageColor = _panelImage.color;
         imageColor.a = alpha;
-        m_PanelImage.color = imageColor;
+        _panelImage.color = imageColor;
 
-        Color textColor = m_PanelText.color;
+        Color textColor = _panelText.color;
         textColor.a = alpha;
-        m_PanelText.color = textColor;
+        _panelText.color = textColor;
     }
 }

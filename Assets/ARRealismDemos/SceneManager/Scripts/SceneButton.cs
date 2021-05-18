@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SceneButton.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class SceneButton : MonoBehaviour
     /// </summary>
     public string SceneLabel;
 
-    private SceneSwitcher m_SceneSwitcher;
+    private SceneSwitcher _sceneSwitcher;
 
     /// <summary>
     /// Triggers the scene switch.
@@ -50,13 +50,13 @@ public class SceneButton : MonoBehaviour
             Debug.Log("Switching to scene: " + SceneName);
 
             // Load scene by name -> sceneName
-            m_SceneSwitcher.LoadScene(SceneName);
+            _sceneSwitcher.LoadScene(SceneName);
         }
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        m_SceneSwitcher = SceneSwitcher.Instance;
+        _sceneSwitcher = SceneSwitcher.Instance;
     }
 }

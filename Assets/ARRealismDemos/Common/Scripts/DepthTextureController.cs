@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthTextureController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,11 +34,16 @@ public class DepthTextureController : MonoBehaviour
     /// </summary>
     public List<Material> Materials;
 
-    private static readonly string k_CurrentDepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string k_TopLeftRightPropertyName = "_UvTopLeftRight";
-    private static readonly string k_BottomLeftRightPropertyName = "_UvBottomLeftRight";
+    /// <summary>
+    /// Whether or not to use the sparse depth map for all materials.
+    /// </summary>
+    public bool UseRawDepth;
 
-    private Texture2D m_DepthTexture;
+    private static readonly string _currentDepthTexturePropertyName = "_CurrentDepthTexture";
+    private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
+    private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
+
+    private Texture2D _depthTexture;
 
     /// <summary>
     /// Assigns the depth texture to each currently added material.
@@ -47,7 +52,7 @@ public class DepthTextureController : MonoBehaviour
     {
         foreach (Material material in Materials)
         {
-            material.SetTexture(k_CurrentDepthTexturePropertyName, m_DepthTexture);
+            material.SetTexture(_currentDepthTexturePropertyName, _depthTexture);
             UpdateScreenOrientationOnMaterial(material);
         }
     }
@@ -58,8 +63,8 @@ public class DepthTextureController : MonoBehaviour
     private void Start()
     {
         // Default texture, will be updated each frame.
-        m_DepthTexture = new Texture2D(2, 2);
-        m_DepthTexture.filterMode = FilterMode.Bilinear;
+        _depthTexture = new Texture2D(2, 2);
+        _depthTexture.filterMode = FilterMode.Bilinear;
 
         Attach();
     }
@@ -72,11 +77,11 @@ public class DepthTextureController : MonoBehaviour
     {
         var uvQuad = Frame.CameraImage.TextureDisplayUvs;
         material.SetVector(
-            k_TopLeftRightPropertyName,
+            _topLeftRightPropertyName,
             new Vector4(
                 uvQuad.TopLeft.x, uvQuad.TopLeft.y, uvQuad.TopRight.x, uvQuad.TopRight.y));
         material.SetVector(
-            k_BottomLeftRightPropertyName,
+            _bottomLeftRightPropertyName,
             new Vector4(uvQuad.BottomLeft.x, uvQuad.BottomLeft.y, uvQuad.BottomRight.x,
                 uvQuad.BottomRight.y));
     }
@@ -86,8 +91,15 @@ public class DepthTextureController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // Gets the latest depth map from ARCore.
-        Frame.CameraImage.UpdateDepthTexture(ref m_DepthTexture);
+        // Gets the latest sparse or smooth depth map from ARCore.
+        if (UseRawDepth)
+        {
+            Frame.CameraImage.UpdateRawDepthTexture(ref _depthTexture);
+        }
+        else
+        {
+            Frame.CameraImage.UpdateDepthTexture(ref _depthTexture);
+        }
 
         // Updates the screen orientation for each material.
         foreach (Material currentMaterial in Materials)

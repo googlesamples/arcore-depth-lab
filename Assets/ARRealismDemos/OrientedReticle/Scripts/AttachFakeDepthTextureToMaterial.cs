@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="AttachFakeDepthTextureToMaterial.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,35 +39,35 @@ public class AttachFakeDepthTextureToMaterial : MonoBehaviour
     /// </summary>
     public short Depth = 2000;
 
-    private static readonly string k_CurrentDepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string k_TopLeftRightPropertyName = "_UvTopLeftRight";
-    private static readonly string k_BottomLeftRightPropertyName = "_UvBottomLeftRight";
+    private static readonly string _currentDepthTexturePropertyName = "_CurrentDepthTexture";
+    private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
+    private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
 
-    private Texture2D m_DepthTexture;
+    private Texture2D _depthTexture;
 
     /// <summary>
     /// Initializes the depth texture and filtering mode.
     /// </summary>
     private void Start()
     {
-        m_DepthTexture = new Texture2D(2, 2, TextureFormat.RGB565, false);
-        m_DepthTexture.filterMode = FilterMode.Bilinear;
+        _depthTexture = new Texture2D(2, 2, TextureFormat.RGB565, false);
+        _depthTexture.filterMode = FilterMode.Bilinear;
 
         byte[] depthValueInBytes = BitConverter.GetBytes(Depth);
-        byte[] depth_bytes = new byte[m_DepthTexture.width * m_DepthTexture.height * 2];
-        for (int i = 0; i < m_DepthTexture.width * m_DepthTexture.height; ++i)
+        byte[] depth_bytes = new byte[_depthTexture.width * _depthTexture.height * 2];
+        for (int i = 0; i < _depthTexture.width * _depthTexture.height; ++i)
         {
             depth_bytes[i * 2] = depthValueInBytes[0];
             depth_bytes[(i * 2) + 1] = depthValueInBytes[1];
         }
 
-        m_DepthTexture.LoadRawTextureData(depth_bytes);
-        m_DepthTexture.Apply();
+        _depthTexture.LoadRawTextureData(depth_bytes);
+        _depthTexture.Apply();
 
         // Assigns the texture to the material.
         foreach (Material currentMaterial in Materials)
         {
-            currentMaterial.SetTexture(k_CurrentDepthTexturePropertyName, m_DepthTexture);
+            currentMaterial.SetTexture(_currentDepthTexturePropertyName, _depthTexture);
             UpdateScreenOrientationOnMaterial(currentMaterial);
         }
     }
@@ -83,9 +83,9 @@ public class AttachFakeDepthTextureToMaterial : MonoBehaviour
         //// Bottom Left  x: 0 y: 1.0
         //// Bottom Right x: 0 y: 0.0
         material.SetVector(
-        k_TopLeftRightPropertyName, new Vector4(1.0f, 1.0f, 1.0f, 0.0f));
+        _topLeftRightPropertyName, new Vector4(1.0f, 1.0f, 1.0f, 0.0f));
         material.SetVector(
-        k_BottomLeftRightPropertyName, new Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+        _bottomLeftRightPropertyName, new Vector4(0.0f, 1.0f, 0.0f, 0.0f));
     }
 
     /// <summary>

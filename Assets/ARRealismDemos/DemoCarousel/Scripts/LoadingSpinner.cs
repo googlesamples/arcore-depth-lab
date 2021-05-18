@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="LoadingSpinner.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ public class LoadingSpinner : MonoBehaviour
     /// </summary>
     public static LoadingSpinner Instance;
 
-    private readonly object k_CurrentLoadingOperationLock = new object();
+    private readonly object _currentLoadingOperationLock = new object();
 
     // The reference to the current loading operation running in the background
-    private AsyncOperation m_CurrentLoadingOperation;
+    private AsyncOperation _currentLoadingOperation;
 
     // A flag to tell whether a scene is being loaded or not
-    private bool m_IsLoading;
+    private bool _isLoading;
 
     // Canvas group used to fade in/out the spinner
-    private CanvasGroup m_CanvasGroup;
+    private CanvasGroup _canvasGroup;
 
     /// <summary>
     /// Shows the loading spinner.
@@ -64,11 +64,11 @@ public class LoadingSpinner : MonoBehaviour
     /// <param name="loadingOperation">AsynOperation to monitor.</param>
     public void SetLoadingOperation(AsyncOperation loadingOperation)
     {
-        lock (k_CurrentLoadingOperationLock)
+        lock (_currentLoadingOperationLock)
         {
             // Stores the reference.
-            m_CurrentLoadingOperation = loadingOperation;
-            m_IsLoading = true;
+            _currentLoadingOperation = loadingOperation;
+            _isLoading = true;
         }
     }
 
@@ -81,10 +81,10 @@ public class LoadingSpinner : MonoBehaviour
         {
             // Disables the spinner
             FadeOut();
-            lock (k_CurrentLoadingOperationLock)
+            lock (_currentLoadingOperationLock)
             {
-                m_CurrentLoadingOperation = null;
-                m_IsLoading = false;
+                _currentLoadingOperation = null;
+                _isLoading = false;
             }
         }
     }
@@ -104,7 +104,7 @@ public class LoadingSpinner : MonoBehaviour
             return;
         }
 
-        m_CanvasGroup = gameObject.GetComponent(typeof(CanvasGroup)) as CanvasGroup;
+        _canvasGroup = gameObject.GetComponent(typeof(CanvasGroup)) as CanvasGroup;
 
         #if UNITY_ANDROID
         Handheld.SetActivityIndicatorStyle(AndroidActivityIndicatorStyle.DontShow);
@@ -114,12 +114,12 @@ public class LoadingSpinner : MonoBehaviour
 
     private void Update()
     {
-        if (m_IsLoading)
+        if (_isLoading)
         {
-            lock (k_CurrentLoadingOperationLock)
+            lock (_currentLoadingOperationLock)
             {
                 // Hides the spinner when completed.
-                if (m_CurrentLoadingOperation.isDone)
+                if (_currentLoadingOperation.isDone)
                 {
                     Hide();
                     Handheld.StopActivityIndicator();
@@ -131,12 +131,12 @@ public class LoadingSpinner : MonoBehaviour
     private void FadeIn()
     {
         gameObject.SetActive(true);
-        StartCoroutine(FadeSpinner(m_CanvasGroup, m_CanvasGroup.alpha, 1, .5f));
+        StartCoroutine(FadeSpinner(_canvasGroup, _canvasGroup.alpha, 1, .5f));
     }
 
     private void FadeOut()
     {
-        StartCoroutine(FadeSpinner(m_CanvasGroup, m_CanvasGroup.alpha, 0, .5f));
+        StartCoroutine(FadeSpinner(_canvasGroup, _canvasGroup.alpha, 0, .5f));
     }
 
     private IEnumerator FadeSpinner(CanvasGroup canvasGroup, float start,

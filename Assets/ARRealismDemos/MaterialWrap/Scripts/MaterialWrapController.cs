@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="MaterialWrapController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class MaterialWrapController : MonoBehaviour
     /// </summary>
     public ButtonInteraction ClearButton;
 
-    private int m_MaterialIndex;
-    private int m_MaterialCount;
+    private int _materialIndex;
+    private int _materialCount;
 
     /// <summary>
     /// Starts MaterialWrap instantiation coroutine.
@@ -66,7 +66,7 @@ public class MaterialWrapController : MonoBehaviour
                 }
         }
 
-        m_MaterialCount = 0;
+        _materialCount = 0;
     }
 
     /// <summary>
@@ -75,28 +75,28 @@ public class MaterialWrapController : MonoBehaviour
     /// <param name="i">Wrap material index.</param>
     public void SetWrapMaterial(int i)
     {
-        m_MaterialIndex = i;
+        _materialIndex = i;
     }
 
     private IEnumerator MaterialWrapCorountine()
     {
         GameObject newTouch = Instantiate(MaterialWrapPrefab, Vector3.zero, Quaternion.identity);
-        newTouch.GetComponent<MeshRenderer>().material = WrapMaterials[m_MaterialIndex];
+        newTouch.GetComponent<MeshRenderer>().material = WrapMaterials[_materialIndex];
         newTouch.transform.parent = transform;
         yield return null;
         newTouch.SetActive(true);
-        m_MaterialCount++;
+        _materialCount++;
     }
 
     private void Start()
     {
-        m_MaterialIndex = 0;
-        m_MaterialCount = 0;
+        _materialIndex = 0;
+        _materialCount = 0;
     }
 
     private void Update()
     {
-        if (m_MaterialCount == 0)
+        if (_materialCount == 0)
         {
             ClearButton.DisableButton();
         }

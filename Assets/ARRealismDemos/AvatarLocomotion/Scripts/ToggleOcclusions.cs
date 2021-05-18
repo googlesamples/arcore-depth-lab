@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ToggleOcclusions.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ public class ToggleOcclusions : MonoBehaviour
     /// </summary>
     public BackgroundToDepthMapEffectController BackgroundEffect;
 
-    private const float k_OcclusionOnOffsetMeters = 0.01f;
+    private const float _occlusionOnOffsetMeters = 0.01f;
 
-    private const float k_OcclusionOffOffsetMeters = 50.0f;
+    private const float _occlusionOffOffsetMeters = 50.0f;
 
-    private bool m_IsOcclusionOn = false;
+    private bool _isOcclusionOn = false;
 
     /// <summary>
     /// Toggles depth occlusion effect.
@@ -51,11 +51,11 @@ public class ToggleOcclusions : MonoBehaviour
     /// <returns>Is occlusion on.</returns>
     public bool Toggle()
     {
-        m_IsOcclusionOn = !m_IsOcclusionOn;
+        _isOcclusionOn = !_isOcclusionOn;
 
         if (BackgroundEffect != null)
         {
-            if (m_IsOcclusionOn)
+            if (_isOcclusionOn)
             {
                 BackgroundEffect.StartOcclusionEffect();
             }
@@ -65,7 +65,7 @@ public class ToggleOcclusions : MonoBehaviour
             }
         }
 
-        return m_IsOcclusionOn;
+        return _isOcclusionOn;
     }
 
     private void Start()
@@ -74,13 +74,13 @@ public class ToggleOcclusions : MonoBehaviour
 
         foreach (Material occlusionMaterial in Materials)
         {
-            occlusionMaterial.SetFloat("_OcclusionOffsetMeters", k_OcclusionOffOffsetMeters);
+            occlusionMaterial.SetFloat("_OcclusionOffsetMeters", _occlusionOffOffsetMeters);
         }
     }
 
     private void SwitchOcclusionMaterials(bool occlusionOn)
     {
-        float targetValue = occlusionOn ? k_OcclusionOnOffsetMeters : k_OcclusionOffOffsetMeters;
+        float targetValue = occlusionOn ? _occlusionOnOffsetMeters : _occlusionOffOffsetMeters;
         foreach (Material occlusionMaterial in Materials)
         {
             occlusionMaterial.SetFloat("_OcclusionOffsetMeters", targetValue);

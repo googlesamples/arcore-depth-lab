@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthVisualizationEffect.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,17 +56,17 @@ public class DepthVisualizationEffect : MonoBehaviour
     [FormerlySerializedAs("m_MaximumVisualizationDistance")]
     public float MaximumVisualizationDistance = 6.0f;
 
-    private static readonly string k_CurrentDepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string k_TopLeftRightPropertyName = "_UvTopLeftRight";
-    private static readonly string k_BottomLeftRightPropertyName = "_UvBottomLeftRight";
-    private static readonly string k_RampTexturePropertyName = "_RampTexture";
-    private static readonly string k_CameraViewOpacityPropertyName = "_CameraViewOpacity";
-    private static readonly string k_MaxVisualizationDistancePropertyName =
+    private static readonly string _currentDepthTexturePropertyName = "_CurrentDepthTexture";
+    private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
+    private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
+    private static readonly string _rampTexturePropertyName = "_RampTexture";
+    private static readonly string _cameraViewOpacityPropertyName = "_CameraViewOpacity";
+    private static readonly string _maxVisualizationDistancePropertyName =
       "_MaxVisualizationDistance";
 
-    private Camera m_Camera;
-    private Material m_Material;
-    private Texture2D m_DepthTexture;
+    private Camera _camera;
+    private Material _material;
+    private Texture2D _depthTexture;
 
     private void Awake()
     {
@@ -77,16 +77,16 @@ public class DepthVisualizationEffect : MonoBehaviour
 
         Debug.Assert(DepthVisualizationEffectShader != null,
           "DepthVisualizationEffectShader is null.");
-        Debug.Assert(RampTexture != null, "m_RampTexture is null");
+        Debug.Assert(RampTexture != null, "_rampTexture is null");
 
         // Default texture, will be updated each frame.
-        m_DepthTexture = new Texture2D(2, 2, TextureFormat.R16, /*mipmap=*/ false);
+        _depthTexture = new Texture2D(2, 2, TextureFormat.R16, /*mipmap=*/ false);
 
-        m_Material = new Material(DepthVisualizationEffectShader);
-        m_Camera = GetComponent<Camera>();
-        m_Camera.depthTextureMode = DepthTextureMode.Depth;
-        Debug.Assert(m_Camera.depthTextureMode != DepthTextureMode.None,
-          "m_Camera.depthTextureMode is set to none.");
+        _material = new Material(DepthVisualizationEffectShader);
+        _camera = GetComponent<Camera>();
+        _camera.depthTextureMode = DepthTextureMode.Depth;
+        Debug.Assert(_camera.depthTextureMode != DepthTextureMode.None,
+          "_camera.depthTextureMode is set to none.");
     }
 
     private void OnValidate()
@@ -96,41 +96,41 @@ public class DepthVisualizationEffect : MonoBehaviour
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if (m_Material == null)
+        if (_material == null)
         {
-            m_Material = new Material(DepthVisualizationEffectShader);
+            _material = new Material(DepthVisualizationEffectShader);
         }
 
         UpdateShader();
 
-        Graphics.Blit(source, destination, m_Material);
+        Graphics.Blit(source, destination, _material);
     }
 
     private void UpdateScreenOrientationOnMaterial()
     {
         var uvQuad = Frame.CameraImage.TextureDisplayUvs;
-        m_Material.SetVector(
-            k_TopLeftRightPropertyName,
+        _material.SetVector(
+            _topLeftRightPropertyName,
             new Vector4(
                 uvQuad.TopLeft.x, uvQuad.TopLeft.y, uvQuad.TopRight.x, uvQuad.TopRight.y));
-        m_Material.SetVector(
-            k_BottomLeftRightPropertyName,
+        _material.SetVector(
+            _bottomLeftRightPropertyName,
             new Vector4(uvQuad.BottomLeft.x, uvQuad.BottomLeft.y, uvQuad.BottomRight.x,
                 uvQuad.BottomRight.y));
     }
 
     private void UpdateShader()
     {
-        if (m_Material == null)
+        if (_material == null)
         {
             return;
         }
 
         UpdateScreenOrientationOnMaterial();
-        Frame.CameraImage.UpdateDepthTexture(ref m_DepthTexture);
-        m_Material.SetTexture(k_CurrentDepthTexturePropertyName, m_DepthTexture);
-        m_Material.SetTexture(k_RampTexturePropertyName, RampTexture);
-        m_Material.SetFloat(k_CameraViewOpacityPropertyName, CameraViewOpacity);
-        m_Material.SetFloat(k_MaxVisualizationDistancePropertyName, MaximumVisualizationDistance);
+        Frame.CameraImage.UpdateDepthTexture(ref _depthTexture);
+        _material.SetTexture(_currentDepthTexturePropertyName, _depthTexture);
+        _material.SetTexture(_rampTexturePropertyName, RampTexture);
+        _material.SetFloat(_cameraViewOpacityPropertyName, CameraViewOpacity);
+        _material.SetFloat(_maxVisualizationDistancePropertyName, MaximumVisualizationDistance);
     }
 }

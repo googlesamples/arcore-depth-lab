@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ObjectCollisionEvent.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,25 +45,25 @@ public class ObjectCollisionEvent : CollisionEventInterface
     /// <summary>
     /// Percentage of collided vertices when we trigger Stop().
     /// </summary>
-    private const float k_LowBound = 0.02f;
+    private const float _lowBound = 0.02f;
 
     /// <summary>
     /// Percentage of collided vertices when we show orange collision.
     /// </summary>
-    private const float k_MidBound = 0.2f;
+    private const float _midBound = 0.2f;
 
     /// <summary>
     /// Percentage of collided vertices when we show red collision.
     /// </summary>
-    private const float k_HighBound = 0.8f;
-    private static readonly Color k_OrangeColor = new Color(1f, 0.5f, 0f, 1f);
+    private const float _highBound = 0.8f;
+    private static readonly Color _orangeColor = new Color(1f, 0.5f, 0f, 1f);
 
     // The current manipulated object.
-    private GameObject m_ManipulatedObject;
+    private GameObject _manipulatedObject;
 
     // Progress in precentage of the collision animation.
-    private float m_CollisionAnimationProgress = 1f;
-    private float m_CollisionPercentage = 0f;
+    private float _collisionAnimationProgress = 1f;
+    private float _collisionPercentage = 0f;
 
     /// <summary>
     /// Returns whether the selected object is in collision.
@@ -71,7 +71,7 @@ public class ObjectCollisionEvent : CollisionEventInterface
     /// <returns>Whether the object is being collided with the environment.</returns>
     public override bool IsTriggering()
     {
-        return m_CollisionAnimationProgress < 1f;
+        return _collisionAnimationProgress < 1f;
     }
 
     /// <summary>
@@ -81,12 +81,12 @@ public class ObjectCollisionEvent : CollisionEventInterface
     /// <param name="collisionPercentage">The collision percentage.</param>
     public override void Trigger(GameObject collidedObject, float collisionPercentage = 1f)
     {
-        m_ManipulatedObject = collidedObject;
-        m_CollisionPercentage = collisionPercentage;
+        _manipulatedObject = collidedObject;
+        _collisionPercentage = collisionPercentage;
 
-        if (collisionPercentage > k_MidBound)
+        if (collisionPercentage > _midBound)
         {
-            m_CollisionAnimationProgress = 0f;
+            _collisionAnimationProgress = 0f;
             PlaceButton.DisableButton();
         }
     }
@@ -99,13 +99,13 @@ public class ObjectCollisionEvent : CollisionEventInterface
     public override void Stop(GameObject collidedObject, float collisionPercentage = 0)
     {
         var colorToChange = OriginalColor;
-        foreach (var mat in m_ManipulatedObject.GetComponent<Renderer>().materials)
+        foreach (var mat in _manipulatedObject.GetComponent<Renderer>().materials)
         {
             mat.color = colorToChange;
         }
 
-        m_CollisionPercentage = 0f;
-        m_CollisionAnimationProgress = 1f;
+        _collisionPercentage = 0f;
+        _collisionAnimationProgress = 1f;
         PlaceButton.EnableButton();
     }
 
@@ -114,26 +114,26 @@ public class ObjectCollisionEvent : CollisionEventInterface
     /// </summary>
     private void Update()
     {
-        if (!IsTriggering() || m_ManipulatedObject == null)
+        if (!IsTriggering() || _manipulatedObject == null)
         {
             return;
         }
 
-        m_CollisionAnimationProgress += Time.deltaTime / AnimationInSeconds;
+        _collisionAnimationProgress += Time.deltaTime / AnimationInSeconds;
 
         var colorToChange = OriginalColor;
 
         if (EnableAnimation)
         {
             // Animates the material color from white to red, keep red for a while, and then white.
-            if (m_CollisionAnimationProgress < k_MidBound)
+            if (_collisionAnimationProgress < _midBound)
             {
-                var intensity = (k_MidBound - m_CollisionAnimationProgress) / k_MidBound;
+                var intensity = (_midBound - _collisionAnimationProgress) / _midBound;
                 colorToChange = new Color(1, intensity, intensity, 1);
             }
-            else if (m_CollisionAnimationProgress > k_HighBound)
+            else if (_collisionAnimationProgress > _highBound)
             {
-                var intensity = (m_CollisionAnimationProgress - k_HighBound) / (1f - k_HighBound);
+                var intensity = (_collisionAnimationProgress - _highBound) / (1f - _highBound);
                 colorToChange = new Color(1, intensity, intensity, 1);
             }
             else
@@ -143,17 +143,17 @@ public class ObjectCollisionEvent : CollisionEventInterface
         }
         else
         {
-            if (m_CollisionPercentage > k_MidBound)
+            if (_collisionPercentage > _midBound)
             {
                 colorToChange = Color.red;
             }
-            else if (m_CollisionPercentage < k_MidBound && m_CollisionPercentage > k_LowBound)
+            else if (_collisionPercentage < _midBound && _collisionPercentage > _lowBound)
             {
-                colorToChange = k_OrangeColor;
+                colorToChange = _orangeColor;
             }
         }
 
-        foreach (var mat in m_ManipulatedObject.GetComponent<Renderer>().materials)
+        foreach (var mat in _manipulatedObject.GetComponent<Renderer>().materials)
         {
             mat.color = colorToChange;
         }

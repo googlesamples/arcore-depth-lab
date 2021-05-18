@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthBackgroundRendererController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,16 +35,16 @@ public class DepthBackgroundRendererController : MonoBehaviour
     /// </summary>
     public GameObject FirstPersonCamera;
 
-    private const string k_BrightnessPropertyName = "_Brightness";
-    private const string k_GammaCorrectionPropertyName = "_GammaCorrection";
+    private const string _brightnessPropertyName = "_Brightness";
+    private const string _gammaCorrectionPropertyName = "_GammaCorrection";
 
     // Whether or not to enable gamma correction for the camera image.
-    private bool m_GammaCorrection = true;
+    private bool _gammaCorrection = true;
 
     /// <summary>
     /// A material used to render the AR background image.
     /// </summary>
-    private DemoARBackgroundRenderer m_BackgroundRenderer;
+    private DemoARBackgroundRenderer _backgroundRenderer;
 
     /// <summary>
     /// Enables or disables gamma correction.
@@ -52,18 +52,18 @@ public class DepthBackgroundRendererController : MonoBehaviour
     /// <param name="gamma">Enable gamma.</param>
     public void EnableGammaCorrection(bool gamma = true)
     {
-        m_GammaCorrection = gamma;
+        _gammaCorrection = gamma;
     }
 
     private void UpdateShaderVariables()
     {
-        var bgMaterial = m_BackgroundRenderer.BackgroundMaterial;
+        var bgMaterial = _backgroundRenderer.BackgroundMaterial;
 
         // Disables the fading transition.
         if (bgMaterial != null)
         {
-            bgMaterial.SetFloat(k_BrightnessPropertyName, 1.0f);
-            bgMaterial.SetFloat(k_GammaCorrectionPropertyName, m_GammaCorrection ? 1f : 0f);
+            bgMaterial.SetFloat(_brightnessPropertyName, 1.0f);
+            bgMaterial.SetFloat(_gammaCorrectionPropertyName, _gammaCorrection ? 1f : 0f);
         }
     }
 
@@ -74,7 +74,7 @@ public class DepthBackgroundRendererController : MonoBehaviour
             FirstPersonCamera = Camera.main.gameObject;
         }
 
-        m_BackgroundRenderer = FirstPersonCamera.GetComponent<DemoARBackgroundRenderer>();
+        _backgroundRenderer = FirstPersonCamera.GetComponent<DemoARBackgroundRenderer>();
     }
 
     private void Update()

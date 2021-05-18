@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DGAA.cginc" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ inline float Max4(in float4 v) { return max(max(v.x, v.y), max(v.z, v.w)); }
 // DGAA Smoothes aliasing artifacts in the depth map.
 // DGAA conducts 9 texture fetches in total.
 // Input parameters:
-// - float2 uv: screen coordiantes.
+// - float2 uv: screen coordinates.
 // - float MaxVisualizationDistance in meters. 7m recommended.
 // Input uniforms:
 // - Sampler2D uDepth: single-channel depth map.

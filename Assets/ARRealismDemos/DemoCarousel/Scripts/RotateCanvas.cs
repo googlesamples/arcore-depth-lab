@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="RotateCanvas.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,33 +29,33 @@ using UnityEngine.UI;
 /// </summary>
 public class RotateCanvas : MonoBehaviour
 {
-    private const float k_GlobalButtonOpacity = 0.2f;
+    private const float _globalButtonOpacity = 0.2f;
 
-    private DeviceOrientation m_DeviceOrientationInit;
-    private RectTransform m_RectTransform;
+    private DeviceOrientation _deviceOrientationInit;
+    private RectTransform _rectTransform;
 
     private void Start()
     {
-        m_DeviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
+        _deviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
 
         if (GetComponent<Text>() != null)
         {
-            m_RectTransform = GetComponent<Text>().rectTransform;
+            _rectTransform = GetComponent<Text>().rectTransform;
         }
         else if (GetComponent<Image>() != null)
         {
-            m_RectTransform = GetComponent<Image>().rectTransform;
+            _rectTransform = GetComponent<Image>().rectTransform;
         }
 
-        switch (m_DeviceOrientationInit)
+        switch (_deviceOrientationInit)
         {
             case DeviceOrientation.LandscapeLeft:
-                m_RectTransform.rotation = Quaternion.Euler(
-                    m_RectTransform.eulerAngles.x, m_RectTransform.eulerAngles.y, -90f);
+                _rectTransform.rotation = Quaternion.Euler(
+                    _rectTransform.eulerAngles.x, _rectTransform.eulerAngles.y, -90f);
                 break;
             case DeviceOrientation.LandscapeRight:
-                m_RectTransform.rotation = Quaternion.Euler(
-                    m_RectTransform.eulerAngles.x, m_RectTransform.eulerAngles.y, 90f);
+                _rectTransform.rotation = Quaternion.Euler(
+                    _rectTransform.eulerAngles.x, _rectTransform.eulerAngles.y, 90f);
                 break;
             default:
                 break;
@@ -73,16 +73,16 @@ public class RotateCanvas : MonoBehaviour
             ColorBlock colors = button.colors;
 
             Color normalColor = colors.normalColor;
-            normalColor.a = k_GlobalButtonOpacity;
+            normalColor.a = _globalButtonOpacity;
 
             Color highlightedColor = colors.highlightedColor;
-            highlightedColor.a = k_GlobalButtonOpacity;
+            highlightedColor.a = _globalButtonOpacity;
 
             Color pressedColor = colors.pressedColor;
-            pressedColor.a = k_GlobalButtonOpacity;
+            pressedColor.a = _globalButtonOpacity;
 
             Color disabledColor = colors.disabledColor;
-            disabledColor.a = k_GlobalButtonOpacity;
+            disabledColor.a = _globalButtonOpacity;
 
             colors.normalColor = normalColor;
             colors.highlightedColor = highlightedColor;

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SceneSwitcher.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,11 +49,11 @@ public class SceneSwitcher : MonoBehaviour
     /// </summary>
     public string StartScene;
 
-    private Scene m_BaseScene;
+    private Scene _baseScene;
 
-    private bool m_SceneChangeComplete = true;
+    private bool _sceneChangeComplete = true;
 
-    private string m_CurrentScene;
+    private string _currentScene;
 
     /// <summary>
     /// Calls the scene loading IEnumerator.
@@ -71,7 +71,7 @@ public class SceneSwitcher : MonoBehaviour
     /// <param name="gameObject">Gameobject to move to the base scene.</param>
     public void MoveObjectToBase(GameObject gameObject)
     {
-        SceneManager.MoveGameObjectToScene(gameObject, m_BaseScene);
+        SceneManager.MoveGameObjectToScene(gameObject, _baseScene);
         gameObject.transform.SetParent(ActiveObjectsContainer);
     }
 
@@ -117,7 +117,7 @@ public class SceneSwitcher : MonoBehaviour
     private void Start()
     {
         StartCoroutine(InitSceneLoad());
-        m_BaseScene = SceneManager.GetActiveScene();
+        _baseScene = SceneManager.GetActiveScene();
     }
 
     /// <summary>
@@ -137,16 +137,16 @@ public class SceneSwitcher : MonoBehaviour
 
         // Checks that the new scene isn't null,
         // we're not trying to reload the same scene or that a scene load is in progress.
-        if (sceneName != m_CurrentScene && m_SceneChangeComplete && sceneName != null)
+        if (sceneName != _currentScene && _sceneChangeComplete && sceneName != null)
         {
-            m_SceneChangeComplete = false;
+            _sceneChangeComplete = false;
 
             // Checks if the scene we're about to load isn't already loaded.
             if (!SceneManager.GetSceneByName(sceneName).isLoaded)
             {
                 // Unloads the previous scene.
                 // Doing it before loading a new scene to prevent AR background effect bug.
-                Scene currentScene = SceneManager.GetSceneByName(m_CurrentScene);
+                Scene currentScene = SceneManager.GetSceneByName(_currentScene);
                 if (currentScene != null && currentScene.isLoaded)
                 {
                     if (ActiveObjectsToDestroy != null)
@@ -178,9 +178,9 @@ public class SceneSwitcher : MonoBehaviour
                 }
 
                 // Assigns new scene as current scene.
-                m_CurrentScene = sceneName;
+                _currentScene = sceneName;
 
-                m_SceneChangeComplete = true;
+                _sceneChangeComplete = true;
             }
         }
         else

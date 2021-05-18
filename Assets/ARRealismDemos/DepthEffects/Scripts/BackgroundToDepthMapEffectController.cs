@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="BackgroundToDepthMapEffectController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,45 +53,45 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     public Material BackgroundToDepthMapMaterial;
 
-    private const float k_TransitionDurationS = 4;
-    private const float k_MaxVisualizationDistanceM = 7;
-    private const float k_MinVisualizationDistanceM = 0.4f;
-    private const float k_FarFadePortion = 0.15f;
-    private const float k_HalfTransitionHighlightWidth = 0.15f;
+    private const float _kTransitionDurationS = 4;
+    private const float _kMaxVisualizationDistanceM = 7;
+    private const float _kMinVisualizationDistanceM = 0.4f;
+    private const float _kFarFadePortion = 0.15f;
+    private const float _kHalfTransitionHighlightWidth = 0.15f;
 
     private static readonly string
-    k_TransitionPropertyName = "_Transition";
+    _transitionPropertyName = "_Transition";
 
     private static readonly string
-    k_CameraViewOpacityPropertyName = "_CameraViewOpacity";
+    _cameraViewOpacityPropertyName = "_CameraViewOpacity";
 
     private static readonly string
-    k_MaxVisualizationDistancePropertyName = "_MaxVisualizationDistance";
+    _maxVisualizationDistancePropertyName = "_MaxVisualizationDistance";
 
     private static readonly string
-    k_MinVisualizationDistancePropertyName = "_MinVisualizationDistance";
+    _minVisualizationDistancePropertyName = "_MinVisualizationDistance";
 
     private static readonly string
-    k_FarFadePortionPropertyName = "_FarFadePortion";
+    _farFadePortionPropertyName = "_FarFadePortion";
 
     private static readonly string
-    k_ApplyAntiAliasingPropertyName = "_ApplyAntiAliasing";
+    _applyAntiAliasingPropertyName = "_ApplyAntiAliasing";
 
     private static readonly string
-    k_HalfTransitionHighlightWidtPropertyName = "_HalfTransitionHighlightWidth";
+    _halfTransitionHighlightWidtPropertyName = "_HalfTransitionHighlightWidth";
 
-    private Coroutine m_CurrentCoroutine;
+    private Coroutine _currentCoroutine;
 
-    private bool m_EnableOcclusionTransition = false;
-    private bool m_OcclusionOn = false;
-    private float m_TransitionDurationS = k_TransitionDurationS;
-    private float m_MaxVisualizationDistanceM = k_MaxVisualizationDistanceM;
-    private float m_MinVisualizationDistanceM = k_MinVisualizationDistanceM;
-    private float m_FarFadePortion = k_FarFadePortion;
-    private float m_HalfTransitionHighlightWidth = k_HalfTransitionHighlightWidth;
-    private float m_ApplyAntiAliasing = 0;
+    private bool _enableOcclusionTransition = false;
+    private bool _occlusionOn = false;
+    private float _transitionDurationS = _kTransitionDurationS;
+    private float _maxVisualizationDistanceM = _kMaxVisualizationDistanceM;
+    private float _minVisualizationDistanceM = _kMinVisualizationDistanceM;
+    private float _farFadePortion = _kFarFadePortion;
+    private float _halfTransitionHighlightWidth = _kHalfTransitionHighlightWidth;
+    private float _applyAntiAliasing = 0;
 
-    private Material m_ShadowReceiverMaterial;
+    private Material _shadowReceiverMaterial;
 
     /// <summary>
     /// Event triggered when the user touched the "Change Occlusion" button.
@@ -104,15 +104,15 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     public void StartTransitionToCamera()
     {
         CameraViewOpacity = 0;
-        m_EnableOcclusionTransition = false;
+        _enableOcclusionTransition = false;
         Transition = 1;
 
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(AnimateTransition(0, m_TransitionDurationS));
+        _currentCoroutine = StartCoroutine(AnimateTransition(0, _transitionDurationS));
     }
 
     /// <summary>
@@ -120,18 +120,18 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     public void StartTransitionToDepth()
     {
-        m_EnableOcclusionTransition = false;
-        m_ApplyAntiAliasing = 1f - m_ApplyAntiAliasing;
+        _enableOcclusionTransition = false;
+        _applyAntiAliasing = 1f - _applyAntiAliasing;
         CameraViewOpacity = 0;
         Transition = 0;
 
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(
-            AnimateTransition(1, m_TransitionDurationS));
+        _currentCoroutine = StartCoroutine(
+            AnimateTransition(1, _transitionDurationS));
     }
 
     /// <summary>
@@ -139,7 +139,7 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     public void ToggleOcclusionEffect()
     {
-        if (!m_OcclusionOn)
+        if (!_occlusionOn)
         {
             StartOcclusionEffect();
         }
@@ -154,22 +154,22 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     public void StartNoOcclusionEffect()
     {
-        m_OcclusionOn = false;
+        _occlusionOn = false;
         CameraViewOpacity = 1;
-        m_EnableOcclusionTransition = true;
+        _enableOcclusionTransition = true;
         Transition = 1;
 
         if (ShadowReceiver != null)
         {
-            ShadowReceiver.MaximumMeshDistance = m_MaxVisualizationDistanceM;
+            ShadowReceiver.MaximumMeshDistance = _maxVisualizationDistanceM;
         }
 
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(AnimateTransition(0, m_TransitionDurationS));
+        _currentCoroutine = StartCoroutine(AnimateTransition(0, _transitionDurationS));
     }
 
     /// <summary>
@@ -177,9 +177,9 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     public void StartOcclusionEffect()
     {
-        m_OcclusionOn = true;
+        _occlusionOn = true;
         CameraViewOpacity = 1;
-        m_EnableOcclusionTransition = true;
+        _enableOcclusionTransition = true;
         Transition = 0;
 
         if (ShadowReceiver != null)
@@ -187,13 +187,13 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
             ShadowReceiver.MaximumMeshDistance = 0;
         }
 
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(
-            AnimateTransition(1, m_TransitionDurationS));
+        _currentCoroutine = StartCoroutine(
+            AnimateTransition(1, _transitionDurationS));
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
         if (ShadowReceiver != null)
         {
             ShadowReceiver.MaximumMeshDistance = 0;
-            m_ShadowReceiverMaterial = ShadowReceiver.GetComponent<MeshRenderer>().material;
+            _shadowReceiverMaterial = ShadowReceiver.GetComponent<MeshRenderer>().material;
         }
     }
 
@@ -236,16 +236,16 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     private void UpdateShaderVariables()
     {
-        BackgroundToDepthMapMaterial.SetFloat(k_TransitionPropertyName, Transition);
-        BackgroundToDepthMapMaterial.SetFloat(k_CameraViewOpacityPropertyName, CameraViewOpacity);
-        BackgroundToDepthMapMaterial.SetFloat(k_MaxVisualizationDistancePropertyName,
-          m_MaxVisualizationDistanceM);
-        BackgroundToDepthMapMaterial.SetFloat(k_MinVisualizationDistancePropertyName,
-          m_MinVisualizationDistanceM);
-        BackgroundToDepthMapMaterial.SetFloat(k_FarFadePortionPropertyName, m_FarFadePortion);
-        BackgroundToDepthMapMaterial.SetFloat(k_HalfTransitionHighlightWidtPropertyName,
-          m_HalfTransitionHighlightWidth);
-        BackgroundToDepthMapMaterial.SetFloat(k_ApplyAntiAliasingPropertyName, m_ApplyAntiAliasing);
+        BackgroundToDepthMapMaterial.SetFloat(_transitionPropertyName, Transition);
+        BackgroundToDepthMapMaterial.SetFloat(_cameraViewOpacityPropertyName, CameraViewOpacity);
+        BackgroundToDepthMapMaterial.SetFloat(_maxVisualizationDistancePropertyName,
+          _maxVisualizationDistanceM);
+        BackgroundToDepthMapMaterial.SetFloat(_minVisualizationDistancePropertyName,
+          _minVisualizationDistanceM);
+        BackgroundToDepthMapMaterial.SetFloat(_farFadePortionPropertyName, _farFadePortion);
+        BackgroundToDepthMapMaterial.SetFloat(_halfTransitionHighlightWidtPropertyName,
+          _halfTransitionHighlightWidth);
+        BackgroundToDepthMapMaterial.SetFloat(_applyAntiAliasingPropertyName, _applyAntiAliasing);
     }
 
     /// <summary>
@@ -256,17 +256,17 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// <returns>Enumerator of the animator.</returns>
     private IEnumerator AnimateTransition(float targetValue, float animationTime)
     {
-        if (m_EnableOcclusionTransition && OcclusionChangedEvent != null)
+        if (_enableOcclusionTransition && OcclusionChangedEvent != null)
         {
-            if (m_ShadowReceiverMaterial != null)
+            if (_shadowReceiverMaterial != null)
             {
-                m_ShadowReceiverMaterial.SetInt("_ZWrite", 1);
+                _shadowReceiverMaterial.SetInt("_ZWrite", 1);
             }
 
-            if (!m_OcclusionOn)
+            if (!_occlusionOn)
             {
                 // Notifies event handler before the occlusion is turned off.
-                OcclusionChangedEvent(m_OcclusionOn);
+                OcclusionChangedEvent(_occlusionOn);
             }
             else
             {
@@ -282,9 +282,9 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / animationTime)
         {
             Transition = Mathf.Lerp(originalTransition, targetValue, t);
-            if (m_EnableOcclusionTransition && ShadowReceiver != null)
+            if (_enableOcclusionTransition && ShadowReceiver != null)
             {
-                ShadowReceiver.MaximumMeshDistance = Transition * m_MaxVisualizationDistanceM;
+                ShadowReceiver.MaximumMeshDistance = Transition * _maxVisualizationDistanceM;
             }
 
             yield return null;
@@ -292,17 +292,17 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
 
         Transition = targetValue;
 
-        if (m_EnableOcclusionTransition && OcclusionChangedEvent != null)
+        if (_enableOcclusionTransition && OcclusionChangedEvent != null)
         {
-            if (m_ShadowReceiverMaterial != null)
+            if (_shadowReceiverMaterial != null)
             {
-                m_ShadowReceiverMaterial.SetInt("_ZWrite", 0);
+                _shadowReceiverMaterial.SetInt("_ZWrite", 0);
             }
 
-            if (m_OcclusionOn)
+            if (_occlusionOn)
             {
                 // Notifies event handler before the occlusion is turned on.
-                OcclusionChangedEvent(m_OcclusionOn);
+                OcclusionChangedEvent(_occlusionOn);
             }
             else
             {

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="LaserBeam.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,28 +55,28 @@ public class LaserBeam : MonoBehaviour
     /// For each valid depth pixel, the neighborhood in a square window of radius
     /// window_radius_pixels is searched.
     /// </summary>
-    private const int k_WindowRadiusPixels = 4;
+    private const int _windowRadiusPixels = 4;
 
     /// <summary>
     /// Each valid neighbor is checked whether it is an inlier in depth. Inliers
     /// are defined as within a distance of (outlier_depth_ratio * depth) of a
     /// point at 'depth' depth.
     /// </summary>
-    private const float k_OutlierDepthRatio = 0.2f;
+    private const float _outlierDepthRatio = 0.2f;
 
-    private const float k_LaserHitQuadScale = 0.07f;
+    private const float _laserHitQuadScale = 0.07f;
 
-    private bool m_AllowTouch = false;
-    private Vector3 m_LaserOffset = new Vector3(0, -0.1f, 0);
-    private Vector3 m_StartPosition = Vector3.zero;
-    private Vector3 m_LaserDirection = Vector3.zero;
-    private Vector3 m_LaserPosition = Vector3.zero;
-    private Vector2 m_LastTouchPosition = new Vector2(-1, -1);
-    private LineRenderer m_LaserRenderer;
-    private List<GameObject> m_NormalDebuggers = new List<GameObject>();
+    private bool _allowTouch = false;
+    private Vector3 _laserOffset = new Vector3(0, -0.1f, 0);
+    private Vector3 _startPosition = Vector3.zero;
+    private Vector3 _laserDirection = Vector3.zero;
+    private Vector3 _laserPosition = Vector3.zero;
+    private Vector2 _lastTouchPosition = new Vector2(-1, -1);
+    private LineRenderer _laserRenderer;
+    private List<GameObject> _normalDebuggers = new List<GameObject>();
 
-    private LaserState m_CurrentState = LaserState.Inactive;
-    private LaserState m_NextState = LaserState.Inactive;
+    private LaserState _currentState = LaserState.Inactive;
+    private LaserState _nextState = LaserState.Inactive;
 
     private enum LaserState
     {
@@ -91,7 +91,7 @@ public class LaserBeam : MonoBehaviour
     /// </summary>
     public void Shoot()
     {
-        m_NextState = LaserState.Fire;
+        _nextState = LaserState.Fire;
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ public class LaserBeam : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-        m_NextState = LaserState.Inactive;
+        _nextState = LaserState.Inactive;
         PopupMessage.FadeOut();
     }
 
@@ -109,7 +109,7 @@ public class LaserBeam : MonoBehaviour
     /// <returns>Returns true if the laser is currently active.</returns>
     public bool HasLaserBeenTriggered()
     {
-        return m_CurrentState != LaserState.Inactive;
+        return _currentState != LaserState.Inactive;
     }
 
     /// <summary>
@@ -119,12 +119,12 @@ public class LaserBeam : MonoBehaviour
     {
         Camera.main.depthTextureMode = DepthTextureMode.Depth;
 
-        m_LaserRenderer = gameObject.AddComponent<LineRenderer>();
-        m_LaserRenderer.material = LaserBeamMaterial;
-        m_LaserRenderer.startWidth = 0.13f;
-        m_LaserRenderer.endWidth = 0.13f;
-        m_LaserRenderer.alignment = LineAlignment.View;
-        m_LaserRenderer.positionCount = 0;
+        _laserRenderer = gameObject.AddComponent<LineRenderer>();
+        _laserRenderer.material = LaserBeamMaterial;
+        _laserRenderer.startWidth = 0.13f;
+        _laserRenderer.endWidth = 0.13f;
+        _laserRenderer.alignment = LineAlignment.View;
+        _laserRenderer.positionCount = 0;
 
         // Makes sure DepthSource is initialized.
         bool initializeDepthSource = DepthSource.Initialized;
@@ -132,13 +132,13 @@ public class LaserBeam : MonoBehaviour
 
     private void ResetBeam()
     {
-        foreach (var debugger in m_NormalDebuggers)
+        foreach (var debugger in _normalDebuggers)
         {
             Destroy(debugger);
         }
 
-        m_NormalDebuggers.Clear();
-        m_LaserRenderer.positionCount = 0;
+        _normalDebuggers.Clear();
+        _laserRenderer.positionCount = 0;
     }
 
     /// <summary>
@@ -150,20 +150,20 @@ public class LaserBeam : MonoBehaviour
     {
         var debugger = GameObject.CreatePrimitive(PrimitiveType.Quad);
         debugger.transform.SetParent(gameObject.transform);
-        debugger.transform.localScale = debugger.transform.localScale * k_LaserHitQuadScale;
+        debugger.transform.localScale = debugger.transform.localScale * _laserHitQuadScale;
         debugger.GetComponent<Renderer>().material = LaserSpotMaterial;
 
         debugger.transform.position = hitPosition;
         debugger.transform.rotation =
           Quaternion.FromToRotation(debugger.transform.up, normal) * debugger.transform.rotation;
-        m_NormalDebuggers.Add(debugger);
+        _normalDebuggers.Add(debugger);
     }
 
     private void Update()
     {
-        if (m_NextState != m_CurrentState)
+        if (_nextState != _currentState)
         {
-            switch (m_NextState)
+            switch (_nextState)
             {
                 case LaserState.Inactive:
                     OnInactiveStateEnter();
@@ -179,10 +179,10 @@ public class LaserBeam : MonoBehaviour
                     break;
             }
 
-            m_CurrentState = m_NextState;
+            _currentState = _nextState;
         }
 
-        switch (m_CurrentState)
+        switch (_currentState)
         {
             case LaserState.Fire:
                 OnFireStateUpdate();
@@ -205,38 +205,38 @@ public class LaserBeam : MonoBehaviour
     {
         ResetBeam();
 
-        if (!m_AllowTouch)
+        if (!_allowTouch)
         {
-            m_LastTouchPosition.x = Screen.width / 2.0f;
-            m_LastTouchPosition.y = Screen.height / 2.0f;
+            _lastTouchPosition.x = Screen.width / 2.0f;
+            _lastTouchPosition.y = Screen.height / 2.0f;
         }
 
         // Shoots the laser from the camera.
-        m_StartPosition = Camera.main.transform.position + m_LaserOffset;
+        _startPosition = Camera.main.transform.position + _laserOffset;
 
         // Computes the first hit position in the world space.
         Vector3 hitPosition = DepthSource.GetVertexInWorldSpaceFromScreenXY(
-                            (int)m_LastTouchPosition.x, (int)m_LastTouchPosition.y);
+                            (int)_lastTouchPosition.x, (int)_lastTouchPosition.y);
 
-        m_LaserDirection = (hitPosition - m_StartPosition).normalized;
-        m_LaserPosition = m_StartPosition + (m_LaserDirection * 0.1f);
+        _laserDirection = (hitPosition - _startPosition).normalized;
+        _laserPosition = _startPosition + (_laserDirection * 0.1f);
     }
 
     private void OnFireStateUpdate()
     {
         // Checks for valid laser direction.
-        if (m_LaserDirection.magnitude >= 0.95f)
+        if (_laserDirection.magnitude >= 0.95f)
         {
-            m_LaserRenderer.positionCount = 3;
-            m_LaserRenderer.SetPosition(0, m_StartPosition);
-            m_LaserRenderer.SetPosition(1, (m_StartPosition + m_LaserPosition) * 0.5f);
-            m_LaserRenderer.SetPosition(2, m_LaserPosition);
+            _laserRenderer.positionCount = 3;
+            _laserRenderer.SetPosition(0, _startPosition);
+            _laserRenderer.SetPosition(1, (_startPosition + _laserPosition) * 0.5f);
+            _laserRenderer.SetPosition(2, _laserPosition);
 
-            m_NextState = LaserState.Update;
+            _nextState = LaserState.Update;
         }
         else
         {
-            m_NextState = LaserState.Inactive;
+            _nextState = LaserState.Inactive;
         }
     }
 
@@ -247,10 +247,10 @@ public class LaserBeam : MonoBehaviour
 
     private void OnUpdateStateUpdate()
     {
-        m_LaserPosition += m_LaserDirection * LaserVelocity * Time.deltaTime;
-        m_LaserRenderer.SetPosition(m_LaserRenderer.positionCount++, m_LaserPosition);
+        _laserPosition += _laserDirection * LaserVelocity * Time.deltaTime;
+        _laserRenderer.SetPosition(_laserRenderer.positionCount++, _laserPosition);
 
-        var screenPosition = Camera.main.WorldToScreenPoint(m_LaserPosition);
+        var screenPosition = Camera.main.WorldToScreenPoint(_laserPosition);
 
         if ((screenPosition.x < 0) || (screenPosition.x > Screen.width) ||
             (screenPosition.y < 0) || (screenPosition.y > Screen.height))
@@ -259,7 +259,7 @@ public class LaserBeam : MonoBehaviour
             screenPosition.x = Mathf.Clamp(screenPosition.x, 0, Screen.width - 1);
             screenPosition.y = Mathf.Clamp(screenPosition.y, 0, Screen.height - 1);
 
-            m_NextState = LaserState.OutOfScreen;
+            _nextState = LaserState.OutOfScreen;
         }
 
         Vector2 hitUv = ScreenPointToViewCoordinate(screenPosition);
@@ -268,7 +268,7 @@ public class LaserBeam : MonoBehaviour
 
         if (screenPosition.z > depth)
         {
-            Vector3 CurrentDirection = m_LaserDirection;
+            Vector3 CurrentDirection = _laserDirection;
             Vector3 normal = ComputeNormalMapFromDepthWeightedMeanGradient(hitUv);
 
             // Checks if the normal is valid.
@@ -281,13 +281,13 @@ public class LaserBeam : MonoBehaviour
 
             // Transforms normal to the world space.
             normal = Camera.main.transform.TransformDirection(normal);
-            m_LaserDirection = Reflect(CurrentDirection, normal);
+            _laserDirection = Reflect(CurrentDirection, normal);
 
             // Adds collision quad.
-            VisualizeNormalVector(m_LaserPosition, normal);
+            VisualizeNormalVector(_laserPosition, normal);
 
-            m_LaserPosition = m_LaserPosition + (m_LaserDirection * LaserVelocity * Time.deltaTime);
-            m_LaserRenderer.SetPosition(m_LaserRenderer.positionCount++, m_LaserPosition);
+            _laserPosition = _laserPosition + (_laserDirection * LaserVelocity * Time.deltaTime);
+            _laserRenderer.SetPosition(_laserRenderer.positionCount++, _laserPosition);
         }
     }
 
@@ -302,12 +302,12 @@ public class LaserBeam : MonoBehaviour
     private void OnOutOfScreenStateUpdate()
     {
         Vector3 nextPosition =
-          m_LaserPosition + (m_LaserDirection * LaserVelocity * Time.deltaTime);
+          _laserPosition + (_laserDirection * LaserVelocity * Time.deltaTime);
         Vector2 screenPosition = Camera.main.WorldToScreenPoint(nextPosition);
         if ((screenPosition.x > 0) && (screenPosition.x < Screen.width) &&
             (screenPosition.y > 0) && (screenPosition.y < Screen.height))
         {
-            m_NextState = LaserState.Update;
+            _nextState = LaserState.Update;
         }
     }
 
@@ -354,8 +354,8 @@ public class LaserBeam : MonoBehaviour
         // Iterates over neighbors to compute normal vector.
         float neighbor_corr_x = 0.0f;
         float neighbor_corr_y = 0.0f;
-        float outlier_distance_m = k_OutlierDepthRatio * depth_m;
-        int radius = k_WindowRadiusPixels;
+        float outlier_distance_m = _outlierDepthRatio * depth_m;
+        int radius = _windowRadiusPixels;
         float neighbor_sum_confidences_x = 0.0f;
         float neighbor_sum_confidences_y = 0.0f;
         for (int dy = -radius; dy <= radius; ++dy)

@@ -1,17 +1,19 @@
 # ARCore Depth Lab - Depth API Samples for Unity
 
-Copyright 2020 Google LLC.  All rights reserved.
+Copyright 2020 Google LLC
 
 **Depth Lab** is a set of ARCore Depth API samples that provides assets using
 depth for advanced geometry-aware features in AR interaction and rendering. Some
 of these features have been used in this
 [Depth API overview](https://www.youtube.com/watch?v=VOVhCTb-1io) video.
 
+[![DepthLab examples](depthlab.gif)](https://augmentedperception.github.io/depthlab)
+
 [**ARCore Depth API**](https://developers.google.com/ar/develop/unity/depth/overview)
 is enabled on a subset of ARCore-certified Android devices. **iOS devices
-(iPhone, iPad) are not supported**. Find the list of
-devices with Depth API support (marked with **Supports Depth API**) here:
-[https://developers.google.com/ar/discover/supported-devices](https://developers.google.com/ar/discover/supported-devices).
+(iPhone, iPad) are not supported**. Find the list of devices with Depth API
+support (marked with **Supports Depth API**) here:
+[https://developers.google.com/ar/devices](https://developers.google.com/ar/discover/supported-devices).
 See the [ARCore developer documentation](https://developers.google.com/ar) for
 more information.
 
@@ -25,46 +27,46 @@ today.
 
 The sample scenes demonstrate three different ways to access depth:
 
-1. **Localized depth**: Sample single depth values at certain texture
-coordinates (CPU).
-  * Character locomotion on uneven terrain
-  * Collision checking for AR object placement
-  * Laser beam reflections
-  * Oriented 3D reticles
-  * Rain and snow particle collision
-2. **Surface depth**: Create a connected mesh representation of the depth data
-(CPU/GPU).
-  * AR shadow receiver
-  * Paint splat
-  * Physics simulation
-  * Surface retexturing
-3. **Dense depth**: Process depth data at every screen pixel (GPU).
-  * AR fog
-  * Occlusions
-  * Depth-of-field blur
-  * Environment relighting
-  * False-color depth map
+1.  **Localized depth**: Sample single depth values at certain texture
+    coordinates (CPU).
+    *   Character locomotion on uneven terrain
+    *   Collision checking for AR object placement
+    *   Laser beam reflections
+    *   Oriented 3D reticles
+    *   Rain and snow particle collision
+2.  **Surface depth**: Create a connected mesh representation of the depth data
+    (CPU/GPU).
+    *   AR shadow receiver
+    *   Paint splat
+    *   Physics simulation
+    *   Surface retexturing
+    *   Point cloud fusion
+3.  **Dense depth**: Process depth data at every screen pixel (GPU).
+    *   AR fog
+    *   Occlusions
+    *   Depth-of-field blur
+    *   Environment relighting
+    *   False-color depth map
+    *   3D photo
 
 ## Unity project setup
-These samples target [**Unity 2018.4.24f1**](https://unity3d.com) and require
+
+These samples target [**Unity 2021.1.3f**](https://unity3d.com) and require
 [**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
-**v1.18.0** or newer. Download and import
-[`arcore-unity-sdk-1.18.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
-or newer into the sample project. Close and reopen the project and reimport all
-demo shaders to resolve any dependency issues in the Unity editor. This project
-only builds with the Build Platform **Android**. **Instant Preview** is not
-enabled for Depth API yet. Build the project to an Android device instead of
-using the **Play** button in the Unity editor.
-
-In **Unity 2019 or newer** you may see code errors associated with
-`SpatialTracking`, `NetworkBehaviour`, and scripts in
-`Assets/GoogleARCore/*`. In `Unity > Window > Package Manager` add the following
-packages to resolve the issue:
-
-* **Multiplayer HLAPI** (com.unity.multiplayer-hlapi)
-* **XR Legacy Input Helpers** (com.unity.xr.legacyinputhelpers)
+**v1.24.0** or newer. Download and import
+[`arcore-unity-sdk-1.24.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
+or newer into the sample project. For the first time, please use Unity 2019.4 to
+open the project and install the following packages in `Window` -> `Packages
+Manager`: Multiplayer HLAPI 1.0.8, TextMeshPro 3.0.4, Unity Collaborate 1.3.9,
+and XR Legacy Input Helpers 2.1.7. Note that newer versions are not tested and
+may not work. Close and reopen the project with Unity 2021 and reimport all demo
+shaders to resolve any dependency issues in the Unity editor. This project only
+builds with the Build Platform **Android**. **Instant Preview** is not enabled
+for Depth API yet. Build the project to an Android device instead of using the
+**Play** button in the Unity editor.
 
 ## Building samples
+
 Individual scenes can be built and run by just enabling a particular scene, e.g.
 `FogEffect` to try out the depth-aware fog filter.
 
@@ -89,16 +91,16 @@ Assets/ARRealismDemos/RainParticles/Scenes/RainParticlesScene.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
 Assets/ARRealismDemos/Water/Scenes/Water.unity
 Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
-Assets/ARRealismDemos/PointCloud/Scenes/PointCloud.unity
+Assets/ARRealismDemos/PointCloud/Scenes/RawPointClouds.unity
 Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity
 Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/StereoPhoto.unity`
 
 ## Upcoming breaking change affecting 32-bit-only apps
 
 The project is set up to use the `IL2CPP` scripting backend instead of `Mono` to
-build an `ARM64` app. You may be prompted to locate the Android NDK folder.
-You can download the `NDK` by navigating to
-`Unity > Preferences > External Tools > NDK` and clicking the `Download` button.
+build an `ARM64` app. You may be prompted to locate the Android NDK folder. You
+can download the `NDK` by navigating to `Unity > Preferences > External Tools >
+NDK` and clicking the `Download` button.
 
 In **August 2020**, **Google Play Services for AR** (ARCore) will remove support
 for 32-bit-only ARCore-enabled apps running on 64-bit devices. Support for
@@ -119,37 +121,41 @@ The main sample assets are placed inside the `Assets/ARRealismDemos` folder.
 Each subfolder contains sample features or helper components.
 
 ### `AvatarLocomotion`
+
 The AR character in this scene follows user-set waypoints while staying close to
 the surface of an uneven terrain. This scene uses raycasting and depth lookups
 on the CPU to calculate a 3D point on the surface of the terrain.
 
 ### `Collider`
-This physics simulation playground uses screen-space depth
-meshes to enable collisions between Unity's rigid-body objects and the physical
-environment.
+
+This physics simulation playground uses screen-space depth meshes to enable
+collisions between Unity's rigid-body objects and the physical environment.
 
 After pressing an on-screen button, a `Mesh` object is procedurally generated
-from the latest depth map. This is used to update the `sharedMesh`
-parameter of the `MeshCollider` object. A randomly selected primitive
-rigid-body object is then thrown into the environment.
+from the latest depth map. This is used to update the `sharedMesh` parameter of
+the `MeshCollider` object. A randomly selected primitive rigid-body object is
+then thrown into the environment.
 
 ### `CollisionDetection`
-This AR object placement scene uses depth lookups on the CPU
-to test collisions between the vertices of virtual objects and the physical
-environment.
+
+This AR object placement scene uses depth lookups on the CPU to test collisions
+between the vertices of virtual objects and the physical environment.
 
 ### `Common`
+
 This folder contains scripts and prefabs that are shared between the feature
 samples. For more details, see the [`Helper Classes`](#helper-classes) section
 below.
 
 ### `DemoCarousel`
+
 This folder contains the main scene, which provides a carousel user interface.
 This scene allows the user to seamlessly switch between different features. A
 scene can be selected by directly touching a preview thumbnail or dragging the
 carousel UI to the desired position.
 
 ### `DepthEffects`
+
 This folder contains three dense depth shader processing examples.
 
 The `DepthEffects` scene contains a fragment-shader effect that can transition
@@ -167,38 +173,51 @@ layer on the physical environment. Close objects will be more visible than
 objects further away. A slider controls the density of the fog.
 
 ### `LaserBeam`
+
 This laser reflection scene allows the user to shoot a slowly moving laser beam
 by touching anywhere on the screen.
 
 This uses:
 
-* The `DepthSource.GetVertexInWorldSpaceFromScreenXY(..)` function to look up a
-raycasted 3D point
-* The `ComputeNormalMapFromDepthWeightedMeanGradient(..)` function to look up
-the surface normal based on a provided 2D screen position.
+*   The `DepthSource.GetVertexInWorldSpaceFromScreenXY(..)` function to look up
+    a raycasted 3D point
+*   The `ComputeNormalMapFromDepthWeightedMeanGradient(..)` function to look up
+    the surface normal based on a provided 2D screen position.
 
 ### `MaterialWrap`
+
 This experience allows the user to change the material of real-world surfaces
 through touch. This uses depth meshes.
 
 ### `OrientedReticle`
+
 This sample uses depth hit testing to obtain the raycasted 3D position and
 surface normal of a raycasted screen point.
 
 ### `PointCloud`
-This samples computes a point cloud on the CPU using the depth array. Press the
+
+This sample computes a point cloud on the CPU using the depth array. Press the
 **Update** button to compute a point cloud based on the latest depth data.
 
+### `RawPointClouds`
+
+This sample fuses point clouds with the raw depth maps on the CPU using the
+depth array. Drag the **confidence** slider to change the visibility of each
+point based on the confidence value of the corresponding raw depth.
+
 ### `RainParticles`
-This sample uses the GPU depth texture to compute collisions
-between rain particles and the physical environment.
+
+This sample uses the GPU depth texture to compute collisions between rain
+particles and the physical environment.
 
 ### `Relighting`
+
 This sample uses the GPU depth texture to computationally re-light the physical
 environment through the AR camera. Areas of the physical environment close to
 the artificial light sources are lit, while areas farther away are darkened.
 
 ### `ScreenSpaceDepthMesh`
+
 This sample uses depth meshes. A template mesh containing a regular grid of
 triangles is created once on the CPU. The GPU shader displaces each vertex of
 the regular grid based on the reprojection of the depth values provided by the
@@ -206,6 +225,7 @@ GPU depth texture. Press **Freeze** to take a snapshot of the mesh and press
 **Unfreeze** to revert back to the live updating mesh.
 
 ### `StereoPhoto`
+
 This sample uses depth meshes and
 [`ScreenSpaceDepthMesh`](#ScreenSpaceDepthMesh). After freezing the mesh, we
 cache the current camera's projection and view matrices, circulate the camera
@@ -214,57 +234,63 @@ cached camera image. Press **Capture** to create the animated 3D photo and press
 **Preview** to go back to camera preview mode.
 
 ### `SnowParticles`
-This sample uses the GPU depth texture to compute collisions
-between snow particles, the physical environment, and the orientation of each
-snowflake.
+
+This sample uses the GPU depth texture to compute collisions between snow
+particles, the physical environment, and the orientation of each snowflake.
 
 ### `Splat`
-This sample uses the [`Oriented Reticle`](#orientedreticle) and
-the depth mesh in placing a surface-aligned texture decal within the physical
-environment.
+
+This sample uses the [`Oriented Reticle`](#orientedreticle) and the depth mesh
+in placing a surface-aligned texture decal within the physical environment.
 
 ### `Water`
-This sample uses a modified GPU occlusion shader to create a
-flooding effect with artificial water in the physical environment.
+
+This sample uses a modified GPU occlusion shader to create a flooding effect
+with artificial water in the physical environment.
 
 ## Developing your own ARCore Depth-enabled Unity experiences
+
 Please make sure that the Unity scene is properly set up to run ARCore. Provide
 depth data by attaching the `ARCoreSession` to the appropriate configuration.
 Please see the example provided in the
 [ARCore SDK for Unity](https://developers.google.com/ar/develop/unity) package
 to correctly set up an ARCore Depth-enabled Unity scene.
 
-Please follow the steps below to utilize the depth utilities provided in
-this **ARCore Depth Lab** sample package:
+Please follow the steps below to utilize the depth utilities provided in this
+**ARCore Depth Lab** sample package:
 
-1. Attach at least one `DepthTarget` component to the scene. This makes sure
-that the `DepthSource` class provides depth data to the scene.
+1.  Attach at least one `DepthTarget` component to the scene. This makes sure
+    that the `DepthSource` class provides depth data to the scene.
 
-2. A `DepthSource` component can be explicitly placed within the scene.
-Otherwise an instance will be created automatically. A few parameters can be
-customized in the editor when `DepthSource` is explicitly placed in the scene.
+2.  A `DepthSource` component can be explicitly placed within the scene.
+    Otherwise an instance will be created automatically. A few parameters can be
+    customized in the editor when `DepthSource` is explicitly placed in the
+    scene.
 
-3. The depth texture is directly set to the material of a `MeshRenderer` when
-the `DepthTarget` script is attached to a `GameObject` with a `Meshrenderer`
-component.
+3.  The depth texture is directly set to the material of a `MeshRenderer` when
+    the `DepthTarget` script is attached to a `GameObject` with a `Meshrenderer`
+    component.
 
 ## Helper classes
 
 ### `DepthSource`
+
 A singleton instance of this class contains references to the CPU array and GPU
 texture of the depth map, camera intrinsics, and many other depth look up and
 coordinate transformation utilities. This class acts as a high-level wrapper for
 the [`MotionStereoDepthDataSource`](#motionstereodepthdatasource) class.
 
 ### `DepthTarget`
+
 Each `GameObject` containing a `DepthTarget` becomes a subscriber to the GPU
 depth data. `DepthSource` will automatically update the depth data for each
 `DepthTarget`. At least one instance of `DepthTarget` has to be present in the
 scene in order for `DepthSource` to provide depth data.
 
 ### `MotionStereoDepthDataSource`
-This class contains low-level operations and access to the depth data. It should
-only be use by advanced developers.
+
+This class contains low-level operations and direct access to the depth data. It
+should only be use by advanced developers.
 
 ## User privacy requirements
 
@@ -272,31 +298,38 @@ You must prominently disclose the use of Google Play Services for AR (ARCore)
 and how it collects and processes data in your application. This information
 must be easily accessible to end users. You can do this by adding the following
 text on your main menu or notice screen: "This application runs on
-[Google Play Services for AR](//play.google.com/store/apps/details?id=com.google.ar.core) (ARCore),
-which is provided by Google LLC and governed by the
+[Google Play Services for AR](//play.google.com/store/apps/details?id=com.google.ar.core)
+(ARCore), which is provided by Google LLC and governed by the
 [Google Privacy Policy](//policies.google.com/privacy)".
 
-## Related Publication
+## Related publication
 
-Please refer to https://augmentedperception.github.io/depthlab/ for our paper published in ACM UIST 2020: "DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality".
+Please refer to https://augmentedperception.github.io/depthlab/ for our paper,
+supplementary material, and presentation published in ACM UIST 2020: "DepthLab:
+Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality".
 
 ## References
 
 If you use ARCore Depth Lab in your research, please reference it as:
 
-    @inproceedings{Du2020DepthLab,
-      title = {{DepthLab: Real-time 3D Interaction with Depth Maps for Mobile Augmented Reality}},
-      author = {Du, Ruofei and Turner, Eric and Dzitsiuk, Maksym and Prasso, Luca and Duarte, Ivo and Dourgarian, Jason and Afonso, Joao and Pascoal, Jose and Gladstone, Josh and Cruces, Nuno and Izadi, Shahram and Kowdle, Adarsh and Tsotsos, Konstantine and Kim, David},
-      booktitle = {Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology},
-      year = {2020},
-      publisher = {ACM},
-      numpages = {15},
-      series = {UIST},
-    }
+```
+@inproceedings{Du2020DepthLab,
+  title = {{DepthLab: Real-time 3D Interaction with Depth Maps for Mobile Augmented Reality}},
+  author = {Du, Ruofei and Turner, Eric and Dzitsiuk, Maksym and Prasso, Luca and Duarte, Ivo and Dourgarian, Jason and Afonso, Joao and Pascoal, Jose and Gladstone, Josh and Cruces, Nuno and Izadi, Shahram and Kowdle, Adarsh and Tsotsos, Konstantine and Kim, David},
+  booktitle = {Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology},
+  year = {2020},
+  publisher = {ACM},
+  pages = {829--843},
+  series = {UIST '20}
+  doi = {10.1145/3379337.3415881}
+}
+```
 
 or
 
-    Ruofei Du, Eric Turner, Maksym Dzitsiuk, Luca Prasso, Ivo Duarte, Jason Dourgarian, Joao Afonso, Jose Pascoal, Josh Gladstone, Nuno Cruces, Shahram Izadi, Adarsh Kowdle, Konstantine Tsotsos, and David Kim. 2020. DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality. Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology, pp. 15.
+```
+Ruofei Du, Eric Turner, Maksym Dzitsiuk, Luca Prasso, Ivo Duarte, Jason Dourgarian, Joao Afonso, Jose Pascoal, Josh Gladstone, Nuno Cruces, Shahram Izadi, Adarsh Kowdle, Konstantine Tsotsos, and David Kim. 2020. DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality. Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology (UIST '20), 829-843. DOI: http://dx.doi.org/10.1145/3379337.3415881.
+```
 
 ## Additional information
 

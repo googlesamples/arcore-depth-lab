@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CheckReticleOrientation.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ using UnityEngine;
 /// </summary>
 public class CheckReticleOrientation : MonoBehaviour
 {
-    private const float k_MaxReticleTiltDegrees = 90;
-    private const float k_Tolerance = 10;
-    private bool m_ReticleTilted = false;
+    private const float _maxReticleTiltDegrees = 90;
+    private const float _tolerance = 10;
+    private bool _reticleTilted = false;
 
     /// <summary>
     /// Gets a value indicating whether the reticle is tilted.
@@ -38,20 +38,20 @@ public class CheckReticleOrientation : MonoBehaviour
     {
         get
         {
-            return m_ReticleTilted;
+            return _reticleTilted;
         }
     }
 
     private void Update()
     {
         float angle = Vector3.Angle(transform.up, Vector3.up);
-        if (angle > k_MaxReticleTiltDegrees)
+        if (angle > _maxReticleTiltDegrees)
         {
-            m_ReticleTilted = true;
+            _reticleTilted = true;
         }
-        else if (angle < k_MaxReticleTiltDegrees - k_Tolerance)
+        else if (angle < _maxReticleTiltDegrees - _tolerance)
         {
-            m_ReticleTilted = false;
+            _reticleTilted = false;
         }
     }
 }

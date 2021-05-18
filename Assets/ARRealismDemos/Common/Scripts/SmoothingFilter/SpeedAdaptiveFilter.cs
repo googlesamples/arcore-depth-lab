@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SpeedAdaptiveFilter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,14 +31,14 @@ using UnityEngine;
 /// </summary>
 public class SpeedAdaptiveFilter
 {
-    private float m_LastValue;
-    private float m_SensorFrequency;
-    private float m_MinCutoff;
-    private float m_BetaCutoffSlope;
-    private float m_DerivateCutoffFrequency;
-    private LowPassFilter m_XFilter;
-    private LowPassFilter m_DXFilter;
-    private DateTime m_PrevTime;
+    private float _lastValue;
+    private float _sensorFrequency;
+    private float _minCutoff;
+    private float _betaCutoffSlope;
+    private float _derivateCutoffFrequency;
+    private LowPassFilter _xFilter;
+    private LowPassFilter _dxFilter;
+    private DateTime _prevTime;
 
     /// <summary>
     /// This is a speed adaptive low-pass filter for smooting sensor data.
@@ -54,9 +54,9 @@ public class SpeedAdaptiveFilter
         SetMinimumCutoff(mincutoff);
         SetBeta(beta);
         SetDerivateCutoff(dcutoff);
-        m_XFilter = new LowPassFilter(GetWeight(mincutoff), 0);
-        m_DXFilter = new LowPassFilter(GetWeight(dcutoff), 0);
-        m_PrevTime = DateTime.MinValue;
+        _xFilter = new LowPassFilter(GetWeight(mincutoff), 0);
+        _dxFilter = new LowPassFilter(GetWeight(dcutoff), 0);
+        _prevTime = DateTime.MinValue;
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class SpeedAdaptiveFilter
     {
         get
         {
-            return m_LastValue;
+            return _lastValue;
         }
     }
 
@@ -77,7 +77,7 @@ public class SpeedAdaptiveFilter
     /// <returns>The filter weight.</returns>
     public float GetWeight(float cutoff)
     {
-        float te = 1f / m_SensorFrequency;
+        float te = 1f / _sensorFrequency;
         float tau = 1f / (2f * Mathf.PI * cutoff);
         return 1f / (1f + (tau / te));
     }
@@ -88,7 +88,7 @@ public class SpeedAdaptiveFilter
     /// <param name="value">Frequency value.</param>
     public void SetFrequency(float value)
     {
-        m_SensorFrequency = value;
+        _sensorFrequency = value;
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class SpeedAdaptiveFilter
     /// <param name="value">Minimum cutoff.</param>
     public void SetMinimumCutoff(float value)
     {
-        m_MinCutoff = value;
+        _minCutoff = value;
     }
 
     /// <summary>
@@ -106,7 +106,7 @@ public class SpeedAdaptiveFilter
     /// <param name="value">Beta value.</param>
     public void SetBeta(float value)
     {
-        m_BetaCutoffSlope = value;
+        _betaCutoffSlope = value;
     }
 
     /// <summary>
@@ -115,7 +115,7 @@ public class SpeedAdaptiveFilter
     /// <param name="value">Derivative cutoff value.</param>
     public void SetDerivateCutoff(float value)
     {
-        m_DerivateCutoffFrequency = value;
+        _derivateCutoffFrequency = value;
     }
 
     /// <summary>
@@ -127,15 +127,15 @@ public class SpeedAdaptiveFilter
     {
         UpdateSensorFrequency();
 
-        float dx = m_XFilter.GetIsInitialized() ?
-            (value - m_XFilter.GetRawInput()) * m_SensorFrequency :
+        float dx = _xFilter.GetIsInitialized() ?
+            (value - _xFilter.GetRawInput()) * _sensorFrequency :
             0f;
 
-        float edx = m_DXFilter.UpdateFilterValue(dx, GetWeight(m_DerivateCutoffFrequency));
-        float cutoff = m_MinCutoff + (m_BetaCutoffSlope * Mathf.Abs(edx));
+        float edx = _dxFilter.UpdateFilterValue(dx, GetWeight(_derivateCutoffFrequency));
+        float cutoff = _minCutoff + (_betaCutoffSlope * Mathf.Abs(edx));
 
-        m_LastValue = m_XFilter.UpdateFilterValue(value, GetWeight(cutoff));
-        return m_LastValue;
+        _lastValue = _xFilter.UpdateFilterValue(value, GetWeight(cutoff));
+        return _lastValue;
     }
 
     /// <summary>
@@ -144,11 +144,11 @@ public class SpeedAdaptiveFilter
     private void UpdateSensorFrequency()
     {
         DateTime now = DateTime.Now;
-        if (m_PrevTime != DateTime.MinValue)
+        if (_prevTime != DateTime.MinValue)
         {
-            m_SensorFrequency = 1f / (float)(now - m_PrevTime).TotalSeconds;
+            _sensorFrequency = 1f / (float)(now - _prevTime).TotalSeconds;
         }
 
-        m_PrevTime = now;
+        _prevTime = now;
     }
 }

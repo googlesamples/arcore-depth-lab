@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="OrientedReticle.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,11 +51,11 @@ public class OrientedReticle : MonoBehaviour
     // Each valid neighbor is checked whether it is an inlier in depth.  Inliers
     // are defined as within a distance of (outlier_depth_ratio * depth) of a
     // point at 'depth' depth.
-    private const float k_OutlierDepthRatio = 0.2f;
+    private const float _outlierDepthRatio = 0.2f;
 
     // For each valid depth pixel, the neighborhood in a square window of radius
     // window_radius_pixels is searched.
-    private const int k_WindowRadiusPixels = 2;
+    private const int _windowRadiusPixels = 2;
 
     private void Start()
     {
@@ -152,8 +152,8 @@ public class OrientedReticle : MonoBehaviour
         // Iterates over neighbors to compute normal vector.
         float neighbor_corr_x = 0.0f;
         float neighbor_corr_y = 0.0f;
-        float outlier_distance_m = k_OutlierDepthRatio * depth_m;
-        int radius = k_WindowRadiusPixels;
+        float outlier_distance_m = _outlierDepthRatio * depth_m;
+        int radius = _windowRadiusPixels;
         float neighbor_sum_confidences_x = 0.0f;
         float neighbor_sum_confidences_y = 0.0f;
         for (int dy = -radius; dy <= radius; ++dy)

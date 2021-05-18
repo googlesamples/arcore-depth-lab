@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="MipmapBlurPrePostRender.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,29 +31,29 @@ public class MipmapBlurPrePostRender : MonoBehaviour
     /// </summary>
     public Material BlurMaterial;
 
-    private const int k_AntiAliasing = 1;
-    private const int k_DepthBits = 24;
-    private RenderTexture m_RenderTexture;
+    private const int _antiAliasing = 1;
+    private const int _depthBits = 24;
+    private RenderTexture _renderTexture;
 
     private void Start()
     {
         Camera.main.depthTextureMode = DepthTextureMode.Depth;
         Camera.main.allowHDR = false;
-        QualitySettings.antiAliasing = k_AntiAliasing;
-        m_RenderTexture = new RenderTexture(Screen.width, Screen.height, k_DepthBits,
+        QualitySettings.antiAliasing = _antiAliasing;
+        _renderTexture = new RenderTexture(Screen.width, Screen.height, _depthBits,
                               RenderTextureFormat.Default, RenderTextureReadWrite.Default);
-        m_RenderTexture.useMipMap = true;
-        m_RenderTexture.autoGenerateMips = true;
+        _renderTexture.useMipMap = true;
+        _renderTexture.autoGenerateMips = true;
     }
 
     private void OnPreRender()
     {
-        Camera.main.targetTexture = m_RenderTexture;
+        Camera.main.targetTexture = _renderTexture;
     }
 
     private void OnPostRender()
     {
         Camera.main.targetTexture = null;
-        Graphics.Blit(m_RenderTexture, null, BlurMaterial);
+        Graphics.Blit(_renderTexture, null, BlurMaterial);
     }
 }

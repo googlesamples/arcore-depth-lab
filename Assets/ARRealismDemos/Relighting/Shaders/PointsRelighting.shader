@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PointsRelighting.shader" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ Shader "ARRealism/Relighting/Points Relighting"
         _NormalizedDepthMax ("Normalized depth maximum", Range(0.0, 10.0)) = 8.0
         _GlobalDarkness ("Mixture percentage of the global darkness", Range(0.0, 1.0)) = 1.0
         _ShowColorOnly("Only Render Camera", Range(0.0, 1.0)) = 0.0
+        _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}
     }
 
     // SubShader for point relighting.
@@ -50,7 +51,8 @@ Shader "ARRealism/Relighting/Points Relighting"
             uniform sampler2D _BackgroundTexture;
             uniform half _ShowColorOnly;
 
-            float3 SampleColor(in float2 uv) {
+            float3 SampleColor(in float2 uv)
+            {
                 return tex2D(_BackgroundTexture, uv).rgb;
             }
 
@@ -58,9 +60,11 @@ Shader "ARRealism/Relighting/Points Relighting"
 
             fixed4 frag(v2f_img i) : COLOR
             {
-                if (_ShowColorOnly > 0.0) {
+                if (_ShowColorOnly > 0.0)
+                {
                     return tex2D(_BackgroundTexture, i.uv);
                 }
+
                 return fixed4(Render(i.uv), 1);
             }
 

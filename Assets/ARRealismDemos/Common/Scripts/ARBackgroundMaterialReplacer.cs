@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ARBackgroundMaterialReplacer.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class ARBackgroundMaterialReplacer : MonoBehaviour
     /// </summary>
     public bool DestroyMaterial = false;
 
-    private DemoARBackgroundRenderer m_BackgroundRenderer;
+    private DemoARBackgroundRenderer _backgroundRenderer;
 
     /// <summary>
     /// Replaces the AR background material.
@@ -60,14 +60,14 @@ public class ARBackgroundMaterialReplacer : MonoBehaviour
             FirstPersonCamera = Camera.main.gameObject;
         }
 
-        m_BackgroundRenderer = FirstPersonCamera.GetComponent<DemoARBackgroundRenderer>();
+        _backgroundRenderer = FirstPersonCamera.GetComponent<DemoARBackgroundRenderer>();
 
         // Resets the fragment shader.
         ReplacementMaterial.SetFloat("_ShowColorOnly", 0f);
 
-        if (m_BackgroundRenderer != null)
+        if (_backgroundRenderer != null)
         {
-            m_BackgroundRenderer.SwapBackgroundMaterial(ReplacementMaterial);
+            _backgroundRenderer.SwapBackgroundMaterial(ReplacementMaterial);
         }
     }
 
@@ -76,9 +76,9 @@ public class ARBackgroundMaterialReplacer : MonoBehaviour
     /// </summary>
     private void UndoReplace()
     {
-        if (m_BackgroundRenderer != null)
+        if (_backgroundRenderer != null)
         {
-            m_BackgroundRenderer.ResetBackgroundMaterial();
+            _backgroundRenderer.ResetBackgroundMaterial();
         }
     }
 

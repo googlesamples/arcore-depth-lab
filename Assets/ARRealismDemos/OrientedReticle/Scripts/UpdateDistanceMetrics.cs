@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="UpdateDistanceMetrics.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,14 +38,14 @@ public class UpdateDistanceMetrics : MonoBehaviour
     /// </summary>
     public Text HeightLabel;
 
-    private OrientedReticle m_OrientedReticle;
+    private OrientedReticle _orientedReticle;
 
-    private LinkedList<float> m_FloorHeights = new LinkedList<float>();
+    private LinkedList<float> _floorHeights = new LinkedList<float>();
 
     private float EstimateFloorHeight()
     {
-        float current_height = m_OrientedReticle.transform.position.y;
-        var nodeToInsert = m_FloorHeights.First;
+        float current_height = _orientedReticle.transform.position.y;
+        var nodeToInsert = _floorHeights.First;
 
         // Searches for the right place in the list to place the new height.
         while (nodeToInsert != null)
@@ -56,7 +56,7 @@ public class UpdateDistanceMetrics : MonoBehaviour
             }
             else
             {
-                m_FloorHeights.AddBefore(nodeToInsert, current_height);
+                _floorHeights.AddBefore(nodeToInsert, current_height);
                 break;
             }
         }
@@ -66,19 +66,19 @@ public class UpdateDistanceMetrics : MonoBehaviour
         if (nodeToInsert == null)
         {
             // In this case add it to the bottom of the stack.
-            m_FloorHeights.AddLast(current_height);
+            _floorHeights.AddLast(current_height);
         }
 
         // Trims the List.
-        while (m_FloorHeights.Count > 100)
+        while (_floorHeights.Count > 100)
         {
-            m_FloorHeights.RemoveFirst();
+            _floorHeights.RemoveFirst();
         }
 
-        return m_FloorHeights.First.Value;
+        return _floorHeights.First.Value;
     }
 
-    private float estimateCurrentHeight()
+    private float EstimateCurrentHeight()
     {
         float current_height = transform.position.y;
         float floor_height = EstimateFloorHeight();
@@ -87,13 +87,13 @@ public class UpdateDistanceMetrics : MonoBehaviour
 
     private void Start()
     {
-        m_OrientedReticle = GetComponent<OrientedReticle>();
-        m_FloorHeights.AddLast(float.PositiveInfinity);
+        _orientedReticle = GetComponent<OrientedReticle>();
+        _floorHeights.AddLast(float.PositiveInfinity);
     }
 
     private void Update()
     {
-        HeightLabel.text = "Height\n" + estimateCurrentHeight().ToString("F2") + " meters";
-        DistanceLabel.text = "Distance\n" + m_OrientedReticle.Distance.ToString("F2") + " meters";
+        HeightLabel.text = "Height\n" + EstimateCurrentHeight().ToString("F2") + " meters";
+        DistanceLabel.text = "Distance\n" + _orientedReticle.Distance.ToString("F2") + " meters";
     }
 }

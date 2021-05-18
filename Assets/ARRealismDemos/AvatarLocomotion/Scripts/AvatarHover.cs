@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="AvatarHover.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,18 +27,18 @@ using UnityEngine;
 /// </summary>
 public class AvatarHover : MonoBehaviour
 {
-    private const float k_HoverRange = 0.08f;
-    private float m_InitialYPosition;
+    private const float _hoverRange = 0.08f;
+    private float _initialYPosition;
 
     private void Start()
     {
-        m_InitialYPosition = transform.localPosition.y;
+        _initialYPosition = transform.localPosition.y;
     }
 
     private void Update()
     {
         Vector3 localPos = transform.localPosition;
-        localPos.y = m_InitialYPosition + (k_HoverRange * Mathf.Sin(Time.time));
+        localPos.y = _initialYPosition + (_hoverRange * Mathf.Sin(Time.time));
         transform.localPosition = localPos;
     }
 }

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthPulseEffect.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,22 +32,22 @@ public class DepthPulseEffect : MonoBehaviour
     /// <summary>
     /// Add comment here.
     /// </summary>
-    public float StartFadingDepth = k_StartFadingDepth;
+    public float StartFadingDepth = _startFadingDepth;
 
     /// <summary>
     /// Add comment here.
     /// </summary>
-    public float MaximumPulseDepth = k_MaximumPulseDepth;
+    public float MaximumPulseDepth = _maximumPulseDepth;
 
     /// <summary>
     /// Add comment here.
     /// </summary>
-    public float PulseDurationS = k_PulseDurationS;
+    public float PulseDurationS = _pulseDurationS;
 
     /// <summary>
     /// Add comment here.
     /// </summary>
-    public float PulseWidthM = k_PulseWidthM;
+    public float PulseWidthM = _pulseWidthM;
 
     /// <summary>
     /// Add comment here.
@@ -55,41 +55,41 @@ public class DepthPulseEffect : MonoBehaviour
     public ShadowReceiverMesh ShadowReceiver;
 
     // A small default texture size to create a texture of unknown size.
-    private const int k_DefaultTextureSize = 2;
-    private const float k_MaximumPulseDepth = 7;
-    private const float k_StartFadingDepth = 6;
-    private const float k_PulseDurationS = 5;
-    private const float k_PulseWidthM = 0.4f;
+    private const int _defaultTextureSize = 2;
+    private const float _maximumPulseDepth = 7;
+    private const float _startFadingDepth = 6;
+    private const float _pulseDurationS = 5;
+    private const float _pulseWidthM = 0.4f;
 
-    private static readonly Vector3 k_DefaultMeshOffset = new Vector3(-100, -100, -100);
+    private static readonly Vector3 _defaultMeshOffset = new Vector3(-100, -100, -100);
 
     // Holds the vertex and index data of the depth template mesh.
-    private Mesh m_Mesh;
+    private Mesh _mesh;
 
     // Holds the calibrated camera's intrinsic parameters.
-    private CameraIntrinsics m_Intrinsics;
+    private CameraIntrinsics _intrinsics;
 
     // This is the scale vector to appropriately scale the camera intrinsics to the depth texture.
-    private Vector2 m_IntrinsicsScale;
-    private Texture2D m_DepthTexture;
-    private bool m_Initialized = false;
+    private Vector2 _intrinsicsScale;
+    private Texture2D _depthTexture;
+    private bool _initialized = false;
 
-    private Material m_Material;
-    private float m_PulseDepth = 0;
-    private Coroutine m_CurrentCoroutine;
-    private Matrix4x4 m_ScreenRotation = Matrix4x4.Rotate(Quaternion.identity);
+    private Material _material;
+    private float _pulseDepth = 0;
+    private Coroutine _currentCoroutine;
+    private Matrix4x4 _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
 
     /// <summary>
     /// Add comment here.
     /// </summary>
     public void StartPulseToCamera()
     {
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(AnimateValue(0, PulseDurationS));
+        _currentCoroutine = StartCoroutine(AnimateValue(0, PulseDurationS));
     }
 
     /// <summary>
@@ -97,12 +97,12 @@ public class DepthPulseEffect : MonoBehaviour
     /// </summary>
     public void StartPulseToHorizon()
     {
-        if (m_CurrentCoroutine != null)
+        if (_currentCoroutine != null)
         {
-            StopCoroutine(m_CurrentCoroutine);
+            StopCoroutine(_currentCoroutine);
         }
 
-        m_CurrentCoroutine = StartCoroutine(
+        _currentCoroutine = StartCoroutine(
             AnimateValue(MaximumPulseDepth, PulseDurationS));
     }
 
@@ -146,76 +146,76 @@ public class DepthPulseEffect : MonoBehaviour
     private void InitializeMesh()
     {
         // Get the camera parameters to create the required number of vertices.
-        m_Intrinsics = Frame.CameraImage.TextureIntrinsics;
+        _intrinsics = Frame.CameraImage.TextureIntrinsics;
 
         // Scale camera intrinsics to the depth map size.
-        m_IntrinsicsScale.x = m_DepthTexture.width / (float)m_Intrinsics.ImageDimensions.x;
-        m_IntrinsicsScale.y = m_DepthTexture.height / (float)m_Intrinsics.ImageDimensions.y;
+        _intrinsicsScale.x = _depthTexture.width / (float)_intrinsics.ImageDimensions.x;
+        _intrinsicsScale.y = _depthTexture.height / (float)_intrinsics.ImageDimensions.y;
 
         // Create template vertices.
         List<Vector3> vertices = new List<Vector3>();
         List<Vector3> normals = new List<Vector3>();
 
         // Create template vertices for the mesh object.
-        for (int y = 0; y < m_DepthTexture.height; y++)
+        for (int y = 0; y < _depthTexture.height; y++)
         {
-            for (int x = 0; x < m_DepthTexture.width; x++)
+            for (int x = 0; x < _depthTexture.width; x++)
             {
-                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + k_DefaultMeshOffset;
+                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + _defaultMeshOffset;
                 vertices.Add(v);
                 normals.Add(Vector3.back);
             }
         }
 
         // Create template triangle list.
-        int[] triangles = GenerateTriangles(m_DepthTexture.width, m_DepthTexture.height);
+        int[] triangles = GenerateTriangles(_depthTexture.width, _depthTexture.height);
 
         // Create the mesh object and set all template data.
-        m_Mesh = new Mesh();
-        m_Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        m_Mesh.SetVertices(vertices);
-        m_Mesh.SetNormals(normals);
-        m_Mesh.SetTriangles(triangles, 0);
-        m_Mesh.bounds = new Bounds(Vector3.zero, new Vector3(1000, 1000, 1000));
-        m_Mesh.UploadMeshData(true);
+        _mesh = new Mesh();
+        _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        _mesh.SetVertices(vertices);
+        _mesh.SetNormals(normals);
+        _mesh.SetTriangles(triangles, 0);
+        _mesh.bounds = new Bounds(Vector3.zero, new Vector3(1000, 1000, 1000));
+        _mesh.UploadMeshData(true);
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.sharedMesh = m_Mesh;
+        meshFilter.sharedMesh = _mesh;
 
-        float principalPointX = m_Intrinsics.PrincipalPoint.x * m_IntrinsicsScale.x;
-        float principalPointY = m_Intrinsics.PrincipalPoint.y * m_IntrinsicsScale.y;
+        float principalPointX = _intrinsics.PrincipalPoint.x * _intrinsicsScale.x;
+        float principalPointY = _intrinsics.PrincipalPoint.y * _intrinsicsScale.y;
 
         // Set camera intrinsics for depth reprojection.
-        m_Material.SetFloat("_FocalLengthX", m_Intrinsics.FocalLength.x * m_IntrinsicsScale.x);
-        m_Material.SetFloat("_FocalLengthY", m_Intrinsics.FocalLength.y * m_IntrinsicsScale.y);
-        m_Material.SetFloat("_PrincipalPointX", principalPointX);
-        m_Material.SetFloat("_PrincipalPointY", principalPointY);
-        m_Material.SetInt("_ImageDimensionsX", m_DepthTexture.width);
-        m_Material.SetInt("_ImageDimensionsY", m_DepthTexture.height);
+        _material.SetFloat("_FocalLengthX", _intrinsics.FocalLength.x * _intrinsicsScale.x);
+        _material.SetFloat("_FocalLengthY", _intrinsics.FocalLength.y * _intrinsicsScale.y);
+        _material.SetFloat("_PrincipalPointX", principalPointX);
+        _material.SetFloat("_PrincipalPointY", principalPointY);
+        _material.SetInt("_ImageDimensionsX", _depthTexture.width);
+        _material.SetInt("_ImageDimensionsY", _depthTexture.height);
 
-        m_Initialized = true;
+        _initialized = true;
     }
 
     private void Start()
     {
         // Default texture, will be updated each frame.
-        m_DepthTexture = new Texture2D(k_DefaultTextureSize, k_DefaultTextureSize);
+        _depthTexture = new Texture2D(_defaultTextureSize, _defaultTextureSize);
 
         // Assign the texture to the material.
-        m_Material = GetComponent<Renderer>().material;
-        m_Material.SetTexture("_CurrentDepthTexture", m_DepthTexture);
+        _material = GetComponent<Renderer>().material;
+        _material.SetTexture("_CurrentDepthTexture", _depthTexture);
         UpdateScreenOrientation();
     }
 
     private void Update()
     {
         // Get the latest depth data from ARCore.
-        Frame.CameraImage.UpdateDepthTexture(ref m_DepthTexture);
+        Frame.CameraImage.UpdateDepthTexture(ref _depthTexture);
         UpdateShaderVariables();
         UpdateScreenOrientation();
 
-        if (!m_Initialized && m_DepthTexture.width != k_DefaultTextureSize
-            && m_DepthTexture.height != k_DefaultTextureSize)
+        if (!_initialized && _depthTexture.width != _defaultTextureSize
+            && _depthTexture.height != _defaultTextureSize)
         {
             InitializeMesh();
         }
@@ -223,11 +223,11 @@ public class DepthPulseEffect : MonoBehaviour
 
     private void UpdateShaderVariables()
     {
-        m_Material.SetFloat("_PulseWidth", PulseWidthM);
-        m_Material.SetFloat("_PulseDepth", m_PulseDepth);
-        m_Material.SetFloat("_MaximumPulseDepth", MaximumPulseDepth);
-        m_Material.SetFloat("_StartFadingDepth", StartFadingDepth);
-        ShadowReceiver.MaximumMeshDistance = m_PulseDepth;
+        _material.SetFloat("_PulseWidth", PulseWidthM);
+        _material.SetFloat("_PulseDepth", _pulseDepth);
+        _material.SetFloat("_MaximumPulseDepth", MaximumPulseDepth);
+        _material.SetFloat("_StartFadingDepth", StartFadingDepth);
+        ShadowReceiver.MaximumMeshDistance = _pulseDepth;
     }
 
     private IEnumerator AnimateValue(float targetValue, float animationTime)
@@ -235,14 +235,14 @@ public class DepthPulseEffect : MonoBehaviour
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.enabled = true;
 
-        float originalPulseDepth = m_PulseDepth;
+        float originalPulseDepth = _pulseDepth;
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / animationTime)
         {
-            m_PulseDepth = Mathf.Lerp(originalPulseDepth, targetValue, t);
+            _pulseDepth = Mathf.Lerp(originalPulseDepth, targetValue, t);
             yield return null;
         }
 
-        m_PulseDepth = targetValue;
+        _pulseDepth = targetValue;
 
         meshRenderer.enabled = false;
     }
@@ -252,19 +252,19 @@ public class DepthPulseEffect : MonoBehaviour
         switch (Screen.orientation)
         {
             case ScreenOrientation.Portrait:
-                m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
+                _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
                 break;
             case ScreenOrientation.LandscapeLeft:
-                m_ScreenRotation = Matrix4x4.Rotate(Quaternion.identity);
+                _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
                 break;
             case ScreenOrientation.PortraitUpsideDown:
-                m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90));
+                _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90));
                 break;
             case ScreenOrientation.LandscapeRight:
-                m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 180));
+                _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 180));
                 break;
         }
 
-        m_Material.SetMatrix("_ScreenRotation", m_ScreenRotation);
+        _material.SetMatrix("_ScreenRotation", _screenRotation);
     }
 }

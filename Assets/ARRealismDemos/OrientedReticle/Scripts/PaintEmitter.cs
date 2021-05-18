@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PaintEmitter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,25 +32,25 @@ public class PaintEmitter : MonoBehaviour
     /// The prefab that will be spawned every frame.
     /// </summary>
     public GameObject PaintPrefab;
-    private GameObject m_Root;
-    private GameObject m_CurrentStroke;
-    private int m_CurrentStrokeId = 0;
-    private bool m_ContinuousMode = false;
-    private List<GameObject> m_GameObjects = new List<GameObject>();
+    private GameObject _root;
+    private GameObject _currentStroke;
+    private int _currentStrokeId = 0;
+    private bool _continuousMode = false;
+    private List<GameObject> _gameObjects = new List<GameObject>();
 
     /// <summary>
     /// Clear all projectiles.
     /// </summary>
     public void Clear()
     {
-        foreach (GameObject go in m_GameObjects)
+        foreach (GameObject go in _gameObjects)
         {
             Destroy(go);
         }
 
-        m_GameObjects.Clear();
-        Destroy(m_Root);
-        m_Root = new GameObject("Strokes");
+        _gameObjects.Clear();
+        Destroy(_root);
+        _root = new GameObject("Strokes");
     }
 
     /// <summary>
@@ -60,50 +60,50 @@ public class PaintEmitter : MonoBehaviour
     {
         var point =
                 Instantiate(PaintPrefab, transform.position, transform.rotation) as GameObject;
-        m_GameObjects.Add(point);
-        point.transform.parent = m_Root.transform;
+        _gameObjects.Add(point);
+        point.transform.parent = _root.transform;
     }
 
     private void Start()
     {
-        m_Root = new GameObject("Strokes");
+        _root = new GameObject("Strokes");
     }
 
     private void OnDestroy()
     {
-        foreach (GameObject go in m_GameObjects)
+        foreach (GameObject go in _gameObjects)
         {
             Destroy(go);
         }
 
-        m_GameObjects.Clear();
-        Destroy(m_Root);
-        m_Root = null;
+        _gameObjects.Clear();
+        Destroy(_root);
+        _root = null;
     }
 
     private void Update()
     {
-        if (!m_ContinuousMode)
+        if (!_continuousMode)
         {
             return;
         }
 
-        if (Input.GetMouseButtonDown(0) && m_CurrentStroke == null)
+        if (Input.GetMouseButtonDown(0) && _currentStroke == null)
         {
-            m_CurrentStroke = new GameObject("Stroke " + m_CurrentStrokeId);
-            m_CurrentStroke.AddComponent<MeshFilter>();
-            MeshRenderer meshRenderer = m_CurrentStroke.AddComponent<MeshRenderer>();
+            _currentStroke = new GameObject("Stroke " + _currentStrokeId);
+            _currentStroke.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = _currentStroke.AddComponent<MeshRenderer>();
             meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             meshRenderer.allowOcclusionWhenDynamic = true;
             meshRenderer.receiveShadows = false;
-            m_CurrentStroke.transform.parent = m_Root.transform;
-            ++m_CurrentStrokeId;
+            _currentStroke.transform.parent = _root.transform;
+            ++_currentStrokeId;
         }
 
         // When the continuous mode is turned on, combine decals painted on touch up.
-        if (m_ContinuousMode && Input.GetMouseButtonUp(0))
+        if (_continuousMode && Input.GetMouseButtonUp(0))
         {
-            MeshFilter[] meshFilters = m_CurrentStroke.GetComponentsInChildren<MeshFilter>();
+            MeshFilter[] meshFilters = _currentStroke.GetComponentsInChildren<MeshFilter>();
             if (meshFilters.Length <= 1)
             {
                 return;
@@ -124,23 +124,23 @@ public class PaintEmitter : MonoBehaviour
                 }
             }
 
-            m_CurrentStroke.transform.GetComponent<MeshFilter>().mesh = new Mesh();
-            m_CurrentStroke.transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
-            m_CurrentStroke.transform.gameObject.SetActive(true);
-            m_CurrentStroke.GetComponent<Renderer>().material =
+            _currentStroke.transform.GetComponent<MeshFilter>().mesh = new Mesh();
+            _currentStroke.transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+            _currentStroke.transform.gameObject.SetActive(true);
+            _currentStroke.GetComponent<Renderer>().material =
                 meshFilters[1].GetComponent<Renderer>().sharedMaterial;
 
-            m_CurrentStroke = null;
+            _currentStroke = null;
         }
 
         // When the continuous mode is turned on, paint while the finger presses the screen.
         // Otherwise, only drop a single decal at each screen tap.
-        if ((m_CurrentStroke != null && Input.GetMouseButton(0))
+        if ((_currentStroke != null && Input.GetMouseButton(0))
                 || Input.GetMouseButtonDown(0))
         {
             var point =
                 Instantiate(PaintPrefab, transform.position, transform.rotation) as GameObject;
-            point.transform.parent = m_CurrentStroke.transform;
+            point.transform.parent = _currentStroke.transform;
         }
     }
 }

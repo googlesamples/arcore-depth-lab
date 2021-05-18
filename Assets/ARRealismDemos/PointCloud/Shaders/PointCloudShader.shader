@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PointCloudShader.shader" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ Shader "ARRealism/PointCloudShader"
     Properties
     {
         _PointSize("Point size", Range(0, 0.2)) = 0.004
+        _ConfidenceThreshold("Confidence threshold", Range(0, 1.0)) = 0.9
     }
     SubShader
     {
@@ -40,6 +41,7 @@ Shader "ARRealism/PointCloudShader"
             #include "UnityCG.cginc"
 
             float _PointSize;
+            float _ConfidenceThreshold;
 
             struct v2g
             {
@@ -64,6 +66,12 @@ Shader "ARRealism/PointCloudShader"
             [maxvertexcount(4)]
             void geom (point v2g p[1], inout TriangleStream<g2f> triStream)
             {
+                // Filters out vertices that have lower confidence than the threshold.
+                if (p[0].color.a < 1.0f - _ConfidenceThreshold)
+                {
+                    return;
+                }
+
                 float3 up = float3(0, 1, 0);
                 float3 look = _WorldSpaceCameraPos - p[0].vertex;
                 look.y = 0;
@@ -98,7 +106,7 @@ Shader "ARRealism/PointCloudShader"
 
             fixed4 frag (g2f i) : SV_Target
             {
-                return i.color;
+                return fixed4(GammaToLinearSpace(i.color.rgb), 1);
             }
             ENDCG
         }

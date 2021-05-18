@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ScreenSpaceDepthMeshGenerator.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,32 +30,32 @@ using UnityEngine.UI;
 public class ScreenSpaceDepthMeshGenerator : MonoBehaviour
 {
     // Specifies the maximum distance between vertices of a single triangle to be rendered.
-    private const float k_TriangleConnectivityCutOff = 0.5f;
+    private const float _triangleConnectivityCutOff = 0.5f;
 
-    private static readonly Vector3 k_DefaultMeshOffset = new Vector3(-100, -100, -100);
+    private static readonly Vector3 _defaultMeshOffset = new Vector3(-100, -100, -100);
 
-    private static readonly string k_VertexModelTransformPropertyName = "_VertexModelTransform";
+    private static readonly string _vertexModelTransformPropertyName = "_VertexModelTransform";
 
     // Holds the vertex and index data of the depth template mesh.
-    private Mesh m_Mesh;
+    private Mesh _mesh;
 
-    private bool m_FreezeMesh = false;
+    private bool _freezeMesh = false;
 
-    private bool m_Initialized = false;
+    private bool _initialized = false;
 
     // Holds a copy of the depth frame at the time the frame was frozen.
-    private Texture2D m_StaticDepthTexture = null;
+    private Texture2D _staticDepthTexture = null;
 
     /// <summary>
     /// Takes a snapshot of the current depth array and sets a static depth texture.
     /// </summary>
     public void FreezeDepthFrame()
     {
-        m_FreezeMesh = true;
-        m_StaticDepthTexture = DepthSource.GetDepthTextureSnapshot();
+        _freezeMesh = true;
+        _staticDepthTexture = DepthSource.GetDepthTextureSnapshot();
 
         Material material = GetComponent<Renderer>().material;
-        material.SetTexture("_CurrentDepthTexture", m_StaticDepthTexture);
+        material.SetTexture("_CurrentDepthTexture", _staticDepthTexture);
     }
 
     /// <summary>
@@ -63,11 +63,11 @@ public class ScreenSpaceDepthMeshGenerator : MonoBehaviour
     /// </summary>
     public void UnfreezeDepthFrame()
     {
-        m_FreezeMesh = false;
+        _freezeMesh = false;
         Material material = GetComponent<Renderer>().material;
         material.SetTexture("_CurrentDepthTexture", DepthSource.DepthTexture);
-        Destroy(m_StaticDepthTexture);
-        m_StaticDepthTexture = null;
+        Destroy(_staticDepthTexture);
+        _staticDepthTexture = null;
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -122,7 +122,7 @@ public class ScreenSpaceDepthMeshGenerator : MonoBehaviour
         {
             for (int x = 0; x < DepthSource.DepthWidth; x++)
             {
-                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + k_DefaultMeshOffset;
+                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + _defaultMeshOffset;
                 vertices.Add(v);
                 normals.Add(Vector3.back);
             }
@@ -132,16 +132,16 @@ public class ScreenSpaceDepthMeshGenerator : MonoBehaviour
         int[] triangles = GenerateTriangles(DepthSource.DepthWidth, DepthSource.DepthHeight);
 
         // Create the mesh object and set all template data.
-        m_Mesh = new Mesh();
-        m_Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        m_Mesh.SetVertices(vertices);
-        m_Mesh.SetNormals(normals);
-        m_Mesh.SetTriangles(triangles, 0);
-        m_Mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
-        m_Mesh.UploadMeshData(true);
+        _mesh = new Mesh();
+        _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        _mesh.SetVertices(vertices);
+        _mesh.SetNormals(normals);
+        _mesh.SetTriangles(triangles, 0);
+        _mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
+        _mesh.UploadMeshData(true);
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.sharedMesh = m_Mesh;
+        meshFilter.sharedMesh = _mesh;
 
         // Sets camera intrinsics for depth reprojection.
         Material material = GetComponent<Renderer>().material;
@@ -152,20 +152,20 @@ public class ScreenSpaceDepthMeshGenerator : MonoBehaviour
         material.SetFloat("_PrincipalPointY", DepthSource.PrincipalPoint.y);
         material.SetInt("_ImageDimensionsX", DepthSource.ImageDimensions.x);
         material.SetInt("_ImageDimensionsY", DepthSource.ImageDimensions.y);
-        material.SetFloat("_TriangleConnectivityCutOff", k_TriangleConnectivityCutOff);
+        material.SetFloat("_TriangleConnectivityCutOff", _triangleConnectivityCutOff);
 
-        m_Initialized = true;
+        _initialized = true;
     }
 
     private void Update()
     {
-        if (!m_FreezeMesh)
+        if (!_freezeMesh)
         {
             Material material = GetComponent<Renderer>().material;
-            material.SetMatrix(k_VertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
+            material.SetMatrix(_vertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
         }
 
-        if (!m_Initialized && DepthSource.Initialized)
+        if (!_initialized && DepthSource.Initialized)
         {
             InitializeMesh();
         }

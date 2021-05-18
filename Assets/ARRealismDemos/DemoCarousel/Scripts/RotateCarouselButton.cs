@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="RotateCarouselButton.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ using UnityEngine;
 /// </summary>
 public class RotateCarouselButton : MonoBehaviour
 {
-    private DeviceOrientation m_DeviceOrientationInit;
+    private DeviceOrientation _deviceOrientationInit;
 
     // Start is called before the first frame update
     private void Start()
     {
-        m_DeviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
+        _deviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
 
-        if (m_DeviceOrientationInit == DeviceOrientation.Unknown)
+        if (_deviceOrientationInit == DeviceOrientation.Unknown)
         {
             StartCoroutine(GetValidDeviceOrientation());
         }
@@ -54,14 +54,14 @@ public class RotateCarouselButton : MonoBehaviour
         else
         {
             DeviceOrientationInit.DeviceOrientationInstance = Input.deviceOrientation;
-            m_DeviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
+            _deviceOrientationInit = DeviceOrientationInit.DeviceOrientationInstance;
             RotateCarouselItem();
         }
     }
 
     private void RotateCarouselItem()
     {
-        switch (m_DeviceOrientationInit)
+        switch (_deviceOrientationInit)
         {
             case DeviceOrientation.LandscapeLeft:
                 transform.Rotate(0, 0, -90f);

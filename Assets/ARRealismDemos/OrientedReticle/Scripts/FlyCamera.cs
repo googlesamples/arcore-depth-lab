@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="FlyCamera.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,27 +29,27 @@ public class FlyCamera : MonoBehaviour
     /// </summary>
     public float CameraRotationSpeed = 50;
 
-    private float m_RotationX = 0.0f;
-    private float m_RotationY = 0.0f;
+    private float _rotationX = 0.0f;
+    private float _rotationY = 0.0f;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        m_RotationX = this.transform.eulerAngles.y;
-        m_RotationY = -this.transform.eulerAngles.x;
+        _rotationX = this.transform.eulerAngles.y;
+        _rotationY = -this.transform.eulerAngles.x;
     }
 
     private void Update()
     {
         if (Cursor.lockState == CursorLockMode.Locked)
         {
-            m_RotationX += Input.GetAxis("Mouse X") * CameraRotationSpeed * Time.deltaTime;
-            m_RotationY += Input.GetAxis("Mouse Y") * CameraRotationSpeed * Time.deltaTime;
-            m_RotationY = Mathf.Clamp(m_RotationY, -40, 40);
-            m_RotationX = Mathf.Clamp(m_RotationX, -40, 40);
+            _rotationX += Input.GetAxis("Mouse X") * CameraRotationSpeed * Time.deltaTime;
+            _rotationY += Input.GetAxis("Mouse Y") * CameraRotationSpeed * Time.deltaTime;
+            _rotationY = Mathf.Clamp(_rotationY, -40, 40);
+            _rotationX = Mathf.Clamp(_rotationX, -40, 40);
 
-            transform.rotation = Quaternion.AngleAxis(m_RotationX, Vector3.up);
-            transform.localRotation *= Quaternion.AngleAxis(m_RotationY, Vector3.left);
+            transform.rotation = Quaternion.AngleAxis(_rotationX, Vector3.up);
+            transform.localRotation *= Quaternion.AngleAxis(_rotationY, Vector3.left);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))

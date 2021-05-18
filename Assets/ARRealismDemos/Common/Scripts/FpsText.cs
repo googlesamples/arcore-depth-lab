@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="FpsText.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ using UnityEngine;
 /// </summary>
 public class FpsText : MonoBehaviour
 {
-    private float m_DeltaTime = 0.0f;
+    private float _deltaTime = 0.0f;
 
     private void Update()
     {
-        m_DeltaTime += (Time.deltaTime - m_DeltaTime) * 0.1f;
+        _deltaTime += (Time.deltaTime - _deltaTime) * 0.1f;
     }
 
     private void OnGUI()
@@ -40,8 +40,8 @@ public class FpsText : MonoBehaviour
         style.alignment = TextAnchor.UpperLeft;
         style.fontSize = Screen.height / 50;
         style.normal.textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f);
-        float msec = m_DeltaTime * 1000.0f;
-        float fps = 1.0f / m_DeltaTime;
+        float msec = _deltaTime * 1000.0f;
+        float fps = 1.0f / _deltaTime;
         string text = string.Format("{0:0.0} ms, {1:0.} fps", msec, fps);
         GUI.Label(rect, text, style);
     }

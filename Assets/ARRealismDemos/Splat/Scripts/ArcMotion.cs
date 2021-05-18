@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ArcMotion.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,15 +59,15 @@ public class ArcMotion : MonoBehaviour
     /// </summary>
     public Material ProjectileMaterial;
 
-    private Vector3 m_LastPosition;
+    private Vector3 _lastPosition;
 
-    private Vector3 m_Impulse;
+    private Vector3 _impulse;
 
-    private float m_Gravity;
+    private float _gravity;
 
-    private Quaternion m_DestinyRotation;
+    private Quaternion _destinyRotation;
 
-    private Vector3 m_DestinyPosition;
+    private Vector3 _destinyPosition;
 
     /// <summary>
     /// Initialize the arc motion.
@@ -80,10 +80,10 @@ public class ArcMotion : MonoBehaviour
                 Vector3 destinyPosition, Quaternion destinyRotation)
     {
         transform.position = initialPosition;
-        this.m_Gravity = gravity;
-        this.m_DestinyRotation = destinyRotation;
-        this.m_DestinyPosition = destinyPosition;
-        this.m_LastPosition = transform.position;
+        this._gravity = gravity;
+        this._destinyRotation = destinyRotation;
+        this._destinyPosition = destinyPosition;
+        this._lastPosition = transform.position;
     }
 
     /// <summary>
@@ -92,28 +92,28 @@ public class ArcMotion : MonoBehaviour
     /// <param name="impulse">The impulse vector.</param>
     public void AddImpulse(Vector3 impulse)
     {
-        this.m_Impulse += impulse;
+        this._impulse += impulse;
     }
 
     private void FixedUpdate()
     {
         float dt = Time.fixedDeltaTime;
         float dtSquared = dt * dt;
-        Vector3 acceleration = -m_Gravity * Vector3.up;
+        Vector3 acceleration = -_gravity * Vector3.up;
 
         Vector3 currentPosition = transform.position;
-        Vector3 newPosition = currentPosition + (currentPosition - m_LastPosition)
-                    + (m_Impulse * dt) + (acceleration * dtSquared);
-        m_LastPosition = currentPosition;
+        Vector3 newPosition = currentPosition + (currentPosition - _lastPosition)
+                    + (_impulse * dt) + (acceleration * dtSquared);
+        _lastPosition = currentPosition;
         transform.position = newPosition;
-        transform.forward = newPosition - m_LastPosition;
+        transform.forward = newPosition - _lastPosition;
 
-        m_Impulse = Vector3.zero;
+        _impulse = Vector3.zero;
 
-        if (Vector3.Distance(transform.position, m_DestinyPosition) < MaxDistanceFromTarget)
+        if (Vector3.Distance(transform.position, _destinyPosition) < MaxDistanceFromTarget)
         {
-            GameObject splat = GameObject.Instantiate<GameObject>(Splat, m_DestinyPosition,
-                                                                  m_DestinyRotation,
+            GameObject splat = GameObject.Instantiate<GameObject>(Splat, _destinyPosition,
+                                                                  _destinyRotation,
                                                                   transform.parent.transform);
             splat.GetComponent<MeshRenderer>().sharedMaterial = SplatMaterial;
             splat.GetComponentsInChildren<ParticleSystemRenderer>()[0].sharedMaterial =

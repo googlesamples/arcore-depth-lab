@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PositionFilter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,39 +40,39 @@ public class PositionFilter : MonoBehaviour
     /// <summary>
     /// Sets the inner window size for ignoring any changes.
     /// </summary>
-    public float InnerHysteresisWindowSizeM = k_InnerHysteresisWindowSizeM;
+    public float InnerHysteresisWindowSizeM = _innerHysteresisWindowSizeM;
 
     /// <summary>
     /// Sets the out window size for smoothly blending from hysteresis to filtering value.
     /// </summary>
-    public float OuterHysteresisWindowSizeM = k_OuterHysteresisWindowSizeM;
+    public float OuterHysteresisWindowSizeM = _outerHysteresisWindowSizeM;
 
     /// <summary>
     /// Minimum cutoff value.
     /// </summary>
-    public float MinCutoff = k_MinCutoff;
+    public float MinCutoff = _minCutoff;
 
     /// <summary>
     /// Beta cutoff slope value.
     /// </summary>
-    public float BetaCutoffSlope = k_BetaCutoffSlope;
+    public float BetaCutoffSlope = _betaCutoffSlope;
 
     /// <summary>
     /// Derivate cutoff frequency value.
     /// </summary>
-    public float DerivateCutoffFrequency = k_DerivateCutoffFrequency;
+    public float DerivateCutoffFrequency = _derivateCutoffFrequency;
 
-    private const float k_SensorFrequency = 60;
-    private const float k_InnerHysteresisWindowSizeM = 0.003f;
-    private const float k_OuterHysteresisWindowSizeM = 0.015f;
-    private const float k_MinCutoff = 7f;
-    private const float k_BetaCutoffSlope = 0.5f;
-    private const float k_DerivateCutoffFrequency = 1f;
-    private SpeedAdaptiveFilter m_XFilter;
-    private SpeedAdaptiveFilter m_YFilter;
-    private SpeedAdaptiveFilter m_ZFilter;
-    private Vector3 m_LastValue;
-    private float m_SensorFrequency = k_SensorFrequency;
+    private const float _initialSensorFrequency = 60;
+    private const float _innerHysteresisWindowSizeM = 0.003f;
+    private const float _outerHysteresisWindowSizeM = 0.015f;
+    private const float _minCutoff = 7f;
+    private const float _betaCutoffSlope = 0.5f;
+    private const float _derivateCutoffFrequency = 1f;
+    private SpeedAdaptiveFilter _xFilter;
+    private SpeedAdaptiveFilter _yFilter;
+    private SpeedAdaptiveFilter _zFilter;
+    private Vector3 _lastValue;
+    private float _sensorFrequency = _initialSensorFrequency;
 
     /// <summary>
     /// Default constructor for a 3D position filter.
@@ -89,7 +89,7 @@ public class PositionFilter : MonoBehaviour
     {
         get
         {
-            return m_LastValue;
+            return _lastValue;
         }
     }
 
@@ -98,12 +98,12 @@ public class PositionFilter : MonoBehaviour
     /// </summary>
     public void ReinitalizeFilter()
     {
-        m_XFilter = new SpeedAdaptiveFilter(
-            m_SensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
-        m_YFilter = new SpeedAdaptiveFilter(
-            m_SensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
-        m_ZFilter = new SpeedAdaptiveFilter(
-            m_SensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
+        _xFilter = new SpeedAdaptiveFilter(
+            _sensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
+        _yFilter = new SpeedAdaptiveFilter(
+            _sensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
+        _zFilter = new SpeedAdaptiveFilter(
+            _sensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
     }
 
     /// <summary>
@@ -113,11 +113,11 @@ public class PositionFilter : MonoBehaviour
     /// <returns>Returns the filtered value.</returns>
     public Vector3 Filter(Vector3 value)
     {
-        UpdateFilterParameters(m_XFilter);
-        UpdateFilterParameters(m_YFilter);
-        UpdateFilterParameters(m_ZFilter);
+        UpdateFilterParameters(_xFilter);
+        UpdateFilterParameters(_yFilter);
+        UpdateFilterParameters(_zFilter);
 
-        float distFromLastPos = (m_LastValue - value).magnitude;
+        float distFromLastPos = (_lastValue - value).magnitude;
         float ratio = (distFromLastPos - InnerHysteresisWindowSizeM) /
             (OuterHysteresisWindowSizeM - InnerHysteresisWindowSizeM);
 
@@ -126,13 +126,13 @@ public class PositionFilter : MonoBehaviour
         Vector3 result = value;
         if (!DoWindowFilterOnly)
         {
-            result.x = m_XFilter.Filter(value.x);
-            result.y = m_YFilter.Filter(value.y);
-            result.z = m_ZFilter.Filter(value.z);
+            result.x = _xFilter.Filter(value.x);
+            result.y = _yFilter.Filter(value.y);
+            result.z = _zFilter.Filter(value.z);
         }
 
-        result = (ratio * result) + ((1.0f - ratio) * m_LastValue);
-        m_LastValue = result;
+        result = (ratio * result) + ((1.0f - ratio) * _lastValue);
+        _lastValue = result;
         return result;
     }
 

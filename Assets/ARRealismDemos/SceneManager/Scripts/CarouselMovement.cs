@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CarouselMovement.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,51 +66,51 @@ public class CarouselMovement : MonoBehaviour
     /// </summary>
     public float MaximumRotation;
 
-    private Component[] m_Buttons;
+    private Component[] _buttons;
 
-    private Coroutine m_InterpolateCoroutine;
+    private Coroutine _interpolateCoroutine;
 
-    private GameObject m_CenterButton;
+    private GameObject _centerButton;
 
-    private GameObject m_DelayedCenterButton;
+    private GameObject _delayedCenterButton;
 
-    private GameObject m_TriggeredCenterButton;
+    private GameObject _triggeredCenterButton;
 
-    private Texture m_GUITex;
+    private Texture _guiTex;
 
-    private bool m_CenterButtonChanged = true;
+    private bool _centerButtonChanged = true;
 
-    private float m_SceneLoadTimer = 0;
+    private float _sceneLoadTimer = 0;
 
-    private float m_ClickHoldTimer = 0;
+    private float _clickHoldTimer = 0;
 
-    private float m_StartCursorPosition = 0;
+    private float _startCursorPosition = 0;
 
-    private float m_LastCursorPosition = 0;
+    private float _lastCursorPosition = 0;
 
-    private float m_StartCarouselRotation = 0;
+    private float _startCarouselRotation = 0;
 
-    private float m_DestinyCarouselRotation = 0;
+    private float _destinyCarouselRotation = 0;
 
-    private float m_CarouselVelocity = 0.0f;
+    private float _carouselVelocity = 0.0f;
 
-    private float m_CarouseltemAngleStep = 4.5f;
+    private float _carouseltemAngleStep = 4.5f;
 
-    private int m_NegativeHalfNumberOfItens = 3;
+    private int _negativeHalfNumberOfItens = 3;
 
-    private int m_PositiveHalfNumberOfItens = 3;
+    private int _positiveHalfNumberOfItens = 3;
 
-    private bool m_TouchStarted = false;
+    private bool _touchStarted = false;
 
     // Start is called before the first frame update.
     private void Start()
     {
-        m_GUITex = GUICamera.targetTexture;
-        m_Buttons = GetComponentsInChildren<SceneButton>();
+        _guiTex = GUICamera.targetTexture;
+        _buttons = GetComponentsInChildren<SceneButton>();
         float maxRotation = float.NegativeInfinity;
         float minRotation = float.PositiveInfinity;
 
-        foreach (SceneButton button in m_Buttons)
+        foreach (SceneButton button in _buttons)
         {
             GameObject item = button.gameObject.transform.parent.gameObject;
             float rotation = WrapAngle(item.transform.localEulerAngles.y) * -1;
@@ -118,12 +118,12 @@ public class CarouselMovement : MonoBehaviour
             minRotation = Mathf.Min(rotation, minRotation);
         }
 
-        m_NegativeHalfNumberOfItens = (int)(minRotation / m_CarouseltemAngleStep);
-        m_PositiveHalfNumberOfItens = (int)(maxRotation / m_CarouseltemAngleStep);
+        _negativeHalfNumberOfItens = (int)(minRotation / _carouseltemAngleStep);
+        _positiveHalfNumberOfItens = (int)(maxRotation / _carouseltemAngleStep);
 
         // Starts the carousel on the leftmost item.
         transform.localEulerAngles = new Vector3(0, minRotation, 0);
-        m_DestinyCarouselRotation = minRotation;
+        _destinyCarouselRotation = minRotation;
     }
 
     // Update is called once per frame.
@@ -149,70 +149,70 @@ public class CarouselMovement : MonoBehaviour
 
     private bool UpdateMovement()
     {
-        if (Input.GetMouseButtonDown(0) && isCursorOnTouchRegion())
+        if (Input.GetMouseButtonDown(0) && IsCursorOnTouchRegion())
         {
             // On touch start.
-            m_StartCursorPosition = Input.mousePosition.x;
-            m_LastCursorPosition = Input.mousePosition.x;
-            m_StartCarouselRotation = transform.localEulerAngles.y;
-            m_ClickHoldTimer = 0f;
-            m_TouchStarted = true;
+            _startCursorPosition = Input.mousePosition.x;
+            _lastCursorPosition = Input.mousePosition.x;
+            _startCarouselRotation = transform.localEulerAngles.y;
+            _clickHoldTimer = 0f;
+            _touchStarted = true;
             LoadingSpinner.Instance.Show();
         }
-        else if (Input.GetMouseButton(0) && m_TouchStarted)
+        else if (Input.GetMouseButton(0) && _touchStarted)
         {
             // On touch move.
-            float dx = (m_LastCursorPosition - Input.mousePosition.x) / Screen.width;
-            m_CarouselVelocity = dx / Time.deltaTime;
-            m_LastCursorPosition = Input.mousePosition.x;
-            float distanceFromStart = m_StartCursorPosition - Input.mousePosition.x;
+            float dx = (_lastCursorPosition - Input.mousePosition.x) / Screen.width;
+            _carouselVelocity = dx / Time.deltaTime;
+            _lastCursorPosition = Input.mousePosition.x;
+            float distanceFromStart = _startCursorPosition - Input.mousePosition.x;
             distanceFromStart /= Screen.width;
             distanceFromStart *= Screen.width * 0.02f; // Small speed boost.
             transform.localEulerAngles = new Vector3(0,
-                        m_StartCarouselRotation + distanceFromStart, 0);
-            m_ClickHoldTimer += Time.deltaTime;
+                        _startCarouselRotation + distanceFromStart, 0);
+            _clickHoldTimer += Time.deltaTime;
         }
-        else if (Input.GetMouseButtonUp(0) && m_TouchStarted)
+        else if (Input.GetMouseButtonUp(0) && _touchStarted)
         {
             float destiny = 0;
             //// On touch end.
             //// Check if it was just a tap.
-            if (m_ClickHoldTimer < 0.1f)
+            if (_clickHoldTimer < 0.1f)
             {
                 // If its just a tap retrieve the tapped icon and
                 // make the carousel animate to it.
-                float rescaled_x = (m_LastCursorPosition / Screen.width) * m_GUITex.width;
-                destiny = getTappedItem(new Vector2(rescaled_x,
-                                            m_GUITex.height / 2));
+                float rescaled_x = (_lastCursorPosition / Screen.width) * _guiTex.width;
+                destiny = GetTappedItem(new Vector2(rescaled_x,
+                                            _guiTex.height / 2));
             }
             else
             {
                 float current_y = transform.localEulerAngles.y;
-                current_y += m_CarouselVelocity;
+                current_y += _carouselVelocity;
                 destiny = WrapAngle(current_y);
-                destiny = Mathf.Round(destiny / m_CarouseltemAngleStep);
+                destiny = Mathf.Round(destiny / _carouseltemAngleStep);
             }
 
-            destiny = Mathf.Min(m_PositiveHalfNumberOfItens, destiny);
-            destiny = Mathf.Max(m_NegativeHalfNumberOfItens, destiny);
+            destiny = Mathf.Min(_positiveHalfNumberOfItens, destiny);
+            destiny = Mathf.Max(_negativeHalfNumberOfItens, destiny);
 
-            m_DestinyCarouselRotation = m_CarouseltemAngleStep * destiny;
-            m_TouchStarted = false;
+            _destinyCarouselRotation = _carouseltemAngleStep * destiny;
+            _touchStarted = false;
         }
 
         float current = WrapAngle(transform.localEulerAngles.y);
-        float interpolatedRotation = current + (0.1f * (m_DestinyCarouselRotation - current));
+        float interpolatedRotation = current + (0.1f * (_destinyCarouselRotation - current));
         transform.localEulerAngles = new Vector3(0, interpolatedRotation, 0);
 
         return (interpolatedRotation - current) < 0.01f;
     }
 
-    private bool isCursorOnTouchRegion()
+    private bool IsCursorOnTouchRegion()
     {
         return Input.mousePosition.y > Screen.height - (Screen.height * 0.2f);
     }
 
-    private int getTappedItem(Vector2 cursorPosition)
+    private int GetTappedItem(Vector2 cursorPosition)
     {
         float rotation = WrapAngle(transform.localEulerAngles.y);
 
@@ -228,34 +228,34 @@ public class CarouselMovement : MonoBehaviour
             }
         }
 
-        return (int)Mathf.Round(rotation / m_CarouseltemAngleStep);
+        return (int)Mathf.Round(rotation / _carouseltemAngleStep);
     }
 
     private void LoadCenterButtonScene()
     {
         // Timer and trigger logic for carousel.
-        m_SceneLoadTimer += Time.deltaTime;
-        if (m_SceneLoadTimer > SecondsBeforeSwitching)
+        _sceneLoadTimer += Time.deltaTime;
+        if (_sceneLoadTimer > SecondsBeforeSwitching)
         {
-            m_SceneLoadTimer = 0f;
-            if (m_DelayedCenterButton == m_CenterButton &&
-                m_TriggeredCenterButton != m_CenterButton)
+            _sceneLoadTimer = 0f;
+            if (_delayedCenterButton == _centerButton &&
+                _triggeredCenterButton != _centerButton)
             {
                 // Trigger button press when carousel has been at center for.
-                SceneButton button = m_CenterButton.GetComponent<SceneButton>();
+                SceneButton button = _centerButton.GetComponent<SceneButton>();
                 if (button != null)
                 {
                     button.Press();
                 }
 
-                m_TriggeredCenterButton = m_CenterButton;
+                _triggeredCenterButton = _centerButton;
             }
-            else if (!m_TouchStarted && m_TriggeredCenterButton == m_CenterButton)
+            else if (!_touchStarted && _triggeredCenterButton == _centerButton)
             {
                 LoadingSpinner.Instance.Hide();
             }
 
-            m_DelayedCenterButton = m_CenterButton;
+            _delayedCenterButton = _centerButton;
         }
     }
 
@@ -264,7 +264,7 @@ public class CarouselMovement : MonoBehaviour
         // Cast ray from center of UI and assign the detected center button to the centerButton
         // gameobject.
         Ray centerRay = GUICamera.ScreenPointToRay(new Vector2(
-            m_GUITex.width / 2, m_GUITex.height / 2));
+            _guiTex.width / 2, _guiTex.height / 2));
         RaycastHit centerRayHit;
 
         GameObject center_button = null;
@@ -273,17 +273,17 @@ public class CarouselMovement : MonoBehaviour
             center_button = centerRayHit.collider.gameObject;
         }
 
-        m_CenterButtonChanged = center_button != m_CenterButton;
+        _centerButtonChanged = center_button != _centerButton;
 
-        if (m_CenterButtonChanged)
+        if (_centerButtonChanged)
         {
-            m_CenterButton = center_button;
+            _centerButton = center_button;
             //// Provide user with haptic feedback.
             HapticManager.HapticFeedback();
             //// Update button label based on center button.
-            if (m_CenterButton.GetComponent<SceneButton>() != null)
+            if (_centerButton.GetComponent<SceneButton>() != null)
             {
-                string centerButtonLabel = m_CenterButton.GetComponent<SceneButton>().SceneLabel;
+                string centerButtonLabel = _centerButton.GetComponent<SceneButton>().SceneLabel;
 
                 if (centerButtonLabel != null)
                 {
@@ -293,9 +293,9 @@ public class CarouselMovement : MonoBehaviour
         }
 
         // Scale down buttons that aren't in the center, and scale up the center button.
-        foreach (SceneButton button in m_Buttons)
+        foreach (SceneButton button in _buttons)
         {
-            if (button.gameObject == m_CenterButton)
+            if (button.gameObject == _centerButton)
             {
                 float scale = button.transform.localScale.x +
                         (0.25f * (1.12f - button.transform.localScale.x));

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ObjectCollisionController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class ObjectCollisionController : MonoBehaviour
     /// <summary>
     /// Type of depth texture to attach to the material.
     /// </summary>
-    public bool UseSparseDepth = false;
+    public bool UseRawDepth = false;
 
     /// <summary>
     /// Whether to use the mesh's bounding box to represent the collider instead of usinsg
@@ -125,15 +125,15 @@ public class ObjectCollisionController : MonoBehaviour
     /// </summary>
     public bool CheckReticleUpVector = true;
 
-    private const float k_LookAtCameraRotationDuration = 0.5f;
-    private Vector3[] m_SelectedVerticesList;
+    private const float _lookAtCameraRotationDuration = 0.5f;
+    private Vector3[] _selectedVerticesList;
 
     /// <summary>
     /// The script to handle collision event.
     /// </summary>
-    private CollisionEventInterface m_CollisionEvent;
+    private CollisionEventInterface _collisionEvent;
 
-    private float m_LastCollisionCheckTimestamp = 0f;
+    private float _lastCollisionCheckTimestamp = 0f;
 
     /// <summary>
     /// Get all vertices of a mesh in the local coordinate system for at most two hierachies.
@@ -188,11 +188,11 @@ public class ObjectCollisionController : MonoBehaviour
 
         if (UseBoundingBox)
         {
-            m_SelectedVerticesList = Utilities.GetBoundingBoxVertices(colliderMesh);
+            _selectedVerticesList = Utilities.GetBoundingBoxVertices(colliderMesh);
         }
         else
         {
-            m_SelectedVerticesList = GetVerticesInChildren(colliderMesh);
+            _selectedVerticesList = GetVerticesInChildren(colliderMesh);
         }
     }
 
@@ -201,7 +201,7 @@ public class ObjectCollisionController : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        m_CollisionEvent = gameObject.GetComponent<ObjectCollisionEvent>();
+        _collisionEvent = gameObject.GetComponent<ObjectCollisionEvent>();
     }
 
     /// <summary>
@@ -210,9 +210,9 @@ public class ObjectCollisionController : MonoBehaviour
     private void Update()
     {
         if (EnableCollisionChecking &&
-            Time.time - m_LastCollisionCheckTimestamp > 1f / CollisionDetectionFps / 1000f)
+            Time.time - _lastCollisionCheckTimestamp > 1f / CollisionDetectionFps / 1000f)
         {
-            m_LastCollisionCheckTimestamp = Time.time;
+            _lastCollisionCheckTimestamp = Time.time;
             CheckCollisionState();
         }
     }
@@ -238,11 +238,11 @@ public class ObjectCollisionController : MonoBehaviour
 
         if (collisionPercentage > CollisionPercentageLowBound)
         {
-            m_CollisionEvent.Trigger(gameObject, collisionPercentage);
+            _collisionEvent.Trigger(gameObject, collisionPercentage);
         }
         else
         {
-            m_CollisionEvent.Stop(gameObject, collisionPercentage);
+            _collisionEvent.Stop(gameObject, collisionPercentage);
         }
     }
 
@@ -259,17 +259,17 @@ public class ObjectCollisionController : MonoBehaviour
         UpdateVerticesList();
 
         // Reports no collision if the mesh or proxy is empty.
-        if (m_SelectedVerticesList == null)
+        if (_selectedVerticesList == null)
         {
             return 0;
         }
 
         int numCollision = 0;
         float collisionPercentage = 0;
-        int totalTests = m_SelectedVerticesList.Length;
+        int totalTests = _selectedVerticesList.Length;
 
         // Tests every single vertex of the mesh and gets the statistics of the results.
-        foreach (var vertex in m_SelectedVerticesList)
+        foreach (var vertex in _selectedVerticesList)
         {
             var result = TestCollisionOnVertex(vertex);
             switch (result)
@@ -342,9 +342,9 @@ public class ObjectCollisionController : MonoBehaviour
         LookAtPos.y = 0;
 
         Quaternion sourceRotation = transform.rotation;
-        while (elapsedTime < k_LookAtCameraRotationDuration)
+        while (elapsedTime < _lookAtCameraRotationDuration)
         {
-            float progress = elapsedTime / k_LookAtCameraRotationDuration;
+            float progress = elapsedTime / _lookAtCameraRotationDuration;
             transform.rotation = Quaternion.Lerp(sourceRotation, Quaternion.LookRotation(LookAtPos),
               progress);
             elapsedTime += Time.deltaTime;

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="HelpBalloonController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class HelpBalloonController : MonoBehaviour
     /// Position balloon offset.
     /// </summary>
     public Vector2 PositionOffset;
-    private bool m_HelpBalloonShowing = true;
+    private bool _helpBalloonShowing = true;
 
     /// <summary>
     /// Starts with fading out.
@@ -75,7 +75,7 @@ public class HelpBalloonController : MonoBehaviour
 
     private void Update()
     {
-        if (HideOnTap && Input.touchCount > 0 && m_HelpBalloonShowing)
+        if (HideOnTap && Input.touchCount > 0 && _helpBalloonShowing)
         {
             StartCoroutine(ShowHide(false));
         }
@@ -98,7 +98,7 @@ public class HelpBalloonController : MonoBehaviour
     {
         if (!Show)
         {
-            m_HelpBalloonShowing = false;
+            _helpBalloonShowing = false;
             while (GetComponent<CanvasGroup>().alpha > 0.02f)
             {
                 GetComponent<CanvasGroup>().alpha -= Time.deltaTime * 2;
@@ -116,7 +116,7 @@ public class HelpBalloonController : MonoBehaviour
             }
 
             GetComponent<CanvasGroup>().alpha = 1;
-            m_HelpBalloonShowing = true;
+            _helpBalloonShowing = true;
         }
     }
 }

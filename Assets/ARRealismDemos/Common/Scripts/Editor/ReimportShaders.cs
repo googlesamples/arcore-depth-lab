@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ReimportShaders.cs" company="Google LLC">
 //
-// Copyright 2020 Google Inc. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ using UnityEngine;
 /// </summary>
 public class ReimportShaders : AssetPostprocessor
 {
-    private static readonly string k_ARCoreDepthShaderName = "ARCoreDepth.cginc";
-    private static readonly string k_ARCoreDepthSamplesPath = "Assets/ARRealismDemos";
+    private static readonly string _arCoreDepthShaderName = "ARCoreDepth.cginc";
+    private static readonly string _arCoreDepthSamplesPath = "Assets/ARRealismDemos";
 
     private static void OnPostprocessAllAssets(
         string[] importedAssets,
@@ -41,9 +41,9 @@ public class ReimportShaders : AssetPostprocessor
     {
         foreach (string str in importedAssets)
         {
-            if (str.EndsWith(k_ARCoreDepthShaderName))
+            if (str.EndsWith(_arCoreDepthShaderName))
             {
-                string[] assetsPaths = { k_ARCoreDepthSamplesPath };
+                string[] assetsPaths = { _arCoreDepthSamplesPath };
                 string[] demoShaders = AssetDatabase.FindAssets("t:Shader", assetsPaths);
 
                 foreach (string shaderGUID in demoShaders)

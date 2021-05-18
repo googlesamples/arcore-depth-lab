@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="MotionStereoDepthDataSource.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,11 +39,15 @@ using IOSImport = GoogleARCoreInternal.DllImportNoop;
 /// </summary>
 public class MotionStereoDepthDataSource : IDepthDataSource
 {
-    private short[] m_DepthArray = new short[0];
-    private int m_DepthHeight = 0;
-    private int m_DepthWidth = 0;
-    private bool m_Initialized = false;
-    private CameraIntrinsics m_DepthCameraIntrinsics;
+    private short[] _depthArray = new short[0];
+    private short[] _rawDepthArray = new short[0];
+    private byte[] _confidenceArray = new byte[0];
+    private long _rawDepthTimestamp = 0;
+    private long _rawDepthTimestampPrevious = 0;
+    private int _depthHeight = 0;
+    private int _depthWidth = 0;
+    private bool _initialized = false;
+    private CameraIntrinsics _depthCameraIntrinsics;
 
     private delegate bool AcquireDepthImageDelegate(
         IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr depthImageHandle);
@@ -55,7 +59,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
         get
         {
-            return m_Initialized;
+            return _initialized;
         }
     }
 
@@ -66,10 +70,35 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
         get
         {
-            return m_DepthArray;
+            return _depthArray;
         }
     }
 
+    /// <summary>
+    /// Gets the CPU array that always contains the latest sparse depth data.
+    /// </summary>
+    public short[] RawDepthArray
+    {
+        get
+        {
+            return _rawDepthArray;
+        }
+    }
+
+    /// <summary>
+    /// Gets the CPU array that always contains the latest sparse depth confidence data.
+    /// Each pixel is a 8-bit unsigned integer representing the estimated confidence of the
+    /// corresponding pixel in the depth image. The confidence value is between 0 and 255,
+    /// inclusive, with 0 representing 0% confidence and 255 representing 100% confidence in the
+    /// measured depth values.
+    /// </summary>
+    public byte[] ConfidenceArray
+    {
+        get
+        {
+            return _confidenceArray;
+        }
+    }
 
     /// <summary>
     /// Gets the focal length in pixels.
@@ -83,7 +112,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
         get
         {
-            return m_DepthCameraIntrinsics.FocalLength;
+            return _depthCameraIntrinsics.FocalLength;
         }
     }
 
@@ -94,7 +123,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
         get
         {
-            return m_DepthCameraIntrinsics.PrincipalPoint;
+            return _depthCameraIntrinsics.PrincipalPoint;
         }
     }
 
@@ -105,7 +134,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
         get
         {
-            return m_DepthCameraIntrinsics.ImageDimensions;
+            return _depthCameraIntrinsics.ImageDimensions;
         }
     }
 
@@ -115,10 +144,31 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     /// <param name="depthTexture">The texture to update with depth data.</param>
     public void UpdateDepthTexture(ref Texture2D depthTexture)
     {
-        _UpdateTexture(ref depthTexture, ref m_DepthArray, _AcquireDepthImage);
+        UpdateTexture(ref depthTexture, ref _depthArray, AcquireDepthImage);
     }
 
+    /// <summary>
+    /// Updates the texture with the latest sparse depth data from ARCore.
+    /// </summary>
+    /// <param name="depthTexture">The texture to update with depth data.</param>
+    public void UpdateRawDepthTexture(ref Texture2D depthTexture)
+    {
+        UpdateTexture(ref depthTexture, ref _rawDepthArray, AcquireRawDepthImage);
+    }
 
+    /// <summary>
+    /// Updates the texture with the latest confidence image corresponding to the sparse depth data.
+    /// Each pixel is a 8-bit unsigned integer representing the estimated confidence of the
+    /// corresponding pixel in the depth image. The confidence value is between 0 and 255,
+    /// inclusive, with 0 representing 0% confidence and 255 representing 100% confidence in the
+    /// measured depth values.
+    /// </summary>
+    /// <param name="confidenceTexture">The texture to update with confidence data.</param>
+    public void UpdateConfidenceTexture(ref Texture2D confidenceTexture)
+    {
+        UpdateTexture(ref confidenceTexture, ref _confidenceArray,
+                       AcquireRawDepthConfidenceImage);
+    }
 
     /// <summary>
     /// Triggers the depth array to be updated.
@@ -130,37 +180,108 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     /// </returns>
     public short[] UpdateDepthArray()
     {
-        _UpdateDepthArray(ref m_DepthArray, _AcquireDepthImage);
-        return m_DepthArray;
+        UpdateDepthArray(ref _depthArray, AcquireDepthImage);
+        return _depthArray;
     }
 
+    /// <summary>
+    /// Triggers the sparse depth array to be updated.
+    /// This is useful when UpdateSparseDepthTexture(...) is not called frequently
+    /// since the sparse depth array is updated at each UpdateSparseDepthTexture(...) call.
+    /// </summary>
+    /// <returns>
+    /// Returns a reference to the sparse depth array.
+    /// </returns>
+    public short[] UpdateRawDepthArray()
+    {
+        UpdateDepthArray(ref _rawDepthArray, AcquireRawDepthImage);
+        return _rawDepthArray;
+    }
 
+    /// <summary>
+    /// Triggers the confidence array to be updated from ARCore.
+    /// This is useful when UpdateConfidenceTexture(...) is not called frequently
+    /// since the confidence array is updated at each UpdateConfidenceTexture(...) call.
+    /// </summary>
+    /// <returns>
+    /// Returns a reference to the confidence array.
+    /// </returns>
+    public byte[] UpdateConfidenceArray()
+    {
+        UpdateDepthArray(ref _confidenceArray, AcquireRawDepthConfidenceImage);
+        return _confidenceArray;
+    }
 
+    /// <summary>
+    /// Query to determine if a new sparse depth frame is available.
+    /// </summary>
+    /// <returns>
+    /// True if a new sparse depth frame is available.
+    /// </returns>
+    public bool NewRawDepthAvailable()
+    {
+        bool isNew = _rawDepthTimestampPrevious != _rawDepthTimestamp;
+        _rawDepthTimestampPrevious = _rawDepthTimestamp;
+        return isNew;
+    }
 
+    /// <summary>
+    /// Provides an aggregate estimate of the depth confidence within the provided screen rectangle,
+    /// corresponding to the depth image returned from the ArFrame.
+    /// </summary>
+    /// <param name="region">
+    /// The screen-space rectangle. Coordinates are expressed in pixels, with (0,0) at the top
+    /// left corner.
+    /// </param>
+    /// <returns>
+    /// Aggregate estimate of confidence within the provided area within range [0,1].
+    /// Confidence >= 0.5 indicates sufficient support for general depth use.
+    /// </returns>
+    public float GetRegionConfidence(RectInt region)
+    {
+        // The native session provides the session and frame handles.
+        var nativeSession = LifecycleManager.Instance.NativeSession;
+        if (nativeSession == null)
+        {
+            Debug.LogError("NativeSession is null.");
+            return 0f;
+        }
+
+        float confidence = 0f;
+        ExternApi.ArFrame_getDepthRegionConfidence_private(
+            nativeSession.SessionHandle,
+            nativeSession.FrameHandle,
+            region.xMin,
+            region.yMin,
+            region.width,
+            region.height,
+            out confidence);
+
+        return confidence;
+    }
 
     /// <summary>
     /// Queries and correctly scales camera intrinsics for depth to vertex reprojection.
     /// </summary>
-    private void _InitializeCameraIntrinsics()
+    private void InitializeCameraIntrinsics()
     {
         // Gets the camera parameters to create the required number of vertices.
-        m_DepthCameraIntrinsics = Frame.CameraImage.TextureIntrinsics;
+        _depthCameraIntrinsics = Frame.CameraImage.TextureIntrinsics;
 
         // Scales camera intrinsics to the depth map size.
         Vector2 intrinsicsScale;
-        intrinsicsScale.x = m_DepthWidth / (float)m_DepthCameraIntrinsics.ImageDimensions.x;
-        intrinsicsScale.y = m_DepthHeight / (float)m_DepthCameraIntrinsics.ImageDimensions.y;
+        intrinsicsScale.x = _depthWidth / (float)_depthCameraIntrinsics.ImageDimensions.x;
+        intrinsicsScale.y = _depthHeight / (float)_depthCameraIntrinsics.ImageDimensions.y;
 
-        m_DepthCameraIntrinsics.FocalLength = Utilities.MultiplyVector2(
-            m_DepthCameraIntrinsics.FocalLength, intrinsicsScale);
-        m_DepthCameraIntrinsics.PrincipalPoint = Utilities.MultiplyVector2(
-            m_DepthCameraIntrinsics.PrincipalPoint, intrinsicsScale);
-        m_DepthCameraIntrinsics.ImageDimensions =
-            new Vector2Int(m_DepthWidth, m_DepthHeight);
+        _depthCameraIntrinsics.FocalLength = Utilities.MultiplyVector2(
+            _depthCameraIntrinsics.FocalLength, intrinsicsScale);
+        _depthCameraIntrinsics.PrincipalPoint = Utilities.MultiplyVector2(
+            _depthCameraIntrinsics.PrincipalPoint, intrinsicsScale);
+        _depthCameraIntrinsics.ImageDimensions =
+            new Vector2Int(_depthWidth, _depthHeight);
 
-        m_Initialized = true;
+        _initialized = true;
     }
-
 
     /// <summary>
     /// Queries the image delegate for a texture data and updates the given array and texture.
@@ -169,7 +290,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     /// <param name="texture">The texture to update with new data.</param>
     /// <param name="dataArray">The CPU array to update with new data.</param>
     /// <param name="acquireImageDelegate">The function to call to obtain data.</param>
-    private void _UpdateTexture<T>(
+    private void UpdateTexture<T>(
         ref Texture2D texture,
         ref T[] dataArray,
         AcquireDepthImageDelegate acquireImageDelegate)
@@ -192,21 +313,21 @@ public class MotionStereoDepthDataSource : IDepthDataSource
             return;
         }
 
-        int previousDepthWidth = m_DepthWidth;
-        int previousDepthHeight = m_DepthHeight;
+        int previousDepthWidth = _depthWidth;
+        int previousDepthHeight = _depthHeight;
 
         // Gets the size of the depth data.
         ExternApi.ArImage_getWidth(
             nativeSession.SessionHandle,
             imageHandle,
-            out m_DepthWidth);
+            out _depthWidth);
         ExternApi.ArImage_getHeight(nativeSession.SessionHandle,
             imageHandle,
-            out m_DepthHeight);
+            out _depthHeight);
 
-        if (previousDepthWidth != m_DepthWidth || previousDepthHeight != m_DepthHeight)
+        if (previousDepthWidth != _depthWidth || previousDepthHeight != _depthHeight)
         {
-            _InitializeCameraIntrinsics();
+            InitializeCameraIntrinsics();
         }
 
         // Accesses the depth image surface data.
@@ -245,15 +366,15 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         }
 
         // Resize the depth texture if needed.
-        if (m_DepthWidth != texture.width || m_DepthHeight != texture.height)
+        if (_depthWidth != texture.width || _depthHeight != texture.height)
         {
             if (pixelStride == 1)
             {
-                texture.Resize(m_DepthWidth, m_DepthHeight, TextureFormat.R8, false);
+                texture.Resize(_depthWidth, _depthHeight, TextureFormat.R8, false);
             }
             else
             {
-                texture.Resize(m_DepthWidth, m_DepthHeight, TextureFormat.RGB565, false);
+                texture.Resize(_depthWidth, _depthHeight, TextureFormat.RGB565, false);
             }
         }
 
@@ -267,7 +388,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         return;
     }
 
-    private void _UpdateDepthArray<T>(
+    private void UpdateDepthArray<T>(
         ref T[] dataArray,
         AcquireDepthImageDelegate acquireImageDelegate)
     {
@@ -341,7 +462,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         return;
     }
 
-    private bool _AcquireDepthImage(
+    private bool AcquireDepthImage(
         IntPtr sessionHandle,
         IntPtr frameHandle,
         ref IntPtr depthImageHandle)
@@ -362,7 +483,54 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         return true;
     }
 
+    private bool AcquireRawDepthImage(
+        IntPtr sessionHandle,
+        IntPtr frameHandle,
+        ref IntPtr depthImageHandle)
+    {
+        // Get the current depth image.
+        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireRawDepthImage(
+            sessionHandle,
+            frameHandle,
+            ref depthImageHandle);
 
+        if (status != ApiArStatus.Success)
+        {
+            Debug.LogError(
+                "DepthHelper::AcquireSparseDepthImage could not get sparse depth data, status: " +
+                status);
+            return false;
+        }
+
+        ExternApi.ArImage_getTimestamp(
+            sessionHandle,
+            depthImageHandle,
+            out _rawDepthTimestamp);
+
+        return true;
+    }
+
+    private bool AcquireRawDepthConfidenceImage(
+        IntPtr sessionHandle,
+        IntPtr frameHandle,
+        ref IntPtr confidenceImageHandle)
+    {
+        // Get the current depth image.
+        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireRawDepthConfidenceImage(
+            sessionHandle,
+            frameHandle,
+            ref confidenceImageHandle);
+
+        if (status != ApiArStatus.Success)
+        {
+            Debug.LogError(
+                "DepthHelper::AcquireSparseDepthConfidenceImage could not get data, status: " +
+                status);
+            return false;
+        }
+
+        return true;
+    }
 
     private struct ExternApi
     {
@@ -371,9 +539,18 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         public static extern ApiArStatus ArFrame_acquireDepthImage(
             IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
 
+        [AndroidImport(ApiConstants.ARCoreNativeApi)]
+        public static extern ApiArStatus ArFrame_acquireRawDepthImage(
+            IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
 
+        [AndroidImport(ApiConstants.ARCoreNativeApi)]
+        public static extern ApiArStatus ArFrame_acquireRawDepthConfidenceImage(
+            IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
 
-
+        [AndroidImport(ApiConstants.ARCoreNativeApi)]
+        public static extern void ArFrame_getDepthRegionConfidence_private(
+            IntPtr sessionHandle, IntPtr frameHandle, int rectX, int rectY, int rectWidth,
+            int rectHeight, out float outRegionConfidence);
 
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
         public static extern void ArImage_getWidth(
@@ -391,6 +568,11 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
         public static extern void ArImage_getPlanePixelStride(
             IntPtr sessionHandle, IntPtr imageHandle, int planeIndex, ref int pixelStride);
+
+        [AndroidImport(ApiConstants.ARCoreNativeApi)]
+        public static extern void ArImage_getTimestamp(
+            IntPtr sessionHandle, IntPtr imageHandle, out long timestamp);
+
 #pragma warning restore 626
     }
 }

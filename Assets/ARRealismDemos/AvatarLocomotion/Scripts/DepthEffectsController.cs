@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthEffectsController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class DepthEffectsController : MonoBehaviour
     /// </summary>
     public DepthBackgroundRendererController Background;
 
-    private States m_State = States.Disabled;
+    private States _state = States.Disabled;
 
     private enum States
     {
@@ -56,24 +56,24 @@ public class DepthEffectsController : MonoBehaviour
     /// </summary>
     public void OnButtonPressed()
     {
-        if (m_State == States.Disabled)
+        if (_state == States.Disabled)
         {
-            m_State = States.Snow;
+            _state = States.Snow;
             Snow.MeshRendererEnabled(true);
             Background.EnableGammaCorrection(true);
             Snow.EnableParticles(true);
             Lights.EnableLights(false);
         }
-        else if (m_State == States.Snow)
+        else if (_state == States.Snow)
         {
-            m_State = States.Lights;
+            _state = States.Lights;
             Background.EnableGammaCorrection(false);
             Snow.EnableParticles(false);
             Lights.EnableLights(true);
         }
-        else if (m_State == States.Lights)
+        else if (_state == States.Lights)
         {
-            m_State = States.Disabled;
+            _state = States.Disabled;
             Background.EnableGammaCorrection(true);
             Snow.EnableParticles(false);
             Snow.MeshRendererEnabled(false);

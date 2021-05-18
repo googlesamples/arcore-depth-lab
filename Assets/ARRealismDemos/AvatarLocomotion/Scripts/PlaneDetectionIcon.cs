@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="PlaneDetectionIcon.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class PlaneDetectionIcon : MonoBehaviour
     /// This is a quick check to see if planes have been detected.
     /// This variable will store a list of detected planes.
     /// </summary>
-    private List<DetectedPlane> m_DetectedPlanes = new List<DetectedPlane>();
+    private List<DetectedPlane> _detectedPlanes = new List<DetectedPlane>();
 
     /// <summary>
     /// Add comment here.
@@ -66,8 +66,8 @@ public class PlaneDetectionIcon : MonoBehaviour
             return;
         }
 
-        Session.GetTrackables<DetectedPlane>(m_DetectedPlanes, TrackableQueryFilter.All);
-        if (m_DetectedPlanes.Count > 0)
+        Session.GetTrackables<DetectedPlane>(_detectedPlanes, TrackableQueryFilter.All);
+        if (_detectedPlanes.Count > 0)
         {
             // GetComponent<Image>().color = Color.green;
             GetComponent<Image>().sprite = PlaneDetectedImage;

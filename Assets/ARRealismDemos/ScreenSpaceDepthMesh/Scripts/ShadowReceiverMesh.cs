@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ShadowReceiverMesh.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,25 +32,25 @@ public class ShadowReceiverMesh : MonoBehaviour
     /// <summary>
     /// Lower bound of mesh distance to cast shadow.
     /// </summary>
-    public float MinimumMeshDistance = k_MinimumMeshDistance;
+    public float MinimumMeshDistance = _minimumMeshDistance;
 
     /// <summary>
     /// Higher bound of mesh distance to cast shadow.
     /// </summary>
-    public float MaximumMeshDistance = k_MaximumMeshDistance;
+    public float MaximumMeshDistance = _maximumMeshDistance;
 
-    private const float k_MinimumMeshDistance = 0;
-    private const float k_MaximumMeshDistance = 1000;
+    private const float _minimumMeshDistance = 0;
+    private const float _maximumMeshDistance = 1000;
 
-    private static readonly Vector3 k_DefaultMeshOffset = new Vector3(-100, -100, -100);
-    private static readonly string k_VertexModelTransformPropertyName = "_VertexModelTransform";
+    private static readonly Vector3 _defaultMeshOffset = new Vector3(-100, -100, -100);
+    private static readonly string _vertexModelTransformPropertyName = "_VertexModelTransform";
 
     // Holds the vertex and index data of the depth template mesh.
-    private Mesh m_Mesh;
+    private Mesh _mesh;
 
-    private bool m_Initialized = false;
+    private bool _initialized = false;
 
-    private Material m_Material;
+    private Material _material;
 
     private static int[] GenerateTriangles(int width, int height)
     {
@@ -100,7 +100,7 @@ public class ShadowReceiverMesh : MonoBehaviour
         {
             for (int x = 0; x < DepthSource.DepthWidth; x++)
             {
-                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + k_DefaultMeshOffset;
+                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + _defaultMeshOffset;
                 vertices.Add(v);
                 normals.Add(Vector3.back);
             }
@@ -110,26 +110,26 @@ public class ShadowReceiverMesh : MonoBehaviour
         int[] triangles = GenerateTriangles(DepthSource.DepthWidth, DepthSource.DepthHeight);
 
         // Creates the mesh object and set all template data.
-        m_Mesh = new Mesh();
-        m_Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        m_Mesh.SetVertices(vertices);
-        m_Mesh.SetNormals(normals);
-        m_Mesh.SetTriangles(triangles, 0);
-        m_Mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
-        m_Mesh.UploadMeshData(true);
+        _mesh = new Mesh();
+        _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        _mesh.SetVertices(vertices);
+        _mesh.SetNormals(normals);
+        _mesh.SetTriangles(triangles, 0);
+        _mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
+        _mesh.UploadMeshData(true);
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.sharedMesh = m_Mesh;
+        meshFilter.sharedMesh = _mesh;
 
         // Set camera intrinsics for depth reprojection.
-        m_Material.SetFloat("_FocalLengthX", DepthSource.FocalLength.x);
-        m_Material.SetFloat("_FocalLengthY", DepthSource.FocalLength.y);
-        m_Material.SetFloat("_PrincipalPointX", DepthSource.PrincipalPoint.x);
-        m_Material.SetFloat("_PrincipalPointY", DepthSource.PrincipalPoint.y);
-        m_Material.SetInt("_ImageDimensionsX", DepthSource.ImageDimensions.x);
-        m_Material.SetInt("_ImageDimensionsY", DepthSource.ImageDimensions.y);
+        _material.SetFloat("_FocalLengthX", DepthSource.FocalLength.x);
+        _material.SetFloat("_FocalLengthY", DepthSource.FocalLength.y);
+        _material.SetFloat("_PrincipalPointX", DepthSource.PrincipalPoint.x);
+        _material.SetFloat("_PrincipalPointY", DepthSource.PrincipalPoint.y);
+        _material.SetInt("_ImageDimensionsX", DepthSource.ImageDimensions.x);
+        _material.SetInt("_ImageDimensionsY", DepthSource.ImageDimensions.y);
 
-        m_Initialized = true;
+        _initialized = true;
     }
 
     private void Start()
@@ -138,7 +138,7 @@ public class ShadowReceiverMesh : MonoBehaviour
         transform.localRotation = Quaternion.identity;
 
         // Assigns the texture to the material.
-        m_Material = GetComponent<Renderer>().material;
+        _material = GetComponent<Renderer>().material;
         UpdateShaderVariables();
     }
 
@@ -146,7 +146,7 @@ public class ShadowReceiverMesh : MonoBehaviour
     {
         UpdateShaderVariables();
 
-        if (!m_Initialized && DepthSource.Initialized)
+        if (!_initialized && DepthSource.Initialized)
         {
             InitializeMesh();
         }
@@ -154,9 +154,9 @@ public class ShadowReceiverMesh : MonoBehaviour
 
     private void UpdateShaderVariables()
     {
-        m_Material.SetFloat("_MinimumMeshDistance", MinimumMeshDistance);
-        m_Material.SetFloat("_MaximumMeshDistance", MaximumMeshDistance);
-        m_Material.SetMatrix(k_VertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
-        m_Material.SetTexture("_CurrentDepthTexture", DepthSource.DepthTexture);
+        _material.SetFloat("_MinimumMeshDistance", MinimumMeshDistance);
+        _material.SetFloat("_MaximumMeshDistance", MaximumMeshDistance);
+        _material.SetMatrix(_vertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
+        _material.SetTexture("_CurrentDepthTexture", DepthSource.DepthTexture);
     }
 }

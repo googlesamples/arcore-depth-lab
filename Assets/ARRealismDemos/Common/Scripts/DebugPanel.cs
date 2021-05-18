@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DebugPanel.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,14 +38,14 @@ public class DebugPanel : MonoBehaviour
     public bool ShowDebugOverlay = true;
 
     // A red color to indicate collision in the bottom debug panel.
-    private static Color s_ColorRed = new Color(252.0f / 255, 141.0f / 255, 89.0f / 255);
+    private static Color _colorRed = new Color(252.0f / 255, 141.0f / 255, 89.0f / 255);
 
     // A green color to indicate no collision in the bottom debug panel.
-    private static Color s_ColorGreen = new Color(145.0f / 255, 207.0f / 255, 96.0f / 255);
+    private static Color _colorGreen = new Color(145.0f / 255, 207.0f / 255, 96.0f / 255);
 
-    private static DebugPanel s_Instance;
-    private Image m_DebugButton;
-    private Text m_DebugConsole;
+    private static DebugPanel _instance;
+    private Image _debugButton;
+    private Text _debugConsole;
 
     /// <summary>
     /// Gets the Singleton class of the DebugPanel.
@@ -54,7 +54,7 @@ public class DebugPanel : MonoBehaviour
     {
         get
         {
-            return s_Instance;
+            return _instance;
         }
     }
 
@@ -66,7 +66,8 @@ public class DebugPanel : MonoBehaviour
     {
         if (ShowDebugOverlay)
         {
-            m_DebugConsole.text = message;
+            Debug.Log(message);
+            _debugConsole.text = message;
         }
     }
 
@@ -75,7 +76,7 @@ public class DebugPanel : MonoBehaviour
     /// </summary>
     public void SetGreen()
     {
-        SetColor(s_ColorGreen);
+        SetColor(_colorGreen);
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ public class DebugPanel : MonoBehaviour
     /// </summary>
     public void SetRed()
     {
-        SetColor(s_ColorRed);
+        SetColor(_colorRed);
     }
 
     /// <summary>
@@ -94,7 +95,7 @@ public class DebugPanel : MonoBehaviour
     {
         if (ShowDebugOverlay)
         {
-            m_DebugButton.color = color;
+            _debugButton.color = color;
         }
     }
 
@@ -113,8 +114,8 @@ public class DebugPanel : MonoBehaviour
 
         if (ShowDebugOverlay)
         {
-            m_DebugButton = GameObject.Find("DebugButton").GetComponent<Image>();
-            m_DebugConsole = GameObject.Find("DebugConsole").GetComponent<Text>();
+            _debugButton = GameObject.Find("DebugButton").GetComponent<Image>();
+            _debugConsole = GameObject.Find("DebugConsole").GetComponent<Text>();
         }
         else
         {
@@ -128,13 +129,13 @@ public class DebugPanel : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (s_Instance != null && s_Instance != this)
+        if (_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
         }
         else
         {
-            s_Instance = this;
+            _instance = this;
         }
     }
 }

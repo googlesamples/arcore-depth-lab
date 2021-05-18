@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="ARCorePlaneUtil.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ using UnityEngine;
 /// </summary>
 public class ARCorePlaneUtil : Singleton<ARCorePlaneUtil>
 {
-    private List<DetectedPlane> m_AllPlanes = new List<DetectedPlane>();
-    private List<DetectedPlane> m_UpdatedPlanes = new List<DetectedPlane>();
-    private List<DetectedPlane> m_NewPlanes = new List<DetectedPlane>();
-    private float m_LastTimestamp;
+    private List<DetectedPlane> _allPlanes = new List<DetectedPlane>();
+    private List<DetectedPlane> _updatedPlanes = new List<DetectedPlane>();
+    private List<DetectedPlane> _newPlanes = new List<DetectedPlane>();
+    private float _lastTimestamp;
 
     /// <summary>
     /// Types of ARCore plane queries.
@@ -73,13 +73,13 @@ public class ARCorePlaneUtil : Singleton<ARCorePlaneUtil>
         switch (whichQuery)
         {
             case ARCorePlaneUtilQuery.All:
-                planes = m_AllPlanes;
+                planes = _allPlanes;
                 break;
             case ARCorePlaneUtilQuery.New:
-                planes = m_NewPlanes;
+                planes = _newPlanes;
                 break;
             case ARCorePlaneUtilQuery.Updated:
-                planes = m_UpdatedPlanes;
+                planes = _updatedPlanes;
                 break;
         }
 
@@ -127,38 +127,38 @@ public class ARCorePlaneUtil : Singleton<ARCorePlaneUtil>
     {
         bool foundPlanes = false;
 
-        if (Mathf.Abs(m_LastTimestamp - Time.time) > float.Epsilon)
+        if (Mathf.Abs(_lastTimestamp - Time.time) > float.Epsilon)
         {
             // Checks if the ARCore session is valid and running.
             if (Session.Status == SessionStatus.Tracking && Session.Status.IsValid())
             {
                 // Gets new planes for this update.
-                m_AllPlanes.Clear();
-                m_UpdatedPlanes.Clear();
-                m_NewPlanes.Clear();
+                _allPlanes.Clear();
+                _updatedPlanes.Clear();
+                _newPlanes.Clear();
 
-                Session.GetTrackables<DetectedPlane>(m_AllPlanes);
-                Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.New);
-                Session.GetTrackables<DetectedPlane>(m_UpdatedPlanes, TrackableQueryFilter.Updated);
+                Session.GetTrackables<DetectedPlane>(_allPlanes);
+                Session.GetTrackables<DetectedPlane>(_newPlanes, TrackableQueryFilter.New);
+                Session.GetTrackables<DetectedPlane>(_updatedPlanes, TrackableQueryFilter.Updated);
             }
 
-            m_LastTimestamp = Time.time;
+            _lastTimestamp = Time.time;
         }
 
-        foundPlanes = m_UpdatedPlanes.Count > 0 ? true : false;
+        foundPlanes = _updatedPlanes.Count > 0 ? true : false;
         return foundPlanes;
     }
 
     private void Awake()
     {
         this.name = "ARCorePlaneUtil";
-        m_LastTimestamp = 0.0f;
+        _lastTimestamp = 0.0f;
     }
 
     private void Destroy()
     {
-        m_AllPlanes.Clear();
-        m_UpdatedPlanes.Clear();
-        m_NewPlanes.Clear();
+        _allPlanes.Clear();
+        _updatedPlanes.Clear();
+        _newPlanes.Clear();
     }
 }

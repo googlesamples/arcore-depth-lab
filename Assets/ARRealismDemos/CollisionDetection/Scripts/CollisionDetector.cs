@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CollisionDetector.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <summary>
         /// Type of depth texture to attach to the material.
         /// </summary>
-        public bool UseSparseDepth = true;
+        public bool UseRawDepth = true;
 
         /// <summary>
         /// Whether to use the mesh's bounding box to represent the collider instead of usinsg

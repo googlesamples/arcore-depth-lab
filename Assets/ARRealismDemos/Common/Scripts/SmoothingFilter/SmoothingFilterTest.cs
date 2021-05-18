@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SmoothingFilterTest.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,30 +56,30 @@ public class SmoothingFilterTest : MonoBehaviour
     /// <summary>
     /// The Z-offset of the test objects from the camera.
     /// </summary>
-    public float TestObjectZOffsetM = k_TestObjectZOffsetM;
+    public float TestObjectZOffsetM = _testObjectZOffsetM;
 
-    private const float k_TestObjectZOffsetM = 2;
-    private const float k_TestObjectXOffsetM = 1;
-    private float m_MouseScroll;
-    private bool m_DetachTestObjects;
-    private Vector3 m_PrevPos;
+    private const float _testObjectZOffsetM = 2;
+    private const float _testObjectXOffsetM = 1;
+    private float _mouseScroll;
+    private bool _detachTestObjects;
+    private Vector3 _prevPos;
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            m_DetachTestObjects = !m_DetachTestObjects;
+            _detachTestObjects = !_detachTestObjects;
         }
 
         Vector2 v2 = Input.mousePosition;
-        Vector3 v3 = m_DetachTestObjects ?
-            m_PrevPos :
+        Vector3 v3 = _detachTestObjects ?
+            _prevPos :
             Camera.main.ScreenToWorldPoint(new Vector3(v2.x, v2.y, TestObjectZOffsetM));
 
         Vector3 newPosition = v3 + (Random.onUnitSphere * PositionalNoiseM * 0.5f);
-        m_MouseScroll += Input.mouseScrollDelta.y;
+        _mouseScroll += Input.mouseScrollDelta.y;
 
-        Quaternion rotation = Quaternion.Euler(0, 0, m_MouseScroll);
+        Quaternion rotation = Quaternion.Euler(0, 0, _mouseScroll);
         Quaternion newRotation = Quaternion.Slerp(
             rotation,
             Random.rotationUniform,
@@ -98,7 +98,7 @@ public class SmoothingFilterTest : MonoBehaviour
             (rotFilter = FilteredObject.GetComponent<QuaternionFilter>()) != null)
         {
             Vector3 filteredPos = posFilter.Filter(newPosition);
-            filteredPos.x += -0.5f * k_TestObjectXOffsetM;
+            filteredPos.x += -0.5f * _testObjectXOffsetM;
             FilteredObject.transform.localPosition = filteredPos;
 
             Quaternion filteredRotation = rotFilter.Filter(newRotation);
@@ -107,12 +107,12 @@ public class SmoothingFilterTest : MonoBehaviour
 
         if (NoisyObject != null)
         {
-            newPosition.x += 0.5f * k_TestObjectXOffsetM;
+            newPosition.x += 0.5f * _testObjectXOffsetM;
             NoisyObject.localPosition = newPosition;
 
             NoisyObject.transform.localRotation = newRotation;
         }
 
-        m_PrevPos = v3;
+        _prevPos = v3;
     }
 }

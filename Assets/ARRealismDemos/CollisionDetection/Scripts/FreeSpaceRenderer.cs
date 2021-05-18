@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="FreeSpaceRenderer.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,47 +88,47 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// </summary>
         public TransformationUtility.TranslationMode ObjectTranslationMode;
 
-        private const float k_MaxDepthInMeters = 7f;
-        private const float k_DiskScale = 10f;
-        private const int k_FreeSpaceEdgeSize = 256;
-        private const int k_FreeSpaceVolumeMaxCapacity =
-            k_FreeSpaceEdgeSize * k_FreeSpaceEdgeSize * k_FreeSpaceEdgeSize;
+        private const float _maxDepthInMeters = 7f;
+        private const float _diskScale = 10f;
+        private const int _freeSpaceEdgeSize = 256;
+        private const int _freeSpaceVolumeMaxCapacity =
+            _freeSpaceEdgeSize * _freeSpaceEdgeSize * _freeSpaceEdgeSize;
 
-        private const int k_ScreenMaxBinsY = 20;
-        private const int k_ScreenMaxBinsX = 40;
+        private const int _screenMaxBinsY = 20;
+        private const int _screenMaxBinsX = 40;
 
         // A small default texture size to create a texture of unknown size.
-        private const int k_DefaultTextureSize = 2;
+        private const int _defaultTextureSize = 2;
 
-        private const int k_MaxIterations = 10000;
+        private const int _maxIterations = 10000;
 
         // The maximum depth value from ArCore.
-        private const short k_ArCoreMaxDepthMM = 8192;
-        private const float k_ArCoreMMToM = 0.001f;
-        private const float k_StepX = 1f / k_ScreenMaxBinsX;
-        private const float k_StepY = 1f / k_ScreenMaxBinsY;
-        private static readonly Vector3[] k_Directions = new[]
+        private const short _arCoreMaxDepthMM = 8192;
+        private const float _arCoreMMToM = 0.001f;
+        private const float _stepX = 1f / _screenMaxBinsX;
+        private const float _stepY = 1f / _screenMaxBinsY;
+        private static readonly Vector3[] _directions = new[]
         {
-            new Vector3(-k_StepX, 0, 0), new Vector3(k_StepX, 0, 0),
-            new Vector3(0, -k_StepY, 0), new Vector3(0, k_StepY, 0)
+            new Vector3(-_stepX, 0, 0), new Vector3(_stepX, 0, 0),
+            new Vector3(0, -_stepY, 0), new Vector3(0, _stepY, 0)
         };
 
-        private Anchor m_TouchAnchor;
-        private Matrix4x4 m_ScreenRotation = Matrix4x4.Rotate(Quaternion.identity);
+        private Anchor _touchAnchor;
+        private Matrix4x4 _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
 
         // Updates every frame with the latest depth data.
-        private Texture2D m_DepthTexture;
+        private Texture2D _depthTexture;
 
         // Stores whether the world space is occupied
-        private bool[] m_WorldSpaceMap = new bool[k_FreeSpaceVolumeMaxCapacity];
+        private bool[] _worldSpaceMap = new bool[_freeSpaceVolumeMaxCapacity];
 
-        private bool[] m_ScreenSpaceMap = new bool[k_ScreenMaxBinsY * k_ScreenMaxBinsX];
+        private bool[] _screenSpaceMap = new bool[_screenMaxBinsY * _screenMaxBinsX];
 
-        private CameraIntrinsics m_CameraIntrinsics;
-        private bool m_Initialized = false;
-        private bool m_IsRendering = false;
-        private DateTime m_LastDepthUpdateTimestamp;
-        private Vector3[] m_BoundingBoxVertices;
+        private CameraIntrinsics _cameraIntrinsics;
+        private bool _initialized = false;
+        private bool _isRendering = false;
+        private DateTime _lastDepthUpdateTimestamp;
+        private Vector3[] _boundingBoxVertices;
 
         /// <summary>
         /// Initialize the debug console and the HashSet.
@@ -136,9 +136,9 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         protected void Start()
         {
             // Default texture, will be updated each frame.
-            m_DepthTexture = new Texture2D(k_DefaultTextureSize, k_DefaultTextureSize);
+            _depthTexture = new Texture2D(_defaultTextureSize, _defaultTextureSize);
 
-            m_BoundingBoxVertices = Utilities.GetBoundingBoxVertices(
+            _boundingBoxVertices = Utilities.GetBoundingBoxVertices(
                 BoundingBoxOrigin, BoundingBoxDimensions);
 
             ClearFreeSpaceWorldMap();
@@ -152,18 +152,18 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         {
             UpdateScreenOrientation();
             DateTime now = DateTime.Now;
-            if ((now - m_LastDepthUpdateTimestamp).TotalSeconds >= 1 / DepthPollingFrameRate)
+            if ((now - _lastDepthUpdateTimestamp).TotalSeconds >= 1 / DepthPollingFrameRate)
             {
-                Frame.CameraImage.UpdateDepthTexture(ref m_DepthTexture);
+                Frame.CameraImage.UpdateDepthTexture(ref _depthTexture);
 
                 // Waits until MotionStereo provides real data.
-                if (!m_Initialized && m_DepthTexture.width > k_DefaultTextureSize
-                    && m_DepthTexture.height > k_DefaultTextureSize)
+                if (!_initialized && _depthTexture.width > _defaultTextureSize
+                    && _depthTexture.height > _defaultTextureSize)
                 {
                     InitializeCameraIntrinsics();
                 }
 
-                m_LastDepthUpdateTimestamp = now;
+                _lastDepthUpdateTimestamp = now;
             }
 
             UpdateTouch();
@@ -195,14 +195,14 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
                         hit.Pose.rotation * Vector3.up) < 0))
                 {
                     // Creates an anchor to allow ARCore to track the hitpoint.
-                    m_TouchAnchor = hit.Trackable.CreateAnchor(hit.Pose);
+                    _touchAnchor = hit.Trackable.CreateAnchor(hit.Pose);
 
-                    if (m_IsRendering)
+                    if (_isRendering)
                     {
                         return;
                     }
 
-                    m_IsRendering = true;
+                    _isRendering = true;
                     var renderThread = new Thread(RenderFreeSpace);
                     renderThread.Start();
                 }
@@ -240,7 +240,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         private void RenderFreeSpace()
         {
             // Updates the current anchor's world position and screen position.
-            var worldPosition = m_TouchAnchor.transform.position;
+            var worldPosition = _touchAnchor.transform.position;
             var screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
             var normalizedScreenPoint = new Vector3(
                 Mathf.Clamp01(1f - (screenPosition.y / Screen.currentResolution.height)),
@@ -264,7 +264,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
             while (queue.Count > 0)
             {
                 ++iterations;
-                if (iterations > k_MaxIterations)
+                if (iterations > _maxIterations)
                 {
                     break;
                 }
@@ -272,7 +272,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
                 var front = queue.Peek();
                 queue.Dequeue();
 
-                foreach (var dir in k_Directions)
+                foreach (var dir in _directions)
                 {
                     var nextScreenPosition = front + dir;
                     if (IsScreenPointRegionExplored(nextScreenPosition.GetXY()))
@@ -291,7 +291,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
                     }
 
                     // After a free space is found, we continue the search.
-                    if (!TestCollisionOfBoxAtWorldPoint(nextWorldPosition, m_BoundingBoxVertices))
+                    if (!TestCollisionOfBoxAtWorldPoint(nextWorldPosition, _boundingBoxVertices))
                     {
                         AddWorldVertexToHashSet(nextWorldPosition);
                         VisualizeWorldRegion(nextWorldPosition, nextScreenPosition.z);
@@ -301,7 +301,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
                 }
             }
 
-            m_IsRendering = false;
+            _isRendering = false;
         }
 
         private bool TestCollisionOfBoxAtWorldPoint(Vector3 worldPosition, Vector3[] boundingBox)
@@ -332,8 +332,8 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
             var mesh = Instantiate(FreeSpaceVisualizerPrefab, worldPoint, Quaternion.identity);
 
             // Rescale the distance to camera to a reverse exponential mapping towards 5.
-            var depthScale = ((Mathf.Exp(Mathf.Min(depthToCamera, k_MaxDepthInMeters)
-                                 / k_MaxDepthInMeters) - 1f) * k_DiskScale) + 1f;
+            var depthScale = ((Mathf.Exp(Mathf.Min(depthToCamera, _maxDepthInMeters)
+                                 / _maxDepthInMeters) - 1f) * _diskScale) + 1f;
             mesh.transform.localScale = mesh.transform.localScale * depthScale;
         }
 
@@ -342,9 +342,9 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// </summary>
         private void ClearFreeSpaceWorldMap()
         {
-            for (int i = 0; i < m_WorldSpaceMap.Length; ++i)
+            for (int i = 0; i < _worldSpaceMap.Length; ++i)
             {
-                m_WorldSpaceMap[i] = false;
+                _worldSpaceMap[i] = false;
             }
         }
 
@@ -353,9 +353,9 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// </summary>
         private void ClearFreeSpaceScreenMap()
         {
-            for (int i = 0; i < m_ScreenSpaceMap.Length; ++i)
+            for (int i = 0; i < _screenSpaceMap.Length; ++i)
             {
-                m_ScreenSpaceMap[i] = false;
+                _screenSpaceMap[i] = false;
             }
         }
 
@@ -366,7 +366,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         private void AddWorldVertexToHashSet(Vector3 worldPosition)
         {
             var hashId = GetWorldPointHashId(worldPosition);
-            m_WorldSpaceMap[hashId] = true;
+            _worldSpaceMap[hashId] = true;
         }
 
         /// <summary>
@@ -375,16 +375,16 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// <param name="worldPosition">
         /// The position of the vertex in the world space.
         /// </param>
-        /// <returns>Hasing ID up to k_FreeSpaceVolumeMaxSize ^ 3.</returns>
+        /// <returns>Hasing ID up to _freeSpaceVolumeMaxSize ^ 3.</returns>
         private bool IsWorldRegionExplored(Vector3 worldPosition)
         {
             var hashId = GetWorldPointHashId(worldPosition);
-            if (hashId < 0 || hashId >= m_WorldSpaceMap.Length)
+            if (hashId < 0 || hashId >= _worldSpaceMap.Length)
             {
                 return true;
             }
 
-            return m_WorldSpaceMap[hashId];
+            return _worldSpaceMap[hashId];
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         private void AddScreenPointToHashSet(Vector2 normalizedScreenPosition)
         {
             var hashId = GetScreenPointHashId(normalizedScreenPosition);
-            m_ScreenSpaceMap[hashId] = true;
+            _screenSpaceMap[hashId] = true;
         }
 
         /// <summary>
@@ -405,23 +405,23 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// <param name="normalizedScreenPosition">
         /// The normalized position of the vertex in the screen space.
         /// </param>
-        /// <returns>Hasing ID up to k_FreeSpaceVolumeMaxSize ^ 3.</returns>
+        /// <returns>Hasing ID up to _freeSpaceVolumeMaxSize ^ 3.</returns>
         private bool IsScreenPointRegionExplored(Vector2 normalizedScreenPosition)
         {
             var hashId = GetScreenPointHashId(normalizedScreenPosition);
-            if (hashId < 0 || hashId >= m_ScreenSpaceMap.Length)
+            if (hashId < 0 || hashId >= _screenSpaceMap.Length)
             {
                 return true;
             }
 
-            return m_ScreenSpaceMap[hashId];
+            return _screenSpaceMap[hashId];
         }
 
         /// <summary>
         /// Gets the world spae vertex's hasing id.
         /// </summary>
         /// <param name="position">The position of the vertex in the screen space.</param>
-        /// <returns>Hasing ID up to k_FreeSpaceVolumeMaxSize ^ 3.</returns>
+        /// <returns>Hasing ID up to _freeSpaceVolumeMaxSize ^ 3.</returns>
         private int GetWorldPointHashId(Vector3 position)
         {
             // Bounds the position into the free space volume around the anchor.
@@ -437,8 +437,8 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
             int binZ = (int)Mathf.Round(position.z);
 
             // Calculates the hashing ID based on the bin number.
-            int hashId = (binY * k_FreeSpaceEdgeSize * k_FreeSpaceEdgeSize) +
-                         (binX * k_FreeSpaceEdgeSize) + binZ;
+            int hashId = (binY * _freeSpaceEdgeSize * _freeSpaceEdgeSize) +
+                         (binX * _freeSpaceEdgeSize) + binZ;
 
             return hashId;
         }
@@ -447,22 +447,22 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// Gets the world space vertex's hasing id.
         /// </summary>
         /// <param name="position">The position of the vertex in the screen space.</param>
-        /// <returns>Hasing ID up to k_FreeSpaceVolumeMaxSize ^ 3.</returns>
+        /// <returns>Hasing ID up to _freeSpaceVolumeMaxSize ^ 3.</returns>
         private int GetScreenPointHashId(Vector2 position)
         {
-            int binX = (int)Mathf.Round(Mathf.Clamp01(position.x) * k_ScreenMaxBinsX);
-            int binY = (int)Mathf.Round(Mathf.Clamp01(position.y) * k_ScreenMaxBinsY);
-            if (binX == k_ScreenMaxBinsX)
+            int binX = (int)Mathf.Round(Mathf.Clamp01(position.x) * _screenMaxBinsX);
+            int binY = (int)Mathf.Round(Mathf.Clamp01(position.y) * _screenMaxBinsY);
+            if (binX == _screenMaxBinsX)
             {
-                binX = k_ScreenMaxBinsX - 1;
+                binX = _screenMaxBinsX - 1;
             }
 
-            if (binY == k_ScreenMaxBinsX)
+            if (binY == _screenMaxBinsX)
             {
-                binY = k_ScreenMaxBinsY - 1;
+                binY = _screenMaxBinsY - 1;
             }
 
-            int hashId = (binY * k_ScreenMaxBinsX) + binX;
+            int hashId = (binY * _screenMaxBinsX) + binX;
             return hashId;
         }
 
@@ -473,24 +473,24 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         /// <returns>The depth value in meters.</returns>
         private float FetchEnvironmentDepth(Vector3 screenPosition)
         {
-            int depthY = (int)(screenPosition.y * m_DepthTexture.height);
-            int depthX = (int)(screenPosition.x * m_DepthTexture.width);
+            int depthY = (int)(screenPosition.y * _depthTexture.height);
+            int depthX = (int)(screenPosition.x * _depthTexture.width);
 
             // Obtains the depth value in 16 bits.
 #if UNITY_2018_3_OR_NEWER
-            var depthData = m_DepthTexture.GetRawTextureData<short>();
-            var depthIndex = depthY * m_DepthTexture.width + depthX;
+            var depthData = _depthTexture.GetRawTextureData<short>();
+            var depthIndex = depthY * _depthTexture.width + depthX;
             var depthInShort = depthData[depthIndex];
 #else
-            var depthData = m_DepthTexture.GetRawTextureData();
-            var depthIndex = ((depthY * m_DepthTexture.width) + depthX) * 2;
+            var depthData = _depthTexture.GetRawTextureData();
+            var depthIndex = ((depthY * _depthTexture.width) + depthX) * 2;
             byte[] value = new byte[2];
             value[0] = depthData[depthIndex];
             value[1] = depthData[depthIndex + 1];
             var depthInShort = BitConverter.ToInt16(value, 0);
 #endif
 
-            var result = Mathf.Min(depthInShort, k_ArCoreMaxDepthMM) * k_ArCoreMMToM;
+            var result = Mathf.Min(depthInShort, _arCoreMaxDepthMM) * _arCoreMMToM;
 
             return result;
         }
@@ -501,21 +501,21 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         private void InitializeCameraIntrinsics()
         {
             // Gets the camera parameters to create the required number of vertices.
-            m_CameraIntrinsics = Frame.CameraImage.TextureIntrinsics;
+            _cameraIntrinsics = Frame.CameraImage.TextureIntrinsics;
 
             // Scales camera intrinsics to the depth map size.
             Vector2 intrinsicsScale;
-            intrinsicsScale.x = m_DepthTexture.width / (float)m_CameraIntrinsics.ImageDimensions.x;
-            intrinsicsScale.y = m_DepthTexture.height / (float)m_CameraIntrinsics.ImageDimensions.y;
+            intrinsicsScale.x = _depthTexture.width / (float)_cameraIntrinsics.ImageDimensions.x;
+            intrinsicsScale.y = _depthTexture.height / (float)_cameraIntrinsics.ImageDimensions.y;
 
-            m_CameraIntrinsics.FocalLength = Utilities.MultiplyVector2(
-                m_CameraIntrinsics.FocalLength, intrinsicsScale);
-            m_CameraIntrinsics.PrincipalPoint = Utilities.MultiplyVector2(
-                m_CameraIntrinsics.PrincipalPoint, intrinsicsScale);
-            m_CameraIntrinsics.ImageDimensions =
-                new Vector2Int(m_DepthTexture.width, m_DepthTexture.height);
+            _cameraIntrinsics.FocalLength = Utilities.MultiplyVector2(
+                _cameraIntrinsics.FocalLength, intrinsicsScale);
+            _cameraIntrinsics.PrincipalPoint = Utilities.MultiplyVector2(
+                _cameraIntrinsics.PrincipalPoint, intrinsicsScale);
+            _cameraIntrinsics.ImageDimensions =
+                new Vector2Int(_depthTexture.width, _depthTexture.height);
 
-            m_Initialized = true;
+            _initialized = true;
         }
 
         /// <summary>
@@ -531,10 +531,10 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
 
             if (z > 0)
             {
-                float vertex_x = (x - m_CameraIntrinsics.PrincipalPoint.x) * z /
-                    m_CameraIntrinsics.FocalLength.x;
-                float vertex_y = (y - m_CameraIntrinsics.PrincipalPoint.y) * z /
-                    m_CameraIntrinsics.FocalLength.y;
+                float vertex_x = (x - _cameraIntrinsics.PrincipalPoint.x) * z /
+                    _cameraIntrinsics.FocalLength.x;
+                float vertex_y = (y - _cameraIntrinsics.PrincipalPoint.y) * z /
+                    _cameraIntrinsics.FocalLength.y;
                 vertex.x = vertex_x;
                 vertex.y = -vertex_y;
                 vertex.z = z;
@@ -551,8 +551,8 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
         private Vector3 ComputeVertexInWorldSpace(Vector3 normalizedScreenPosition)
         {
             var vertex = ComputeVertexInCameraSpace(
-                (int)(normalizedScreenPosition.x * m_DepthTexture.width),
-                (int)(normalizedScreenPosition.y * m_DepthTexture.height),
+                (int)(normalizedScreenPosition.x * _depthTexture.width),
+                (int)(normalizedScreenPosition.y * _depthTexture.height),
                 FetchEnvironmentDepth(normalizedScreenPosition));
 
             if (vertex == Vector3.negativeInfinity)
@@ -561,7 +561,7 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
             }
 
             vertex = (Camera.main.cameraToWorldMatrix *
-                m_ScreenRotation).MultiplyPoint(-vertex);
+                _screenRotation).MultiplyPoint(-vertex);
             return vertex;
         }
 
@@ -574,16 +574,16 @@ namespace GoogleARCore.Examples.FreeSpaceRenderer
             switch (Screen.orientation)
             {
                 case ScreenOrientation.Portrait:
-                    m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
+                    _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
                     break;
                 case ScreenOrientation.LandscapeLeft:
-                    m_ScreenRotation = Matrix4x4.Rotate(Quaternion.identity);
+                    _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
                     break;
                 case ScreenOrientation.PortraitUpsideDown:
-                    m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90));
+                    _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90));
                     break;
                 case ScreenOrientation.LandscapeRight:
-                    m_ScreenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 180));
+                    _screenRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 180));
                     break;
             }
         }

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DemoBackgroundProvider.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,24 +35,24 @@ public class DemoBackgroundProvider : MonoBehaviour
     /// </summary>
     public const string BackgroundTexturePropertyName = "_BackgroundTexture";
 
-    private Camera m_Camera;
-    private Material m_Material;
-    private ARCoreBackgroundRenderer m_BackgroundRenderer;
-    private DemoARBackgroundRenderer m_DemoRenderer;
-    private CommandBuffer m_CommandBuffer;
-    private bool m_UseDemoRenderer = false;
-    private int m_BackgroundTextureID = -1;
+    private Camera _camera;
+    private Material _material;
+    private ARCoreBackgroundRenderer _backgroundRenderer;
+    private DemoARBackgroundRenderer _demoRenderer;
+    private CommandBuffer _commandBuffer;
+    private bool _useDemoRenderer = false;
+    private int _backgroundTextureID = -1;
 
     private void Start()
     {
-        m_Camera = Camera.main;
+        _camera = Camera.main;
 
-        m_BackgroundRenderer = FindObjectOfType<ARCoreBackgroundRenderer>();
-        if (m_BackgroundRenderer == null)
+        _backgroundRenderer = FindObjectOfType<ARCoreBackgroundRenderer>();
+        if (_backgroundRenderer == null)
         {
-            m_UseDemoRenderer = true;
-            m_DemoRenderer = FindObjectOfType<DemoARBackgroundRenderer>();
-            if (m_DemoRenderer == null)
+            _useDemoRenderer = true;
+            _demoRenderer = FindObjectOfType<DemoARBackgroundRenderer>();
+            if (_demoRenderer == null)
             {
                 Debug.LogError("DemoBackgroundProvider requires ARCoreBackgroundRenderer or" +
                                "DemoARBackgroundRenderer anywhere in the scene.");
@@ -66,43 +66,43 @@ public class DemoBackgroundProvider : MonoBehaviour
             Debug.Log("ARCoreTextureProvider loaded.");
         }
 
-        m_CommandBuffer = new CommandBuffer();
-        m_CommandBuffer.name = "Camera texture";
-        m_BackgroundTextureID = Shader.PropertyToID(BackgroundTexturePropertyName);
-        m_CommandBuffer.GetTemporaryRT(m_BackgroundTextureID, /*width=*/ -1, /*height=*/ -1,
+        _commandBuffer = new CommandBuffer();
+        _commandBuffer.name = "Camera texture";
+        _backgroundTextureID = Shader.PropertyToID(BackgroundTexturePropertyName);
+        _commandBuffer.GetTemporaryRT(_backgroundTextureID, /*width=*/ -1, /*height=*/ -1,
                                        /*depthBuffer=*/ 0, FilterMode.Bilinear);
 
         // Alternatively, can blit from BuiltinRenderTextureType.CameraTarget into
-        // m_BackgroundTextureID, but make sure this is executed after the renderer is initialized.
-        var material = m_UseDemoRenderer ?
-                         m_DemoRenderer.BackgroundMaterial :
-                         m_BackgroundRenderer.BackgroundMaterial;
+        // _backgroundTextureID, but make sure this is executed after the renderer is initialized.
+        var material = _useDemoRenderer ?
+                         _demoRenderer.BackgroundMaterial :
+                         _backgroundRenderer.BackgroundMaterial;
         if (material != null)
         {
-            m_CommandBuffer.Blit(material.mainTexture, m_BackgroundTextureID, material);
+            _commandBuffer.Blit(material.mainTexture, _backgroundTextureID, material);
             Debug.Log("BackgroundTextureProvider material blited.");
         }
 
-        m_CommandBuffer.SetGlobalTexture(BackgroundTexturePropertyName, m_BackgroundTextureID);
-        m_Camera.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, m_CommandBuffer);
-        m_Camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, m_CommandBuffer);
+        _commandBuffer.SetGlobalTexture(BackgroundTexturePropertyName, _backgroundTextureID);
+        _camera.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, _commandBuffer);
+        _camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, _commandBuffer);
     }
 
     private void OnEnable()
     {
-        if (m_Camera != null && m_CommandBuffer != null)
+        if (_camera != null && _commandBuffer != null)
         {
-            m_Camera.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, m_CommandBuffer);
-            m_Camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, m_CommandBuffer);
+            _camera.AddCommandBuffer(CameraEvent.BeforeForwardOpaque, _commandBuffer);
+            _camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, _commandBuffer);
         }
     }
 
     private void OnDisable()
     {
-        if (m_Camera != null && m_CommandBuffer != null)
+        if (_camera != null && _commandBuffer != null)
         {
-            m_Camera.RemoveCommandBuffer(CameraEvent.BeforeForwardOpaque, m_CommandBuffer);
-            m_Camera.RemoveCommandBuffer(CameraEvent.BeforeGBuffer, m_CommandBuffer);
+            _camera.RemoveCommandBuffer(CameraEvent.BeforeForwardOpaque, _commandBuffer);
+            _camera.RemoveCommandBuffer(CameraEvent.BeforeGBuffer, _commandBuffer);
         }
     }
 }

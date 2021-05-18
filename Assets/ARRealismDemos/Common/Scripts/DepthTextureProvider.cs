@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthTextureProvider.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,27 +30,35 @@ public class DepthTextureProvider : MonoBehaviour
     /// <summary>
     /// Type of depth texture to attach to the material.
     /// </summary>
-    public bool UseSparseDepth = false;
+    public bool UseRawDepth = false;
 
     /// <summary>
     /// Reproject intermediate sparse depth frames.
     /// </summary>
-    public bool ReprojectIntermediateSparseDepth = true;
+    public bool ReprojectIntermediateRawDepth = true;
 
-    private Texture2D m_DepthTexture;
+    private Texture2D _depthTexture;
 
     private void Start()
     {
         // Default texture, will be updated each frame.
-        m_DepthTexture = new Texture2D(2, 2);
+        _depthTexture = new Texture2D(2, 2);
 
         // Assign the depth texture as the main texture in the material.
         Material material = GetComponent<Renderer>().sharedMaterial;
-        material.mainTexture = m_DepthTexture;
+        material.mainTexture = _depthTexture;
     }
 
     private void Update()
     {
-        DepthSource.DepthDataSource.UpdateDepthTexture(ref m_DepthTexture);
+        // Gets the latest depth data from ARCore.
+        if (UseRawDepth == true)
+        {
+            DepthSource.DepthDataSource.UpdateRawDepthTexture(ref _depthTexture);
+        }
+        else
+        {
+            DepthSource.DepthDataSource.UpdateDepthTexture(ref _depthTexture);
+        }
     }
 }

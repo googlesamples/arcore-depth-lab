@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthMotionLightsController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,21 +41,21 @@ public class DepthMotionLightsController : MonoBehaviour
     [FormerlySerializedAs("avatarSceneController")]
     public AvatarSceneController AvatarSceneController;
 
-    private const float k_FadeInTime = 1.0f;
-    private static readonly string k_LightAnchorPositionName = "_LightAnchorPosition";
-    private static readonly string k_GlobalAlphaValueName = "_GlobalAlphaValue";
-    private static readonly string k_NormalizedDepthMinName = "_NormalizedDepthMin";
-    private static readonly string k_NormalizedDepthMaxName = "_NormalizedDepthMax";
-    private static readonly Vector3 k_DestinationOffset = new Vector3(0, 1.25f, -0.2f);
-    private static readonly Vector3 k_SourceOffset = new Vector3(0, 0.25f, -0.4f);
+    private const float _fadeInTime = 1.0f;
+    private static readonly string _lightAnchorPositionName = "_LightAnchorPosition";
+    private static readonly string _globalAlphaValueName = "_GlobalAlphaValue";
+    private static readonly string _normalizedDepthMinName = "_NormalizedDepthMin";
+    private static readonly string _normalizedDepthMaxName = "_NormalizedDepthMax";
+    private static readonly Vector3 _destinationOffset = new Vector3(0, 1.25f, -0.2f);
+    private static readonly Vector3 _sourceOffset = new Vector3(0, 0.25f, -0.4f);
 
-    private Transform m_LightAnchor;
-    private Vector3 m_LightAnchorPosition = Vector3.zero;
-    private Vector3 m_SunTargetPosition = k_DestinationOffset;
-    private Vector3 m_SunPosition = k_SourceOffset;
-    private bool m_Initialized = false;
-    private float m_GlobalAlphaValue = 0.0f;
-    private float m_StartTime = 0.0f;
+    private Transform _lightAnchor;
+    private Vector3 _lightAnchorPosition = Vector3.zero;
+    private Vector3 _sunTargetPosition = _destinationOffset;
+    private Vector3 _sunPosition = _sourceOffset;
+    private bool _initialized = false;
+    private float _globalAlphaValue = 0.0f;
+    private float _startTime = 0.0f;
 
     /// <summary>
     /// Enables the MotionLights effect if and only if the avatar is placed.
@@ -64,7 +64,7 @@ public class DepthMotionLightsController : MonoBehaviour
     public void EnableLights(bool enableLights)
     {
         Debug.Log("Lights enabled.");
-        m_Initialized = false;
+        _initialized = false;
         if (AvatarSceneController == null)
         {
             Debug.LogError("Avatar scene controller is not set.");
@@ -78,14 +78,14 @@ public class DepthMotionLightsController : MonoBehaviour
         }
 
         SetAnchor(AvatarSceneController.Avatar.transform);
-        m_SunPosition = m_LightAnchor.transform.TransformPoint(k_SourceOffset);
-        m_SunTargetPosition = m_LightAnchor.transform.TransformPoint(k_DestinationOffset);
+        _sunPosition = _lightAnchor.transform.TransformPoint(_sourceOffset);
+        _sunTargetPosition = _lightAnchor.transform.TransformPoint(_destinationOffset);
 
         enabled = enableLights;
 
         if (enabled)
         {
-            m_StartTime = Time.time + k_FadeInTime;
+            _startTime = Time.time + _fadeInTime;
         }
     }
 
@@ -96,7 +96,7 @@ public class DepthMotionLightsController : MonoBehaviour
     public void SetAnchor(Transform anchor)
     {
         Debug.Log("Lights anchor set.");
-        m_LightAnchor = anchor;
+        _lightAnchor = anchor;
     }
 
     private void Update()
@@ -112,38 +112,38 @@ public class DepthMotionLightsController : MonoBehaviour
         SetAnchor(AvatarSceneController.Avatar.transform);
 
         // Smoothly moves the light anchor from the bottom of the avatar to the top of the avatar.
-        if (m_LightAnchor != null && enabled)
+        if (_lightAnchor != null && enabled)
         {
-            m_GlobalAlphaValue = Mathf.Clamp01(Time.time - m_StartTime);
-            if (Time.time - m_StartTime > 1.0)
+            _globalAlphaValue = Mathf.Clamp01(Time.time - _startTime);
+            if (Time.time - _startTime > 1.0)
             {
                 float lerpTime = Time.deltaTime * 0.2f;
-                m_SunPosition = Vector3.Lerp(m_SunPosition, m_SunTargetPosition, lerpTime);
+                _sunPosition = Vector3.Lerp(_sunPosition, _sunTargetPosition, lerpTime);
             }
 
-            m_LightAnchorPosition = Camera.main.WorldToScreenPoint(m_SunPosition);
-            float depthMin = MotionLightsMaterial.GetFloat(k_NormalizedDepthMinName);
-            float depthMax = MotionLightsMaterial.GetFloat(k_NormalizedDepthMaxName);
+            _lightAnchorPosition = Camera.main.WorldToScreenPoint(_sunPosition);
+            float depthMin = MotionLightsMaterial.GetFloat(_normalizedDepthMinName);
+            float depthMax = MotionLightsMaterial.GetFloat(_normalizedDepthMaxName);
             float depthRange = depthMax - depthMin;
-            float zLightAnchorPosition = (m_LightAnchorPosition.z - depthMin) / depthRange;
-            m_LightAnchorPosition.z = Mathf.Clamp01(zLightAnchorPosition);
+            float zLightAnchorPosition = (_lightAnchorPosition.z - depthMin) / depthRange;
+            _lightAnchorPosition.z = Mathf.Clamp01(zLightAnchorPosition);
             MotionLightsMaterial.SetVector(
-                k_LightAnchorPositionName, m_LightAnchorPosition);
+                _lightAnchorPositionName, _lightAnchorPosition);
             MotionLightsMaterial.SetFloat(
-                k_GlobalAlphaValueName, m_GlobalAlphaValue);
-            if (!m_Initialized)
+                _globalAlphaValueName, _globalAlphaValue);
+            if (!_initialized)
             {
                 Debug.Log("Lights initialized in update.");
             }
 
-            m_Initialized = true;
+            _initialized = true;
         }
     }
 
     [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
     {
-        if (MotionLightsMaterial != null && m_Initialized)
+        if (MotionLightsMaterial != null && _initialized)
         {
             Debug.Log("Blit works.");
             Graphics.Blit(sourceTexture, destTexture, MotionLightsMaterial);

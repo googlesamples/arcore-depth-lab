@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SplatCannon.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,19 +66,19 @@ public class SplatCannon : MonoBehaviour
     /// </summary>
     public bool TouchShoot = false;
 
-    private GameObject m_Root;
+    private GameObject _root;
 
-    private bool m_Running = true;
+    private bool _running = true;
 
     /// <summary>
     /// Clears all the instantiated projectiles.
     /// </summary>
     public void Clear()
     {
-        m_Running = false;
-        if (m_Root != null)
+        _running = false;
+        if (_root != null)
         {
-            foreach (Transform child in m_Root.transform)
+            foreach (Transform child in _root.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -92,9 +92,9 @@ public class SplatCannon : MonoBehaviour
     /// </summary>
     public void Shoot()
     {
-        if (m_Root == null)
+        if (_root == null)
         {
-            m_Root = new GameObject("Projectiles");
+            _root = new GameObject("Projectiles");
         }
 
         Vector3 targetPos = transform.position;
@@ -104,7 +104,7 @@ public class SplatCannon : MonoBehaviour
         float distance = Vector3.Distance(targetPos, projPos);
         Vector3 impulse = CalculateImpulseToDestiny(projPos, Velocity + distance,
                                                     targetPos, Gravity);
-        GameObject proj = GameObject.Instantiate<GameObject>(Projectile, m_Root.transform);
+        GameObject proj = GameObject.Instantiate<GameObject>(Projectile, _root.transform);
         ArcMotion motion = proj.GetComponent<ArcMotion>();
         int index = Random.Range(0, SplatMaterials.Count);
         motion.ParticleMaterial = ParticleMaterials[index];
@@ -116,14 +116,14 @@ public class SplatCannon : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(m_Root);
-        m_Root = null;
+        Destroy(_root);
+        _root = null;
     }
 
     private IEnumerator ReEnable()
     {
         yield return new WaitForSeconds(1f);
-        m_Running = true;
+        _running = true;
     }
 
     private void Start()
@@ -150,7 +150,7 @@ public class SplatCannon : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (TouchShoot && m_Running && Input.GetMouseButtonDown(0)
+        if (TouchShoot && _running && Input.GetMouseButtonDown(0)
                     && Input.mousePosition.y < Screen.height * 0.8)
         {
             Shoot();

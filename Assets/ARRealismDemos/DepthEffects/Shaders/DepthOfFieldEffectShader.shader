@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthOfFieldEffectShader.shader" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ Shader "ARRealism/Depth Of Field Effect Shader"
         _NormalizedDepthMin ("Normalized Depth Min", Range(0.0, 5.0)) = 0.0
         _NormalizedDepthMax ("Normalized Depth Max", Range(0.0, 10.0)) = 8.0
         _ShowColorOnly("Only Render Camera", Range(0.0, 1.0)) = 0.0
+        _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}
     }
 
     // Subshader for depth-of-field effect.
@@ -47,7 +48,8 @@ Shader "ARRealism/Depth Of Field Effect Shader"
             uniform sampler2D _BackgroundTexture;
             uniform half _ShowColorOnly;
 
-            float3 SampleColor(in float2 uv) {
+            float3 SampleColor(in float2 uv)
+            {
                 return tex2D(_BackgroundTexture, uv).rgb;
             }
 
@@ -57,9 +59,11 @@ Shader "ARRealism/Depth Of Field Effect Shader"
 
             fixed4 frag(v2f_img i) : COLOR
             {
-                if (_ShowColorOnly > 0.0) {
+                if (_ShowColorOnly > 0.0)
+                {
                     return tex2D(_BackgroundTexture, i.uv);
                 }
+
                 return fixed4(Render(i.uv), 1);
             }
 

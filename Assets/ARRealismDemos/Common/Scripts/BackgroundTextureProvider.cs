@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="BackgroundTextureProvider.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,53 +35,53 @@ public class BackgroundTextureProvider : MonoBehaviour
     /// </summary>
     public const string BackgroundTexturePropertyName = "_BackgroundTexture";
 
-    private Camera m_Camera;
-    private ARCoreBackgroundRenderer m_BackgroundRenderer;
-    private CommandBuffer m_CommandBuffer;
-    private int m_BackgroundTextureID = -1;
+    private Camera _camera;
+    private ARCoreBackgroundRenderer _backgroundRenderer;
+    private CommandBuffer _commandBuffer;
+    private int _backgroundTextureID = -1;
 
     private void Awake()
     {
-        m_Camera = Camera.main;
-        Debug.Assert(m_Camera != null,
+        _camera = Camera.main;
+        Debug.Assert(_camera != null,
                      "The scene must include a camera object to get the background texture.");
 
-        m_BackgroundRenderer = FindObjectOfType<ARCoreBackgroundRenderer>();
-        if (m_BackgroundRenderer == null)
+        _backgroundRenderer = FindObjectOfType<ARCoreBackgroundRenderer>();
+        if (_backgroundRenderer == null)
         {
             Debug.LogError("BackgroundTextureProvider requires ARCoreBackgroundRenderer " +
                             "anywhere in the scene.");
             return;
         }
 
-        m_CommandBuffer = new CommandBuffer();
-        m_CommandBuffer.name = "Camera texture";
-        m_BackgroundTextureID = Shader.PropertyToID(BackgroundTexturePropertyName);
-        m_CommandBuffer.GetTemporaryRT(m_BackgroundTextureID, /*width=*/ -1, /*height=*/ -1,
+        _commandBuffer = new CommandBuffer();
+        _commandBuffer.name = "Camera texture";
+        _backgroundTextureID = Shader.PropertyToID(BackgroundTexturePropertyName);
+        _commandBuffer.GetTemporaryRT(_backgroundTextureID, /*width=*/ -1, /*height=*/ -1,
                                        /*depthBuffer=*/ 0, FilterMode.Bilinear);
 
         // Alternatively, can blit from BuiltinRenderTextureType.CameraTarget into
-        // m_BackgroundTextureID, but make sure this is executed after the renderer is initialized.
-        var material = m_BackgroundRenderer.BackgroundMaterial;
+        // _backgroundTextureID, but make sure this is executed after the renderer is initialized.
+        var material = _backgroundRenderer.BackgroundMaterial;
         if (material != null)
         {
-            m_CommandBuffer.Blit(material.mainTexture, m_BackgroundTextureID, material);
+            _commandBuffer.Blit(material.mainTexture, _backgroundTextureID, material);
         }
 
-        m_CommandBuffer.SetGlobalTexture(BackgroundTexturePropertyName, m_BackgroundTextureID);
-        m_Camera.AddCommandBuffer(CameraEvent.AfterForwardOpaque, m_CommandBuffer);
-        m_Camera.AddCommandBuffer(CameraEvent.AfterGBuffer, m_CommandBuffer);
+        _commandBuffer.SetGlobalTexture(BackgroundTexturePropertyName, _backgroundTextureID);
+        _camera.AddCommandBuffer(CameraEvent.AfterForwardOpaque, _commandBuffer);
+        _camera.AddCommandBuffer(CameraEvent.AfterGBuffer, _commandBuffer);
     }
 
     private void OnEnable()
     {
-        m_Camera.AddCommandBuffer(CameraEvent.AfterForwardOpaque, m_CommandBuffer);
-        m_Camera.AddCommandBuffer(CameraEvent.AfterGBuffer, m_CommandBuffer);
+        _camera.AddCommandBuffer(CameraEvent.AfterForwardOpaque, _commandBuffer);
+        _camera.AddCommandBuffer(CameraEvent.AfterGBuffer, _commandBuffer);
     }
 
     private void OnDisable()
     {
-        m_Camera.RemoveCommandBuffer(CameraEvent.AfterForwardOpaque, m_CommandBuffer);
-        m_Camera.RemoveCommandBuffer(CameraEvent.AfterGBuffer, m_CommandBuffer);
+        _camera.RemoveCommandBuffer(CameraEvent.AfterForwardOpaque, _commandBuffer);
+        _camera.RemoveCommandBuffer(CameraEvent.AfterGBuffer, _commandBuffer);
     }
 }

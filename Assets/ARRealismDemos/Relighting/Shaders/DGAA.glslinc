@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DGAA.glslinc" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 // Smoothes aliasing artifacts in the depth map.
 //
 // Input parameters:
-// - vec2 uv: screen coordiantes.
+// - vec2 uv: screen coordinates.
 //
 // Input uniforms:
 // - Sampler2D uDepth: single-channel depth map.

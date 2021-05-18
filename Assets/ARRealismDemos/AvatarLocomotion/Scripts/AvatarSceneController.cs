@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="AvatarSceneController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -126,23 +126,23 @@ public class AvatarSceneController : MonoBehaviour
     /// <summary>
     /// The rotation in degrees need to apply to model when the Andy model is placed.
     /// </summary>
-    private const float k_ModelRotation = 180.0f;
+    private const float _modelRotation = 180.0f;
 
     /// <summary>
     /// True if the app is in the process of quitting due to an ARCore connection error,
     /// otherwise false.
     /// </summary>
-    private bool m_IsQuitting = false;
+    private bool _isQuitting = false;
 
     /// <summary>
     /// True once the avatar is placed,
     /// otherwise false. Placing the avatar will turn of placing functionality.
     /// </summary>
-    private bool m_AvatarPlaced = false;
+    private bool _avatarPlaced = false;
 
-    private bool m_IsDepthShowing = false;
+    private bool _isDepthShowing = false;
 
-    private GameObject m_SceneContainer;
+    private GameObject _sceneContainer;
 
     /// <summary>
     /// Toggles the occlusion in the avatar gameobject.
@@ -157,7 +157,7 @@ public class AvatarSceneController : MonoBehaviour
     /// </summary>
     public void ToggleDepth()
     {
-        if (m_IsDepthShowing)
+        if (_isDepthShowing)
         {
             DepthEffectController.StartTransitionToCamera();
         }
@@ -166,7 +166,7 @@ public class AvatarSceneController : MonoBehaviour
             DepthEffectController.StartTransitionToDepth();
         }
 
-        m_IsDepthShowing = !m_IsDepthShowing;
+        _isDepthShowing = !_isDepthShowing;
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public class AvatarSceneController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        _UpdateApplicationLifecycle();
+        UpdateApplicationLifecycle();
 
         // If the player has not touched the screen, we are done with this update.
         Touch touch;
@@ -232,7 +232,7 @@ public class AvatarSceneController : MonoBehaviour
         }
 
         // Shoots the cubes.
-        if (m_AvatarPlaced)
+        if (_avatarPlaced)
         {
             TouchDetected?.Invoke();
             return;
@@ -263,10 +263,10 @@ public class AvatarSceneController : MonoBehaviour
             }
             else
             {
-                if (!m_AvatarPlaced)
+                if (!_avatarPlaced)
                 {
                     PlaceAvatarScene(hit);
-                    m_AvatarPlaced = true;
+                    _avatarPlaced = true;
                 }
             }
         }
@@ -278,7 +278,7 @@ public class AvatarSceneController : MonoBehaviour
     /// <param name="hit">Trackable hit.</param>
     private void PlaceAvatarScene(TrackableHit hit)
     {
-        m_SceneContainer = new GameObject();
+        _sceneContainer = new GameObject();
 
         // Creates an anchor to allow ARCore to track the hitpoint as understanding of
         // the physical world evolves.
@@ -288,7 +288,7 @@ public class AvatarSceneController : MonoBehaviour
         var avatarObject = Instantiate(AvatarPrefab, hit.Pose.position, hit.Pose.rotation);
 
         // Compensates for the hitPose rotation facing away from the raycast (i.e. camera).
-        avatarObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
+        avatarObject.transform.Rotate(0, _modelRotation, 0, Space.Self);
 
         // Makes avatar model a child of the anchor.
         Avatar = avatarObject;
@@ -311,7 +311,7 @@ public class AvatarSceneController : MonoBehaviour
             manipulatorScript.SetCollisionDetector(collisionDetector);
             avatarObject.transform.parent = manipulator.transform;
 
-            anchor.transform.parent = m_SceneContainer.transform;
+            anchor.transform.parent = _sceneContainer.transform;
 
             // Makes manipulator a child of the anchor.
             manipulator.transform.parent = anchor.transform;
@@ -321,15 +321,15 @@ public class AvatarSceneController : MonoBehaviour
         }
         else
         {
-            anchor.transform.parent = m_SceneContainer.transform;
-            Avatar.transform.parent = m_SceneContainer.transform;
+            anchor.transform.parent = _sceneContainer.transform;
+            Avatar.transform.parent = _sceneContainer.transform;
         }
 
         // Places the ground plane to avoid the cubes to fall to holes.
         Vector3 planePosition = hit.Pose.position + new Vector3(0.0f, 0.0f, 0.0f);
         GameObject NewGroundPlane = Instantiate(GroundPlane, planePosition, hit.Pose.rotation)
           as GameObject;
-        NewGroundPlane.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
+        NewGroundPlane.transform.Rotate(0, _modelRotation, 0, Space.Self);
         NewGroundPlane.transform.parent = anchor.transform;
 
         ToggleUI();
@@ -347,7 +347,7 @@ public class AvatarSceneController : MonoBehaviour
     /// <summary>
     /// Checks and updates the application lifecycle.
     /// </summary>
-    private void _UpdateApplicationLifecycle()
+    private void UpdateApplicationLifecycle()
     {
         // Exits the app when the 'back' button is pressed.
         if (Input.GetKey(KeyCode.Escape))
@@ -366,7 +366,7 @@ public class AvatarSceneController : MonoBehaviour
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
-        if (m_IsQuitting)
+        if (_isQuitting)
         {
             return;
         }
@@ -375,7 +375,7 @@ public class AvatarSceneController : MonoBehaviour
     /// <summary>
     /// Actually quits the application.
     /// </summary>
-    private void _DoQuit()
+    private void DoQuit()
     {
         Application.Quit();
     }

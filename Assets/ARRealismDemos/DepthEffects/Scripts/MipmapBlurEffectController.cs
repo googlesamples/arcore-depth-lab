@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="MipmapBlurEffectController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,21 +55,21 @@ public class MipmapBlurEffectController : MonoBehaviour
     /// </summary>
     public bool GreyscalePeripheral = false;
 
-    private const int k_PixelSkip = 4;
+    private const int _pixelSkip = 4;
 
-    private static readonly string k_AspectRatioPropertyName = "_AspectRatio";
-    private static readonly string k_MinDepthPropertyName = "_MinDepth";
-    private static readonly string k_DepthRangePropertyName = "_DepthRange";
-    private static readonly string k_AperturePropertyName = "_Aperture";
-    private static readonly string k_TouchPositionPropertyName = "_TouchPosition";
-    private static readonly string k_NormalizedDepthMinName = "_NormalizedDepthMin";
-    private static readonly string k_NormalizedDepthMaxName = "_NormalizedDepthMax";
-    private static readonly string k_RenderModePropertyName = "_RenderMode";
-    private static readonly string k_GreyscalePheripheralPropertyName = "_GreyscalePheripheral";
-    private Vector3 m_ScreenAnchorPosition = new Vector3(0.5f, 0.5f, 1f);
-    private DepthOfFieldRenderMode m_RenderMode = DepthOfFieldRenderMode.FocusOnProjectedPoint;
-    private float m_Aperture = 0.9f;
-    private float m_LastTouchTimestamp = 0f;
+    private static readonly string _aspectRatioPropertyName = "_AspectRatio";
+    private static readonly string _minDepthPropertyName = "_MinDepth";
+    private static readonly string _depthRangePropertyName = "_DepthRange";
+    private static readonly string _aperturePropertyName = "_Aperture";
+    private static readonly string _touchPositionPropertyName = "_TouchPosition";
+    private static readonly string _normalizedDepthMinName = "_NormalizedDepthMin";
+    private static readonly string _normalizedDepthMaxName = "_NormalizedDepthMax";
+    private static readonly string _renderModePropertyName = "_RenderMode";
+    private static readonly string _greyscalePheripheralPropertyName = "_GreyscalePheripheral";
+    private Vector3 _screenAnchorPosition = new Vector3(0.5f, 0.5f, 1f);
+    private DepthOfFieldRenderMode _renderMode = DepthOfFieldRenderMode.FocusOnProjectedPoint;
+    private float _aperture = 0.9f;
+    private float _lastTouchTimestamp = 0f;
 
     /// <summary>
     /// Rendering modes of the demo scene:
@@ -89,7 +89,7 @@ public class MipmapBlurEffectController : MonoBehaviour
     public void SwitchToNextDepthOfFieldMode()
     {
         var numModes = System.Enum.GetValues(typeof(DepthOfFieldRenderMode)).Length;
-        m_RenderMode = (DepthOfFieldRenderMode)(((int)m_RenderMode + 1) % numModes);
+        _renderMode = (DepthOfFieldRenderMode)(((int)_renderMode + 1) % numModes);
     }
 
     /// <summary>
@@ -106,11 +106,11 @@ public class MipmapBlurEffectController : MonoBehaviour
     /// <param name="slider">An UI slider in the scene.</param>
     public void ChangeAperture(Slider slider)
     {
-        if (m_Aperture != slider.value)
+        if (_aperture != slider.value)
         {
-            m_Aperture = slider.value;
+            _aperture = slider.value;
             GreyscalePeripheral = true;
-            m_LastTouchTimestamp = Time.time;
+            _lastTouchTimestamp = Time.time;
         }
     }
 
@@ -141,27 +141,27 @@ public class MipmapBlurEffectController : MonoBehaviour
 
     private void UpdateShaderVariables()
     {
-        if (m_RenderMode == DepthOfFieldRenderMode.FocusOnProjectedPoint)
+        if (_renderMode == DepthOfFieldRenderMode.FocusOnProjectedPoint)
         {
-            m_ScreenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
-            m_ScreenAnchorPosition.x /= Screen.width;
-            m_ScreenAnchorPosition.y /= Screen.height;
+            _screenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
+            _screenAnchorPosition.x /= Screen.width;
+            _screenAnchorPosition.y /= Screen.height;
         }
 
         // Cancels the highlighting effect when the user has not touched the slider for half second.
-        if (Time.time - m_LastTouchTimestamp > 0.5f)
+        if (Time.time - _lastTouchTimestamp > 0.5f)
         {
             GreyscalePeripheral = false;
         }
 
-        MipmapBlurMaterial.SetVector(k_TouchPositionPropertyName, m_ScreenAnchorPosition);
+        MipmapBlurMaterial.SetVector(_touchPositionPropertyName, _screenAnchorPosition);
         Vector2 aspectRatio = new Vector2(Screen.height / Screen.width, 1f);
-        MipmapBlurMaterial.SetVector(k_AspectRatioPropertyName, aspectRatio);
-        MipmapBlurMaterial.SetFloat(k_AperturePropertyName, m_Aperture);
+        MipmapBlurMaterial.SetVector(_aspectRatioPropertyName, aspectRatio);
+        MipmapBlurMaterial.SetFloat(_aperturePropertyName, _aperture);
 
         // Updates the rendering mode.
-        MipmapBlurMaterial.SetInt(k_RenderModePropertyName, (int)m_RenderMode);
-        MipmapBlurMaterial.SetInt(k_GreyscalePheripheralPropertyName,
+        MipmapBlurMaterial.SetInt(_renderModePropertyName, (int)_renderMode);
+        MipmapBlurMaterial.SetInt(_greyscalePheripheralPropertyName,
                                     GreyscalePeripheral ? 1 : 0);
 
         // Updates the values related to DepthSource.
@@ -177,9 +177,9 @@ public class MipmapBlurEffectController : MonoBehaviour
         var mapWidth = DepthSource.DepthWidth;
 
         // Looks up the global minimum and maximum depth value for depth normalization.
-        for (int i = 0; i < mapHeight; i += k_PixelSkip)
+        for (int i = 0; i < mapHeight; i += _pixelSkip)
         {
-            for (int j = 0; j < mapWidth; j += k_PixelSkip)
+            for (int j = 0; j < mapWidth; j += _pixelSkip)
             {
                 var depth = depthArray[(i * mapWidth) + j];
                 if (depth > maxDepth)
@@ -196,8 +196,8 @@ public class MipmapBlurEffectController : MonoBehaviour
         // Updates the minimum depth and depth range in meters in the shader.
         float minDepthM = minDepth * DepthSource.MillimeterToMeter;
         float maxDepthM = maxDepth * DepthSource.MillimeterToMeter;
-        MipmapBlurMaterial.SetFloat(k_MinDepthPropertyName, minDepthM);
-        MipmapBlurMaterial.SetFloat(k_DepthRangePropertyName, maxDepthM - minDepthM);
+        MipmapBlurMaterial.SetFloat(_minDepthPropertyName, minDepthM);
+        MipmapBlurMaterial.SetFloat(_depthRangePropertyName, maxDepthM - minDepthM);
     }
 
     private void ProcessTouch()
@@ -213,24 +213,24 @@ public class MipmapBlurEffectController : MonoBehaviour
         if (Input.touchCount == 1)
         {
             // Computes the view-space anchor based on rendering mode.
-            switch (m_RenderMode)
+            switch (_renderMode)
             {
                 case DepthOfFieldRenderMode.FocusOnWorldAnchor:
-                    m_ScreenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
-                    float depthMin = MipmapBlurMaterial.GetFloat(k_NormalizedDepthMinName);
-                    float depthMax = MipmapBlurMaterial.GetFloat(k_NormalizedDepthMaxName);
+                    _screenAnchorPosition = Camera.main.WorldToScreenPoint(FocusPoint.position);
+                    float depthMin = MipmapBlurMaterial.GetFloat(_normalizedDepthMinName);
+                    float depthMax = MipmapBlurMaterial.GetFloat(_normalizedDepthMaxName);
                     float depthRange = depthMax - depthMin;
 
-                    m_ScreenAnchorPosition.x /= Screen.width;
-                    m_ScreenAnchorPosition.y /= Screen.height;
+                    _screenAnchorPosition.x /= Screen.width;
+                    _screenAnchorPosition.y /= Screen.height;
                     float zScreenAnchorPosition =
-                        (m_ScreenAnchorPosition.z - depthMin) / depthRange;
-                    m_ScreenAnchorPosition.z = Mathf.Clamp01(zScreenAnchorPosition);
+                        (_screenAnchorPosition.z - depthMin) / depthRange;
+                    _screenAnchorPosition.z = Mathf.Clamp01(zScreenAnchorPosition);
                     break;
 
                 case DepthOfFieldRenderMode.FocusOnProjectedPoint:
                 case DepthOfFieldRenderMode.FocusOnScreenPoint:
-                    m_ScreenAnchorPosition.z = Input.touchCount >= 1 ? 1 : 0;
+                    _screenAnchorPosition.z = Input.touchCount >= 1 ? 1 : 0;
                     break;
             }
         }
@@ -238,7 +238,7 @@ public class MipmapBlurEffectController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             // For the first touch, computes the view-space anchor based on rendering mode.
-            switch (m_RenderMode)
+            switch (_renderMode)
             {
                 case DepthOfFieldRenderMode.FocusOnProjectedPoint:
                 case DepthOfFieldRenderMode.FocusOnWorldAnchor:
@@ -250,7 +250,7 @@ public class MipmapBlurEffectController : MonoBehaviour
                 case DepthOfFieldRenderMode.FocusOnScreenPoint:
                     // Touch position corresponds to the image UV in the portrait mode.
                     // Depth map UV is in landscape mode.
-                    m_ScreenAnchorPosition = new Vector3(touch.position.x / Screen.width,
+                    _screenAnchorPosition = new Vector3(touch.position.x / Screen.width,
                                                          touch.position.y / Screen.height,
                                                          1f);
                     break;

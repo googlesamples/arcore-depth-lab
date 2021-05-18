@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="QuaternionFilter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,40 +40,40 @@ public class QuaternionFilter : MonoBehaviour
     /// <summary>
     /// Sets the inner window size for ignoring any changes.
     /// </summary>
-    public float InnerHysteresisDegrees = k_InnerHysteresisDegrees;
+    public float InnerHysteresisDegrees = _innerHysteresisDegrees;
 
     /// <summary>
     /// Sets the out window size for smoothly blending from hysteresis to filtering value.
     /// </summary>
-    public float OuterHysteresisDegrees = k_OuterHysteresisDegrees;
+    public float OuterHysteresisDegrees = _outerHysteresisDegrees;
 
     /// <summary>
     /// Minimum cutoff value.
     /// </summary>
-    public float MinCutoff = k_MinCutoff;
+    public float MinCutoff = _minCutoff;
 
     /// <summary>
     /// Beta cutoff slope value.
     /// </summary>
-    public float BetaCutoffSlope = k_BetaCutoffSlope;
+    public float BetaCutoffSlope = _betaCutoffSlope;
 
     /// <summary>
     /// Derivate cutoff frequency value.
     /// </summary>
-    public float DerivateCutoffFrequency = k_DerivateCutoffFrequency;
+    public float DerivateCutoffFrequency = _derivateCutoffFrequency;
 
-    private const float k_SensorFrequency = 60;
-    private const float k_InnerHysteresisDegrees = 0.5f;
-    private const float k_OuterHysteresisDegrees = 1.0f;
-    private const float k_MinCutoff = 7f;
-    private const float k_BetaCutoffSlope = 0.5f;
-    private const float k_DerivateCutoffFrequency = 1f;
-    private SpeedAdaptiveFilter m_XFilter;
-    private SpeedAdaptiveFilter m_YFilter;
-    private SpeedAdaptiveFilter m_ZFilter;
-    private SpeedAdaptiveFilter m_WFilter;
-    private Quaternion m_LastValue;
-    private float m_SensorFrequency = k_SensorFrequency;
+    private const float _initialSensorFrequency = 60;
+    private const float _innerHysteresisDegrees = 0.5f;
+    private const float _outerHysteresisDegrees = 1.0f;
+    private const float _minCutoff = 7f;
+    private const float _betaCutoffSlope = 0.5f;
+    private const float _derivateCutoffFrequency = 1f;
+    private SpeedAdaptiveFilter _xFilter;
+    private SpeedAdaptiveFilter _yFilter;
+    private SpeedAdaptiveFilter _zFilter;
+    private SpeedAdaptiveFilter _wFilter;
+    private Quaternion _lastValue;
+    private float _sensorFrequency = _initialSensorFrequency;
 
     /// <summary>
     /// This is a speed-adaptive rotation filter for Quaternion input.
@@ -90,7 +90,7 @@ public class QuaternionFilter : MonoBehaviour
     {
         get
         {
-            return m_LastValue;
+            return _lastValue;
         }
     }
 
@@ -99,13 +99,13 @@ public class QuaternionFilter : MonoBehaviour
     /// </summary>
     public void ReinitalizeFilter()
     {
-        m_XFilter = new SpeedAdaptiveFilter(m_SensorFrequency, MinCutoff, BetaCutoffSlope,
+        _xFilter = new SpeedAdaptiveFilter(_sensorFrequency, MinCutoff, BetaCutoffSlope,
             DerivateCutoffFrequency);
-        m_YFilter = new SpeedAdaptiveFilter(m_SensorFrequency, MinCutoff, BetaCutoffSlope,
+        _yFilter = new SpeedAdaptiveFilter(_sensorFrequency, MinCutoff, BetaCutoffSlope,
             DerivateCutoffFrequency);
-        m_ZFilter = new SpeedAdaptiveFilter(m_SensorFrequency, MinCutoff, BetaCutoffSlope,
+        _zFilter = new SpeedAdaptiveFilter(_sensorFrequency, MinCutoff, BetaCutoffSlope,
             DerivateCutoffFrequency);
-        m_WFilter = new SpeedAdaptiveFilter(m_SensorFrequency, MinCutoff, BetaCutoffSlope,
+        _wFilter = new SpeedAdaptiveFilter(_sensorFrequency, MinCutoff, BetaCutoffSlope,
             DerivateCutoffFrequency);
     }
 
@@ -116,16 +116,16 @@ public class QuaternionFilter : MonoBehaviour
     /// <returns>Returns the filtered value.</returns>
     public Quaternion Filter(Quaternion value)
     {
-        UpdateFilterParameters(m_XFilter);
-        UpdateFilterParameters(m_YFilter);
-        UpdateFilterParameters(m_ZFilter);
-        UpdateFilterParameters(m_WFilter);
+        UpdateFilterParameters(_xFilter);
+        UpdateFilterParameters(_yFilter);
+        UpdateFilterParameters(_zFilter);
+        UpdateFilterParameters(_wFilter);
 
         Vector4 lastRot = new Vector4(
-            m_XFilter.LastValue,
-            m_YFilter.LastValue,
-            m_ZFilter.LastValue,
-            m_WFilter.LastValue).normalized;
+            _xFilter.LastValue,
+            _yFilter.LastValue,
+            _zFilter.LastValue,
+            _wFilter.LastValue).normalized;
 
         Vector4 currentRot = new Vector4(
             value.x,
@@ -143,7 +143,7 @@ public class QuaternionFilter : MonoBehaviour
                 -currentRot.w);
         }
 
-        float angleDist = Math.Abs(Quaternion.Angle(value, m_LastValue));
+        float angleDist = Math.Abs(Quaternion.Angle(value, _lastValue));
 
         float ratio = (angleDist - InnerHysteresisDegrees) /
             (OuterHysteresisDegrees - InnerHysteresisDegrees);
@@ -153,14 +153,14 @@ public class QuaternionFilter : MonoBehaviour
         Quaternion result = value;
         if (!DoWindowFilterOnly)
         {
-            result.x = m_XFilter.Filter(value.x);
-            result.y = m_YFilter.Filter(value.y);
-            result.z = m_ZFilter.Filter(value.z);
-            result.w = m_WFilter.Filter(value.w);
+            result.x = _xFilter.Filter(value.x);
+            result.y = _yFilter.Filter(value.y);
+            result.z = _zFilter.Filter(value.z);
+            result.w = _wFilter.Filter(value.w);
         }
 
-        result = Quaternion.Slerp(m_LastValue, result, ratio);
-        m_LastValue = result;
+        result = Quaternion.Slerp(_lastValue, result, ratio);
+        _lastValue = result;
         return result;
     }
 

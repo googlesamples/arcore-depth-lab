@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthMeshCollider.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,13 +57,18 @@ public class DepthMeshCollider : MonoBehaviour
     /// Life time in seconds of the thrown game object.
     /// </summary>
     [FormerlySerializedAs("projectileLifetimeS")]
-    public int ProjectileLifetimeS = k_ProjectileLifetimeS;
+    public int ProjectileLifetimeS = _projectileLifetimeS;
 
     /// <summary>
     /// Whether to enable the renderer.
     /// </summary>
     [FormerlySerializedAs("render")]
     public bool Render = false;
+
+    /// <summary>
+    /// Flag to enable sparse depth.
+    /// </summary>
+    public bool UseRawDepth;
 
     /// <summary>
     /// Makes sure physics objects don't fall through.
@@ -87,34 +92,34 @@ public class DepthMeshCollider : MonoBehaviour
     public float ProjectileThrust = 5;
 
     // Number of threads used by the compute shader.
-    private const int k_NumThreadsX = 8;
-    private const int k_NumThreadsY = 8;
-    private const int k_DepthPixelSkippingX = 2;
-    private const int k_DepthPixelSkippingY = 2;
-    private const int k_NormalSamplingOffset = 1;
-    private const int k_ProjectileLifetimeS = 180;
-    private const float k_EdgeExtensionOffset = 0.5f;
-    private const float k_EdgeExtensionDepthOffset = -0.5f;
+    private const int _numThreadsX = 8;
+    private const int _numThreadsY = 8;
+    private const int _kDepthPixelSkippingX = 2;
+    private const int _kDepthPixelSkippingY = 2;
+    private const int _normalSamplingOffset = 1;
+    private const int _projectileLifetimeS = 180;
+    private const float _edgeExtensionOffset = 0.5f;
+    private const float _edgeExtensionDepthOffset = -0.5f;
 
     // Holds the vertex and index data of the depth template mesh.
-    private Mesh m_Mesh;
-    private bool m_Initialized = false;
-    private MeshCollider m_MeshCollider;
-    private System.Random m_Random = new System.Random();
-    private int m_VertexFromDepthHandle;
-    private int m_NormalFromVertexHandle;
-    private int m_NumElements;
-    private ComputeBuffer m_VertexBuffer;
-    private ComputeBuffer m_NormalBuffer;
-    private Vector3[] m_Vertices;
-    private Vector3[] m_Normals;
-    private int m_GetDataCountdown = -1;
-    private int m_DepthPixelSkippingX = k_DepthPixelSkippingX;
-    private int m_DepthPixelSkippingY = k_DepthPixelSkippingY;
-    private int m_MeshWidth;
-    private int m_MeshHeight;
-    private GameObject m_Root = null;
-    private List<GameObject> m_GameObjects = new List<GameObject>();
+    private Mesh _mesh;
+    private bool _initialized = false;
+    private MeshCollider _meshCollider;
+    private System.Random _random = new System.Random();
+    private int _vertexFromDepthHandle;
+    private int _normalFromVertexHandle;
+    private int _numElements;
+    private ComputeBuffer _vertexBuffer;
+    private ComputeBuffer _normalBuffer;
+    private Vector3[] _vertices;
+    private Vector3[] _normals;
+    private int _getDataCountdown = -1;
+    private int _depthPixelSkippingX = _kDepthPixelSkippingX;
+    private int _depthPixelSkippingY = _kDepthPixelSkippingY;
+    private int _meshWidth;
+    private int _meshHeight;
+    private GameObject _root = null;
+    private List<GameObject> _gameObjects = new List<GameObject>();
 
     /// <summary>
     /// Throws a game object for the collision test.
@@ -129,20 +134,20 @@ public class DepthMeshCollider : MonoBehaviour
     /// </summary>
     public void ShootPrefab()
     {
-        if (m_Root == null)
+        if (_root == null)
         {
-            m_Root = new GameObject("Projectiles");
+            _root = new GameObject("Projectiles");
         }
 
         GameObject bullet = Instantiate(
-            Projectiles[m_Random.Next(Projectiles.Length)],
+            Projectiles[_random.Next(Projectiles.Length)],
             SceneCamera.transform.position + (SceneCamera.transform.forward * ForwardOffset),
             Quaternion.identity) as GameObject;
 
         Vector3 forceVector = SceneCamera.transform.forward * ProjectileThrust;
         bullet.GetComponent<Rigidbody>().velocity = forceVector;
-        bullet.transform.parent = m_Root.transform;
-        m_GameObjects.Add(bullet);
+        bullet.transform.parent = _root.transform;
+        _gameObjects.Add(bullet);
     }
 
     /// <summary>
@@ -150,17 +155,17 @@ public class DepthMeshCollider : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        foreach (GameObject go in m_GameObjects)
+        foreach (GameObject go in _gameObjects)
         {
             Destroy(go);
         }
 
-        m_GameObjects.Clear();
+        _gameObjects.Clear();
 
-        if (m_Root != null)
+        if (_root != null)
         {
-            Debug.Log("Destroy all projectiles " + m_Root.transform.childCount);
-            foreach (Transform child in m_Root.transform)
+            Debug.Log("Destroy all projectiles " + _root.transform.childCount);
+            foreach (Transform child in _root.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -207,19 +212,19 @@ public class DepthMeshCollider : MonoBehaviour
     private void OnDestroy()
     {
         Clear();
-        if (m_Root != null)
+        if (_root != null)
         {
-            Destroy(m_Root);
+            Destroy(_root);
         }
 
-        m_Root = null;
-        m_VertexBuffer.Dispose();
-        m_NormalBuffer.Dispose();
+        _root = null;
+        _vertexBuffer.Dispose();
+        _normalBuffer.Dispose();
     }
 
     private void Start()
     {
-        m_MeshCollider = GetComponent<MeshCollider>();
+        _meshCollider = GetComponent<MeshCollider>();
         GetComponent<MeshRenderer>().enabled = Render;
 
         if (SceneCamera == null)
@@ -230,13 +235,13 @@ public class DepthMeshCollider : MonoBehaviour
 
     private void Update()
     {
-        if (m_Initialized)
+        if (_initialized)
         {
-            if (m_GetDataCountdown > 0)
+            if (_getDataCountdown > 0)
             {
-                m_GetDataCountdown--;
+                _getDataCountdown--;
             }
-            else if (m_GetDataCountdown == 0)
+            else if (_getDataCountdown == 0)
             {
                 UpdateCollider();
             }
@@ -245,13 +250,13 @@ public class DepthMeshCollider : MonoBehaviour
         {
             if (DepthSource.Initialized)
             {
-                m_MeshWidth = DepthSource.DepthWidth / m_DepthPixelSkippingX;
-                m_MeshHeight = DepthSource.DepthHeight / m_DepthPixelSkippingY;
-                m_NumElements = m_MeshWidth * m_MeshHeight;
+                _meshWidth = DepthSource.DepthWidth / _depthPixelSkippingX;
+                _meshHeight = DepthSource.DepthHeight / _depthPixelSkippingY;
+                _numElements = _meshWidth * _meshHeight;
 
                 InitializeComputeShader();
                 InitializeMesh();
-                m_Initialized = true;
+                _initialized = true;
             }
         }
     }
@@ -259,49 +264,50 @@ public class DepthMeshCollider : MonoBehaviour
     private void InitializeMesh()
     {
         // Creates template vertices.
-        m_Vertices = new Vector3[m_NumElements];
-        m_Normals = new Vector3[m_NumElements];
+        _vertices = new Vector3[_numElements];
+        _normals = new Vector3[_numElements];
 
         // Creates template vertices for the mesh object.
-        for (int y = 0; y < m_MeshHeight; y++)
+        for (int y = 0; y < _meshHeight; y++)
         {
-            for (int x = 0; x < m_MeshWidth; x++)
+            for (int x = 0; x < _meshWidth; x++)
             {
-                int index = (y * m_MeshWidth) + x;
+                int index = (y * _meshWidth) + x;
                 Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0);
-                m_Vertices[index] = v;
-                m_Normals[index] = Vector3.back;
+                _vertices[index] = v;
+                _normals[index] = Vector3.back;
             }
         }
 
         // Creates template triangle list.
-        int[] triangles = GenerateTriangles(m_MeshWidth, m_MeshHeight);
+        int[] triangles = GenerateTriangles(_meshWidth, _meshHeight);
 
         // Creates the mesh object and set all template data.
-        m_Mesh = new Mesh();
-        m_Mesh.MarkDynamic();
-        m_Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        m_Mesh.vertices = m_Vertices;
-        m_Mesh.normals = m_Normals;
-        m_Mesh.triangles = triangles;
-        m_Mesh.bounds = new Bounds(Vector3.zero, new Vector3(20, 20, 20));
-        m_Mesh.UploadMeshData(false);
+        _mesh = new Mesh();
+        _mesh.MarkDynamic();
+        _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        _mesh.vertices = _vertices;
+        _mesh.normals = _normals;
+        _mesh.triangles = triangles;
+        _mesh.bounds = new Bounds(Vector3.zero, new Vector3(20, 20, 20));
+        _mesh.UploadMeshData(false);
 
         if (Render)
         {
-            GetComponent<MeshFilter>().sharedMesh = m_Mesh;
+            GetComponent<MeshFilter>().sharedMesh = _mesh;
         }
     }
 
     private void InitializeComputeShader()
     {
-        m_VertexFromDepthHandle = DepthProcessingCS.FindKernel("VertexFromDepth");
-        m_NormalFromVertexHandle = DepthProcessingCS.FindKernel("NormalFromVertex");
+        _vertexFromDepthHandle = DepthProcessingCS.FindKernel("VertexFromDepth");
+        _normalFromVertexHandle = DepthProcessingCS.FindKernel("NormalFromVertex");
 
-        m_VertexBuffer = new ComputeBuffer(m_NumElements, sizeof(float) * 3);
-        m_NormalBuffer = new ComputeBuffer(m_NumElements, sizeof(float) * 3);
+        _vertexBuffer = new ComputeBuffer(_numElements, sizeof(float) * 3);
+        _normalBuffer = new ComputeBuffer(_numElements, sizeof(float) * 3);
 
         Texture2D depthTexture =
+            UseRawDepth ? DepthSource.RawDepthTexture :
             DepthSource.DepthTexture;
 
         // Sets general compute shader variables.
@@ -311,55 +317,55 @@ public class DepthMeshCollider : MonoBehaviour
         DepthProcessingCS.SetFloat("PrincipalY", DepthSource.PrincipalPoint.y);
         DepthProcessingCS.SetFloat("FocalLengthX", DepthSource.FocalLength.x);
         DepthProcessingCS.SetFloat("FocalLengthY", DepthSource.FocalLength.y);
-        DepthProcessingCS.SetInt("NormalSamplingOffset", k_NormalSamplingOffset);
-        DepthProcessingCS.SetInt("DepthPixelSkippingX", m_DepthPixelSkippingX);
-        DepthProcessingCS.SetInt("DepthPixelSkippingY", m_DepthPixelSkippingY);
-        DepthProcessingCS.SetInt("MeshWidth", m_MeshWidth);
-        DepthProcessingCS.SetInt("MeshHeight", m_MeshHeight);
+        DepthProcessingCS.SetInt("NormalSamplingOffset", _normalSamplingOffset);
+        DepthProcessingCS.SetInt("DepthPixelSkippingX", _depthPixelSkippingX);
+        DepthProcessingCS.SetInt("DepthPixelSkippingY", _depthPixelSkippingY);
+        DepthProcessingCS.SetInt("MeshWidth", _meshWidth);
+        DepthProcessingCS.SetInt("MeshHeight", _meshHeight);
         DepthProcessingCS.SetBool("ExtendEdges", ExtendMeshEdges);
-        DepthProcessingCS.SetFloat("EdgeExtensionOffset", k_EdgeExtensionOffset);
-        DepthProcessingCS.SetFloat("EdgeExtensionDepthOffset", k_EdgeExtensionDepthOffset);
+        DepthProcessingCS.SetFloat("EdgeExtensionOffset", _edgeExtensionOffset);
+        DepthProcessingCS.SetFloat("EdgeExtensionDepthOffset", _edgeExtensionDepthOffset);
 
         // Sets shader resources for the vertex function.
-        DepthProcessingCS.SetTexture(m_VertexFromDepthHandle, "depthTex", depthTexture);
-        DepthProcessingCS.SetBuffer(m_VertexFromDepthHandle, "vertexBuffer", m_VertexBuffer);
+        DepthProcessingCS.SetTexture(_vertexFromDepthHandle, "depthTex", depthTexture);
+        DepthProcessingCS.SetBuffer(_vertexFromDepthHandle, "vertexBuffer", _vertexBuffer);
 
         // Sets shader resources for the normal function.
-        DepthProcessingCS.SetBuffer(m_NormalFromVertexHandle, "vertexBuffer", m_VertexBuffer);
-        DepthProcessingCS.SetBuffer(m_NormalFromVertexHandle, "normalBuffer", m_NormalBuffer);
+        DepthProcessingCS.SetBuffer(_normalFromVertexHandle, "vertexBuffer", _vertexBuffer);
+        DepthProcessingCS.SetBuffer(_normalFromVertexHandle, "normalBuffer", _normalBuffer);
     }
 
     private void UpdateMesh()
     {
-        if (!m_Initialized)
+        if (!_initialized)
         {
             return;
         }
 
         UpdateComputeShaderVariables();
 
-        DepthProcessingCS.Dispatch(m_VertexFromDepthHandle, m_MeshWidth / k_NumThreadsX,
-            (m_MeshHeight / k_NumThreadsY) + 1, 1);
+        DepthProcessingCS.Dispatch(_vertexFromDepthHandle, _meshWidth / _numThreadsX,
+            (_meshHeight / _numThreadsY) + 1, 1);
 
-        m_GetDataCountdown = 2;
+        _getDataCountdown = 2;
 
         if (Render)
         {
-            m_VertexBuffer.GetData(m_Vertices);
-            m_Mesh.vertices = m_Vertices;
-            m_Mesh.RecalculateNormals();
-            m_Mesh.UploadMeshData(false);
+            _vertexBuffer.GetData(_vertices);
+            _mesh.vertices = _vertices;
+            _mesh.RecalculateNormals();
+            _mesh.UploadMeshData(false);
         }
     }
 
     private void UpdateCollider()
     {
-        m_GetDataCountdown = -1;
+        _getDataCountdown = -1;
 
-        m_VertexBuffer.GetData(m_Vertices);
-        m_Mesh.vertices = m_Vertices;
-        m_MeshCollider.sharedMesh = null;
-        m_MeshCollider.sharedMesh = m_Mesh;
+        _vertexBuffer.GetData(_vertices);
+        _mesh.vertices = _vertices;
+        _meshCollider.sharedMesh = null;
+        _meshCollider.sharedMesh = _mesh;
 
         OnColliderMeshReady();
     }
@@ -371,9 +377,10 @@ public class DepthMeshCollider : MonoBehaviour
 
     private void UpdateComputeShaderVariables()
     {
-        Texture2D depthTexture = DepthSource.DepthTexture;
+        Texture2D depthTexture = UseRawDepth ? DepthSource.RawDepthTexture :
+            DepthSource.DepthTexture;
 
-        DepthProcessingCS.SetTexture(m_VertexFromDepthHandle, "depthTex", depthTexture);
+        DepthProcessingCS.SetTexture(_vertexFromDepthHandle, "depthTex", depthTexture);
         DepthProcessingCS.SetMatrix("ModelTransform", DepthSource.LocalToWorldMatrix);
     }
 }

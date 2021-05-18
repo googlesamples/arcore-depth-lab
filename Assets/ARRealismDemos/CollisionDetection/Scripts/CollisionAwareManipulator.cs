@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CollisionAwareManipulator.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -77,37 +77,37 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public float MaxTranslationDistanceInMeters = 3;
 
         // A small default texture size to create a texture of unknown size.
-        private const int k_DefaultTextureSize = 2;
+        private const int _defaultTextureSize = 2;
 
         // The maximum distance in meters which the model translates per second.
-        private const float k_PositionSpeedMS = 12.0f;
-        private const float k_TranslationThreshold = 0.0001f;
-        private const float k_MinimumSquaredDistance = 2.5e-7f;
+        private const float _positionSpeedMS = 12.0f;
+        private const float _translationThreshold = 0.0001f;
+        private const float _minimumSquaredDistance = 2.5e-7f;
 
         // A vertical offset in meters to prevent inaccurate collision checking.
-        private static float s_ObjectVerticalPlacementOffset = 0.03f;
+        private static float _objectVerticalPlacementOffset = 0.03f;
 
         /// <summary>
         /// A simplified collider proxy for detecting collision. Set by SetProxy().
         /// </summary>
-        private GameObject m_ColliderProxy;
+        private GameObject _colliderProxy;
 
         /// <summary>
         /// Handles the collision event.
         /// </summary>
-        private CollisionEvent m_CollisionEvent;
+        private CollisionEvent _collisionEvent;
 
         // Updates every frame with the latest depth data.
-        private Texture2D m_DepthTexture;
-        private bool m_IsActive = false;
-        private Vector3 m_DesiredAnchorPosition;
-        private Vector3 m_DesiredLocalPosition;
-        private Vector3 m_LastValidLocalPosition;
-        private Quaternion m_DesiredRotation;
-        private float m_GroundingPlaneHeight;
-        private TrackableHit m_LastHit;
-        private GameObject m_ManipulatedObject;
-        private Vector3[] m_SelectedVerticesList;
+        private Texture2D _depthTexture;
+        private bool _isActive = false;
+        private Vector3 _desiredAnchorPosition;
+        private Vector3 _desiredLocalPosition;
+        private Vector3 _lastValidLocalPosition;
+        private Quaternion _desiredRotation;
+        private float _groundingPlaneHeight;
+        private TrackableHit _lastHit;
+        private GameObject _manipulatedObject;
+        private Vector3[] _selectedVerticesList;
 
         /// <summary>
         /// Sets the parental collision detector.
@@ -116,8 +116,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void SetCollisionDetector(CollisionDetector detector)
         {
             ParentCollisionDetector = detector;
-            m_ColliderProxy = ParentCollisionDetector.ColliderProxy;
-            m_CollisionEvent = detector.CollisionEvent.GetComponent<CollisionEvent>();
+            _colliderProxy = ParentCollisionDetector.ColliderProxy;
+            _collisionEvent = detector.CollisionEvent.GetComponent<CollisionEvent>();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         protected void Start()
         {
-            m_DepthTexture = new Texture2D(k_DefaultTextureSize, k_DefaultTextureSize);
+            _depthTexture = new Texture2D(_defaultTextureSize, _defaultTextureSize);
         }
 
         /// <summary>
@@ -157,22 +157,22 @@ namespace GoogleARCore.Examples.ObjectManipulation
 
             Select();
 
-            m_ManipulatedObject = gesture.TargetObject;
+            _manipulatedObject = gesture.TargetObject;
 
             if (!ParentCollisionDetector.UseColliderProxy)
             {
                 if (ParentCollisionDetector.UseBoundingBox)
                 {
-                    m_SelectedVerticesList = Utilities.GetBoundingBoxVertices(m_ManipulatedObject);
+                    _selectedVerticesList = Utilities.GetBoundingBoxVertices(_manipulatedObject);
                 }
                 else
                 {
-                    m_SelectedVerticesList = GetVerticesInChildren(m_ManipulatedObject);
+                    _selectedVerticesList = GetVerticesInChildren(_manipulatedObject);
                 }
             }
             else
             {
-                m_SelectedVerticesList = GetVerticesInChildren(m_ColliderProxy);
+                _selectedVerticesList = GetVerticesInChildren(_colliderProxy);
             }
 
             return true;
@@ -184,8 +184,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <param name="gesture">The current gesture.</param>
         protected override void OnStartManipulation(DragGesture gesture)
         {
-            m_GroundingPlaneHeight = transform.parent.position.y;
-            m_IsActive = true;
+            _groundingPlaneHeight = transform.parent.position.y;
+            _isActive = true;
         }
 
         /// <summary>
@@ -194,12 +194,12 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <param name="gesture">The current gesture.</param>
         protected override void OnContinueManipulation(DragGesture gesture)
         {
-            m_IsActive = true;
+            _isActive = true;
 
             TransformationUtility.Placement desiredPlacement =
               TransformationUtility.GetBestPlacementPosition(
-                transform.parent.position, gesture.Position, m_GroundingPlaneHeight,
-                s_ObjectVerticalPlacementOffset, MaxTranslationDistanceInMeters,
+                transform.parent.position, gesture.Position, _groundingPlaneHeight,
+                _objectVerticalPlacementOffset, MaxTranslationDistanceInMeters,
                 ObjectTranslationMode);
 
             // Discards invalid position.
@@ -209,12 +209,12 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 return;
             }
 
-            m_ManipulatedObject = gesture.TargetObject;
+            _manipulatedObject = gesture.TargetObject;
 
             // Drops the value when collision occurs.
             if (TestCollision(desiredPlacement.PlacementPosition.Value))
             {
-                m_CollisionEvent.Trigger(m_ManipulatedObject);
+                _collisionEvent.Trigger(_manipulatedObject);
                 return;
             }
 
@@ -222,29 +222,29 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 // Rotates if the plane direction has changed.
                 if (((desiredPlacement.PlacementRotation.Value * Vector3.up) - transform.up)
-                  .sqrMagnitude > k_MinimumSquaredDistance)
+                  .sqrMagnitude > _minimumSquaredDistance)
                 {
-                    m_CollisionEvent.Trigger(m_ManipulatedObject);
+                    _collisionEvent.Trigger(_manipulatedObject);
                     return;
                 }
                 else
                 {
-                    m_DesiredRotation = transform.rotation;
+                    _desiredRotation = transform.rotation;
                 }
             }
 
             // If desired position is lower than the current position, don't drop it until it's
             // finished.
-            m_DesiredLocalPosition = transform.parent.InverseTransformPoint(
+            _desiredLocalPosition = transform.parent.InverseTransformPoint(
               desiredPlacement.HoveringPosition.Value);
 
-            m_DesiredAnchorPosition = desiredPlacement.PlacementPosition.Value;
+            _desiredAnchorPosition = desiredPlacement.PlacementPosition.Value;
 
-            m_GroundingPlaneHeight = desiredPlacement.UpdatedGroundingPlaneHeight;
+            _groundingPlaneHeight = desiredPlacement.UpdatedGroundingPlaneHeight;
 
             if (desiredPlacement.PlacementPlane.HasValue)
             {
-                m_LastHit = desiredPlacement.PlacementPlane.Value;
+                _lastHit = desiredPlacement.PlacementPlane.Value;
             }
         }
 
@@ -254,14 +254,14 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <param name="gesture">The current gesture.</param>
         protected override void OnEndManipulation(DragGesture gesture)
         {
-            if (m_CollisionEvent.IsTriggering())
+            if (_collisionEvent.IsTriggering())
             {
                 return;
             }
 
             GameObject oldAnchor = transform.parent.gameObject;
 
-            Pose desiredPose = new Pose(m_DesiredAnchorPosition, m_LastHit.Pose.rotation);
+            Pose desiredPose = new Pose(_desiredAnchorPosition, _lastHit.Pose.rotation);
 
             Vector3 desiredLocalPosition =
               transform.parent.InverseTransformPoint(desiredPose.position);
@@ -274,32 +274,32 @@ namespace GoogleARCore.Examples.ObjectManipulation
 
             desiredPose.position = transform.parent.TransformPoint(desiredLocalPosition);
 
-            Anchor newAnchor = m_LastHit.Trackable.CreateAnchor(desiredPose);
+            Anchor newAnchor = _lastHit.Trackable.CreateAnchor(desiredPose);
 
             if (TestCollision(newAnchor.transform.position))
             {
-                m_CollisionEvent.Trigger(gesture.TargetObject);
+                _collisionEvent.Trigger(gesture.TargetObject);
                 return;
             }
 
             var rotationDifference = (desiredPose.rotation * Vector3.up) - newAnchor.transform.up;
-            if (rotationDifference.sqrMagnitude > k_MinimumSquaredDistance)
+            if (rotationDifference.sqrMagnitude > _minimumSquaredDistance)
             {
-                m_CollisionEvent.Trigger(gesture.TargetObject);
+                _collisionEvent.Trigger(gesture.TargetObject);
                 return;
             }
 
             // Translates the model.
             transform.parent = newAnchor.transform;
-            m_DesiredLocalPosition = Vector3.zero;
+            _desiredLocalPosition = Vector3.zero;
 
             // Discards if the plane direction has changed.
-            m_DesiredRotation = newAnchor.transform.rotation;
+            _desiredRotation = newAnchor.transform.rotation;
 
             Destroy(oldAnchor);
 
             // Makes sure position is updated one last time.
-            m_IsActive = true;
+            _isActive = true;
         }
 
         /// <summary>
@@ -309,17 +309,17 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <returns>The depth value in meters.</returns>
         private float FetchEnvironmentDepth(Vector3 screenPosition)
         {
-            int depthY = (int)(screenPosition.y * m_DepthTexture.height);
-            int depthX = (int)(screenPosition.x * m_DepthTexture.width);
+            int depthY = (int)(screenPosition.y * _depthTexture.height);
+            int depthX = (int)(screenPosition.x * _depthTexture.width);
 
             // Obtains the depth value in short.
 #if UNITY_2018_3_OR_NEWER
-            var depthData = m_DepthTexture.GetRawTextureData<short>();
-            var depthIndex = depthY * m_DepthTexture.width + depthX;
+            var depthData = _depthTexture.GetRawTextureData<short>();
+            var depthIndex = depthY * _depthTexture.width + depthX;
             var depthInShort = depthData[depthIndex];
 #else
-            var depthData = m_DepthTexture.GetRawTextureData();
-            var depthIndex = ((depthY * m_DepthTexture.width) + depthX) * 2;
+            var depthData = _depthTexture.GetRawTextureData();
+            var depthIndex = ((depthY * _depthTexture.width) + depthX) * 2;
             byte[] value = new byte[2];
             value[0] = depthData[depthIndex];
             value[1] = depthData[depthIndex + 1];
@@ -350,7 +350,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
             // Fetches the environment depth.
             var normalizedScreenPoint = new Vector2(
                 normalizedScreenPosition.x, normalizedScreenPosition.y);
-            var depthArray = DepthSource.DepthArray;
+            var depthArray = ParentCollisionDetector.UseRawDepth ? DepthSource.RawDepthArray
+                                                                    : DepthSource.DepthArray;
             var environmentDepth = DepthSource.GetDepthFromUV(normalizedScreenPoint,
                                                                       depthArray);
 
@@ -395,22 +396,30 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <returns>Whether the mesh triggers collision at targetWorldPosition.</returns>
         private bool TestCollision(Vector3 targetWorldPosition)
         {
-            DepthSource.DepthDataSource.UpdateDepthTexture(ref m_DepthTexture);
+            // Retrieves the latest (sparse) depth data from ARCore.
+            if (ParentCollisionDetector.UseRawDepth)
+            {
+                DepthSource.DepthDataSource.UpdateRawDepthTexture(ref _depthTexture);
+            }
+            else
+            {
+                DepthSource.DepthDataSource.UpdateDepthTexture(ref _depthTexture);
+            }
 
             // Retrieves all vertices of the collider mesh.
-            var coliderMesh = ParentCollisionDetector.UseColliderProxy ? m_ColliderProxy
-                                                                       : m_ManipulatedObject;
-            if (m_SelectedVerticesList == null)
+            var coliderMesh = ParentCollisionDetector.UseColliderProxy ? _colliderProxy
+                                                                       : _manipulatedObject;
+            if (_selectedVerticesList == null)
             {
-                m_SelectedVerticesList = GetVerticesInChildren(coliderMesh);
+                _selectedVerticesList = GetVerticesInChildren(coliderMesh);
             }
 
             int numCollision = 0;
             float collisionPercentage = 0;
-            int totalTests = m_SelectedVerticesList.Length;
+            int totalTests = _selectedVerticesList.Length;
 
             // Tests every single vertex of the mesh and gets the statistics of the results.
-            foreach (var vertex in m_SelectedVerticesList)
+            foreach (var vertex in _selectedVerticesList)
             {
                 var result = CollisionTestSingleVertex(targetWorldPosition + vertex);
                 switch (result)
@@ -440,37 +449,37 @@ namespace GoogleARCore.Examples.ObjectManipulation
         private void UpdatePosition()
         {
             // Blocks the translation when the manipulator is not active or the object is collided.
-            if (!m_IsActive || m_CollisionEvent.IsTriggering())
+            if (!_isActive || _collisionEvent.IsTriggering())
             {
-                m_DesiredLocalPosition = m_LastValidLocalPosition;
+                _desiredLocalPosition = _lastValidLocalPosition;
                 return;
             }
 
             // Lerps position.
             Vector3 oldLocalPosition = transform.localPosition;
             Vector3 newLocalPosition = Vector3.Lerp(
-              oldLocalPosition, m_DesiredLocalPosition, Time.deltaTime * k_PositionSpeedMS);
+              oldLocalPosition, _desiredLocalPosition, Time.deltaTime * _positionSpeedMS);
 
-            float diffLenghth = (m_DesiredLocalPosition - newLocalPosition).sqrMagnitude;
-            if (diffLenghth < k_MinimumSquaredDistance)
+            float diffLenghth = (_desiredLocalPosition - newLocalPosition).sqrMagnitude;
+            if (diffLenghth < _minimumSquaredDistance)
             {
-                newLocalPosition = m_DesiredLocalPosition;
-                m_IsActive = false;
+                newLocalPosition = _desiredLocalPosition;
+                _isActive = false;
             }
 
             transform.localPosition = newLocalPosition;
-            m_LastValidLocalPosition = transform.localPosition;
+            _lastValidLocalPosition = transform.localPosition;
 
             // Lerps rotation.
             Quaternion oldRotation = transform.rotation;
             Quaternion newRotation =
-              Quaternion.Lerp(oldRotation, m_DesiredRotation, Time.deltaTime * k_PositionSpeedMS);
+              Quaternion.Lerp(oldRotation, _desiredRotation, Time.deltaTime * _positionSpeedMS);
             transform.rotation = newRotation;
 
             // Avoids placing the selection higher than the object if the anchor is higher than the
             // object.
             float newElevation =
-              Mathf.Max(0, -transform.InverseTransformPoint(m_DesiredAnchorPosition).y);
+              Mathf.Max(0, -transform.InverseTransformPoint(_desiredAnchorPosition).y);
             GetComponent<SelectionManipulator>().OnElevationChanged(newElevation);
         }
     }

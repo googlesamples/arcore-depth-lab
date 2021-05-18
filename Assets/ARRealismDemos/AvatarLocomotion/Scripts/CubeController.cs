@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="CubeController.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,25 +27,25 @@ using UnityEngine;
 /// </summary>
 public class CubeController : MonoBehaviour
 {
-    private AvatarController m_Android;
+    private AvatarController _android;
 
     /// <summary>
     /// Determines if this pickable can be added to the pickable list.
     /// </summary>
-    private bool m_CanBeAddedToPickableList = true;
+    private bool _canBeAddedToPickableList = true;
 
     private void Start()
     {
         GameObject andy = GameObject.FindGameObjectWithTag("Andy");
-        m_Android = andy.GetComponentInChildren<AvatarController>();
+        _android = andy.GetComponentInChildren<AvatarController>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (m_CanBeAddedToPickableList)
+        if (_canBeAddedToPickableList)
         {
-            m_Android.AddNewCubeObject(gameObject);
-            m_CanBeAddedToPickableList = false;
+            _android.AddNewCubeObject(gameObject);
+            _canBeAddedToPickableList = false;
         }
     }
 }

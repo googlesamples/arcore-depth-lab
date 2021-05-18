@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SimpleCollisionHelper.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ using UnityEngine.Serialization;
 /// </summary>
 public class SimpleCollisionHelper
 {
-    private const float k_VertexCollisionThresholdInMeters = 0.12f;
+    private const float _vertexCollisionThresholdInMeters = 0.12f;
 
-    private static Vector3[] s_Offsets =
+    private static Vector3[] _offsets =
     {
         new Vector3(0.0f, 0.0f, 0.0f),
         new Vector3(-1.0f, -1.0f, -1.0f),
@@ -97,11 +97,11 @@ public class SimpleCollisionHelper
         bounds.Encapsulate(collider.center + (collider.size * 0.5f));
         bounds.Encapsulate(collider.center - (collider.size * 0.5f));
 
-        Vector3[] box_vertices = new Vector3[s_Offsets.Length];
-        for (int i = 0; i < s_Offsets.Length; ++i)
+        Vector3[] box_vertices = new Vector3[_offsets.Length];
+        for (int i = 0; i < _offsets.Length; ++i)
         {
             box_vertices[i] = transform.MultiplyPoint(
-              bounds.center + Vector3.Scale(s_Offsets[i], bounds.extents));
+              bounds.center + Vector3.Scale(_offsets[i], bounds.extents));
         }
 
         return box_vertices;
@@ -125,7 +125,7 @@ public class SimpleCollisionHelper
         var targetDepth = screenPosition.z;
 
         return targetDepth >
-               environmentDepth + k_VertexCollisionThresholdInMeters
+               environmentDepth + _vertexCollisionThresholdInMeters
                ? CollisionResults.Collided : CollisionResults.NoCollision;
     }
 }

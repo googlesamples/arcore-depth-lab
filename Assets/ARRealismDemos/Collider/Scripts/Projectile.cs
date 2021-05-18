@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="Projectile.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,20 +28,20 @@ using UnityEngine;
 /// </summary>
 public class Projectile : MonoBehaviour
 {
-    private Rigidbody m_Rigidbody;
+    private Rigidbody _rigidbody;
 
     // Start is called before the first frame update
     private void Start()
     {
-        m_Rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (m_Rigidbody.IsSleeping() && !m_Rigidbody.isKinematic)
+        if (_rigidbody.IsSleeping() && !_rigidbody.isKinematic)
         {
-            m_Rigidbody.isKinematic = true;
+            _rigidbody.isKinematic = true;
             CreateAnchor();
         }
     }

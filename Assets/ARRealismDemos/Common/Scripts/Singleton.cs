@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="Singleton.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ using UnityEngine;
 /// <typeparam name="T">A MonoBehaviour type.</param>
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T s_Instance;
-    private static object s_Lock = new object();
-    private static bool s_QuittingApplication = false;
+    private static T _instance;
+    private static object _lock = new object();
+    private static bool _quittingApplication = false;
 
     /// <summary>
     /// Gets the instance of this class.
@@ -45,37 +45,37 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private static T TryGetInstance()
     {
-        if (s_QuittingApplication)
+        if (_quittingApplication)
         {
             return null;
         }
 
-        lock (s_Lock)
+        lock (_lock)
         {
-            if (s_Instance == null)
+            if (_instance == null)
             {
-                s_Instance = (T)FindObjectOfType(typeof(T));
+                _instance = (T)FindObjectOfType(typeof(T));
 
                 if (FindObjectsOfType(typeof(T)).Length > 1)
                 {
-                    return s_Instance;
+                    return _instance;
                 }
 
-                if (s_Instance == null)
+                if (_instance == null)
                 {
                     GameObject singleton = new GameObject("Singleton");
-                    s_Instance = singleton.AddComponent<T>();
+                    _instance = singleton.AddComponent<T>();
                     singleton.name = "(singleton) " + typeof(T).ToString();
                     DontDestroyOnLoad(singleton);
                 }
             }
 
-            return s_Instance;
+            return _instance;
         }
     }
 
     private void OnDestroy()
     {
-        s_QuittingApplication = true;
+        _quittingApplication = true;
     }
 }

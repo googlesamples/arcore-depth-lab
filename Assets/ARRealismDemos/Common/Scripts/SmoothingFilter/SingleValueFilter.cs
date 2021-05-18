@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="SingleValueFilter.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,37 +40,37 @@ public class SingleValueFilter : MonoBehaviour
     /// <summary>
     /// Sets the inner window size for ignoring any changes.
     /// </summary>
-    public float InnerHysteresisWindowSizeM = k_InnerHysteresisWindowSizeM;
+    public float InnerHysteresisWindowSizeM = _innerHysteresisWindowSizeM;
 
     /// <summary>
     /// Sets the out window size for smoothly blending from hysteresis to filtering value.
     /// </summary>
-    public float OuterHysteresisWindowSizeM = k_OuterHysteresisWindowSizeM;
+    public float OuterHysteresisWindowSizeM = _outerHysteresisWindowSizeM;
 
     /// <summary>
     /// Minimum cutoff value.
     /// </summary>
-    public float MinCutoff = k_MinCutoff;
+    public float MinCutoff = _minCutoff;
 
     /// <summary>
     /// Cutoff slope.
     /// </summary>
-    public float BetaCutoffSlope = k_BetaCutoffSlope;
+    public float BetaCutoffSlope = _betaCutoffSlope;
 
     /// <summary>
     /// Derivate cutoff frequency value.
     /// </summary>
-    public float DerivateCutoffFrequency = k_DerivateCutoffFrequency;
+    public float DerivateCutoffFrequency = _derivateCutoffFrequency;
 
-    private const float k_SensorFrequency = 60;
-    private const float k_InnerHysteresisWindowSizeM = 0.003f;
-    private const float k_OuterHysteresisWindowSizeM = 0.015f;
-    private const float k_MinCutoff = 7f;
-    private const float k_BetaCutoffSlope = 0.5f;
-    private const float k_DerivateCutoffFrequency = 1f;
-    private SpeedAdaptiveFilter m_XFilter;
-    private float m_LastValue;
-    private float m_SensorFrequency = k_SensorFrequency;
+    private const float _initialSensorFrequency = 60;
+    private const float _innerHysteresisWindowSizeM = 0.003f;
+    private const float _outerHysteresisWindowSizeM = 0.015f;
+    private const float _minCutoff = 7f;
+    private const float _betaCutoffSlope = 0.5f;
+    private const float _derivateCutoffFrequency = 1f;
+    private SpeedAdaptiveFilter _xFilter;
+    private float _lastValue;
+    private float _sensorFrequency = _initialSensorFrequency;
 
     /// <summary>
     /// Default constructor for a 3D position filter.
@@ -87,7 +87,7 @@ public class SingleValueFilter : MonoBehaviour
     {
         get
         {
-            return m_LastValue;
+            return _lastValue;
         }
     }
 
@@ -96,8 +96,8 @@ public class SingleValueFilter : MonoBehaviour
     /// </summary>
     public void ReinitalizeFilter()
     {
-        m_XFilter = new SpeedAdaptiveFilter(
-            m_SensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
+        _xFilter = new SpeedAdaptiveFilter(
+            _sensorFrequency, MinCutoff, BetaCutoffSlope, DerivateCutoffFrequency);
     }
 
     /// <summary>
@@ -107,9 +107,9 @@ public class SingleValueFilter : MonoBehaviour
     /// <returns>Returns the filtered value.</returns>
     public float Filter(float value)
     {
-        UpdateFilterParameters(m_XFilter);
+        UpdateFilterParameters(_xFilter);
 
-        float distFromLastPos = Math.Abs(m_LastValue - value);
+        float distFromLastPos = Math.Abs(_lastValue - value);
         float ratio = (distFromLastPos - InnerHysteresisWindowSizeM) /
             (OuterHysteresisWindowSizeM - InnerHysteresisWindowSizeM);
 
@@ -118,11 +118,11 @@ public class SingleValueFilter : MonoBehaviour
         float result = value;
         if (!DoWindowFilterOnly)
         {
-            result = m_XFilter.Filter(value);
+            result = _xFilter.Filter(value);
         }
 
-        result = (ratio * result) + ((1.0f - ratio) * m_LastValue);
-        m_LastValue = result;
+        result = (ratio * result) + ((1.0f - ratio) * _lastValue);
+        _lastValue = result;
         return result;
     }
 

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="StereoPhotoGenerator.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,58 +42,58 @@ public class StereoPhotoGenerator : MonoBehaviour
     public Camera StereoPhotoCamera;
 
     // Specifies the maximum distance between vertices of a single triangle to be rendered.
-    private const float k_TriangleConnectivityCutOff = 0.5f;
+    private const float _triangleConnectivityCutOff = 0.5f;
 
     // Tests if a value is close to zero.
-    private const float k_Epsilon = 1e-6f;
+    private const float _epsilon = 1e-6f;
 
     // Maximum distance of the depth value in meters.
-    private const float k_MaximumDistance = 4f;
+    private const float _maximumDistance = 4f;
 
     // Minimum rotating radius of the cached camera in meters.
-    private const float k_CameraRotationRadiusMin = 0.0017f;
+    private const float _cameraRotationRadiusMin = 0.0017f;
 
     // Maximum rotating radius of the cached camera in meters.
-    private const float k_CameraRotationRadiusMax = 0.05f;
+    private const float _cameraRotationRadiusMax = 0.05f;
 
     // Rotating speed of the cached camera.
-    private const float k_CameraRotationSpeed = 5f;
+    private const float _cameraRotationSpeed = 5f;
 
     // Percentage to move camera towards the target mesh to crop the animated stereoscopic photo.
-    private const float k_CachedCameraLeaningTargetPercetangeMin = 0.05f;
-    private const float k_CachedCameraLeaningTargetPercetangeMax = 0.2f;
+    private const float _cachedCameraLeaningTargetPercetangeMin = 0.05f;
+    private const float _cachedCameraLeaningTargetPercetangeMax = 0.2f;
 
-    private static readonly Vector3 k_DefaultMeshOffset = new Vector3(-100, -100, -100);
-    private static readonly string k_DepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string k_CameraTexturePropertyName = "_MainTex";
-    private static readonly string k_CameraViewMatrixPropertyName = "_CameraViewMatrix";
-    private static readonly string k_VertexModelTransformPropertyName = "_VertexModelTransform";
-    private static readonly string k_TextureProjectionMatrixPropertyName =
+    private static readonly Vector3 _defaultMeshOffset = new Vector3(-100, -100, -100);
+    private static readonly string _depthTexturePropertyName = "_CurrentDepthTexture";
+    private static readonly string _cameraTexturePropertyName = "_MainTex";
+    private static readonly string _cameraViewMatrixPropertyName = "_CameraViewMatrix";
+    private static readonly string _vertexModelTransformPropertyName = "_VertexModelTransform";
+    private static readonly string _textureProjectionMatrixPropertyName =
       "_TextureProjectionMatrix";
 
     // Holds the vertex and index data of the depth template mesh.
-    private Mesh m_Mesh;
+    private Mesh _mesh;
 
     // Whether the mesh is frozen.
-    private bool m_FreezeMesh = false;
+    private bool _freezeMesh = false;
 
     // Whether the mesh is initialized.
-    private bool m_Initialized = false;
+    private bool _initialized = false;
 
     // Holds a copy of the depth frame at the time the frame was frozen.
-    private Texture2D m_StaticDepthTexture = null;
+    private Texture2D _staticDepthTexture = null;
 
     // Holds a copy of the color frame at the time the frame was frozen.
-    private Texture2D m_StaticColorTexture = null;
+    private Texture2D _staticColorTexture = null;
 
-    private Vector3 m_CachedCameraPosition = new Vector3();
-    private Vector3 m_CachedCameraUp = new Vector3();
-    private Vector3 m_CachedTargetPosition = new Vector3();
-    private Vector3 m_CachedCameraPlaneAxisA = new Vector3();
-    private Vector3 m_CachedCameraPlaneAxisB = new Vector3();
-    private Matrix4x4 m_CachedModelViewMatrix = new Matrix4x4();
-    private Matrix4x4 m_CachedModeMatrix = new Matrix4x4();
-    private float m_CameraRotationRadius = k_CameraRotationRadiusMax;
+    private Vector3 _cachedCameraPosition = new Vector3();
+    private Vector3 _cachedCameraUp = new Vector3();
+    private Vector3 _cachedTargetPosition = new Vector3();
+    private Vector3 _cachedCameraPlaneAxisA = new Vector3();
+    private Vector3 _cachedCameraPlaneAxisB = new Vector3();
+    private Matrix4x4 _cachedModelViewMatrix = new Matrix4x4();
+    private Matrix4x4 _cachedModeMatrix = new Matrix4x4();
+    private float _cameraRotationRadius = _cameraRotationRadiusMax;
 
     /// <summary>
     /// Starts the capture coroutine, which is used to hide UI elements
@@ -109,11 +109,11 @@ public class StereoPhotoGenerator : MonoBehaviour
     /// </summary>
     public void UnfreezeToPreviewMode()
     {
-        m_FreezeMesh = false;
+        _freezeMesh = false;
         Material material = GetComponent<Renderer>().material;
-        material.SetTexture(k_DepthTexturePropertyName, DepthSource.DepthTexture);
-        Destroy(m_StaticDepthTexture);
-        m_StaticDepthTexture = null;
+        material.SetTexture(_depthTexturePropertyName, DepthSource.DepthTexture);
+        Destroy(_staticDepthTexture);
+        _staticDepthTexture = null;
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -197,48 +197,48 @@ public class StereoPhotoGenerator : MonoBehaviour
         CanvasObj.SetActive(false);
         yield return null;
 
-        m_FreezeMesh = true;
-        m_CachedCameraPosition = Camera.main.transform.position;
-        m_CachedTargetPosition = DepthSource.GetVertexInWorldSpaceFromScreenXY(
+        _freezeMesh = true;
+        _cachedCameraPosition = Camera.main.transform.position;
+        _cachedTargetPosition = DepthSource.GetVertexInWorldSpaceFromScreenXY(
                                     Screen.width / 2, Screen.height / 2,
                                     DepthSource.DepthArray);
-        m_CachedModelViewMatrix = Camera.main.worldToCameraMatrix * DepthSource.LocalToWorldMatrix;
-        m_CachedModeMatrix = DepthSource.LocalToWorldMatrix;
+        _cachedModelViewMatrix = Camera.main.worldToCameraMatrix * DepthSource.LocalToWorldMatrix;
+        _cachedModeMatrix = DepthSource.LocalToWorldMatrix;
 
         // Computes the direction from the target to the cached camera.
-        var direction = Vector3.Normalize(m_CachedTargetPosition - m_CachedCameraPosition);
+        var direction = Vector3.Normalize(_cachedTargetPosition - _cachedCameraPosition);
 
         // To crop the boundary, adaptively moves the camera towards the target.
         var cachedCameraLeaningTargetPercetange = Mathf.SmoothStep(
-            k_CachedCameraLeaningTargetPercetangeMin,
-            k_CachedCameraLeaningTargetPercetangeMax,
-            Mathf.Clamp(m_CachedTargetPosition.z / k_MaximumDistance, 0f, 1f));
+            _cachedCameraLeaningTargetPercetangeMin,
+            _cachedCameraLeaningTargetPercetangeMax,
+            Mathf.Clamp(_cachedTargetPosition.z / _maximumDistance, 0f, 1f));
 
         // Changes the camera rotation radius based on the distance.
-        m_CameraRotationRadius = Mathf.SmoothStep(
-            k_CameraRotationRadiusMin,
-            k_CameraRotationRadiusMax,
-            Mathf.Clamp(m_CachedTargetPosition.z / k_MaximumDistance, 0f, 1f));
+        _cameraRotationRadius = Mathf.SmoothStep(
+            _cameraRotationRadiusMin,
+            _cameraRotationRadiusMax,
+            Mathf.Clamp(_cachedTargetPosition.z / _maximumDistance, 0f, 1f));
 
         // Moves the camera position a little bit towards the target to crop the boundary.
-        m_CachedCameraPosition += direction * cachedCameraLeaningTargetPercetange;
+        _cachedCameraPosition += direction * cachedCameraLeaningTargetPercetange;
 
         // Computes an arbitrary non-zero basis of the camera plane orthognoal to the direction.
-        if (Mathf.Abs(direction.z) > k_Epsilon)
+        if (Mathf.Abs(direction.z) > _epsilon)
         {
-            m_CachedCameraPlaneAxisA =
+            _cachedCameraPlaneAxisA =
               new Vector3(1f, 1f, (direction.x + direction.y) / -direction.z);
         }
         else
-        if (Mathf.Abs(direction.x) > k_Epsilon)
+        if (Mathf.Abs(direction.x) > _epsilon)
         {
-            m_CachedCameraPlaneAxisA =
+            _cachedCameraPlaneAxisA =
               new Vector3((direction.y + direction.z) / -direction.x, 1f, 1f);
         }
         else
-        if (Mathf.Abs(direction.y) > k_Epsilon)
+        if (Mathf.Abs(direction.y) > _epsilon)
         {
-            m_CachedCameraPlaneAxisA =
+            _cachedCameraPlaneAxisA =
               new Vector3(1f, (direction.x + direction.z) / -direction.y, 1f);
         }
         else
@@ -247,42 +247,42 @@ public class StereoPhotoGenerator : MonoBehaviour
         }
 
         // Computes two orthognonal basis of the cached camera plane.
-        m_CachedCameraPlaneAxisA = Vector3.Normalize(m_CachedCameraPlaneAxisA);
-        m_CachedCameraPlaneAxisB = Vector3.Normalize(
-          Vector3.Cross(m_CachedCameraPlaneAxisA, direction));
+        _cachedCameraPlaneAxisA = Vector3.Normalize(_cachedCameraPlaneAxisA);
+        _cachedCameraPlaneAxisB = Vector3.Normalize(
+          Vector3.Cross(_cachedCameraPlaneAxisA, direction));
 
         // Binds the depth texture.
-        m_StaticDepthTexture = DepthSource.GetDepthTextureSnapshot();
+        _staticDepthTexture = DepthSource.GetDepthTextureSnapshot();
         Material material = GetComponent<Renderer>().material;
-        material.SetTexture(k_DepthTexturePropertyName, m_StaticDepthTexture);
+        material.SetTexture(_depthTexturePropertyName, _staticDepthTexture);
 
         // Initializes a static color texture.
-        if (m_StaticColorTexture == null)
+        if (_staticColorTexture == null)
         {
-            m_StaticColorTexture = new Texture2D(
+            _staticColorTexture = new Texture2D(
                 Screen.width, Screen.height,
                 TextureFormat.RGBA32, /*mipChain=*/false)
             {
                 filterMode = FilterMode.Point
             };
 
-            m_StaticColorTexture.Apply();
+            _staticColorTexture.Apply();
         }
 
         // Grabs the static color texture from the background render texture.
         Rect rectReadPicture = new Rect(0, 0, Screen.width, Screen.height);
         RenderTexture.active = DemoRenderer.BackgroundRenderTexture;
-        m_StaticColorTexture.ReadPixels(rectReadPicture, 0, 0);
-        m_StaticColorTexture.Apply();
-        material.SetTexture(k_CameraTexturePropertyName, m_StaticColorTexture);
+        _staticColorTexture.ReadPixels(rectReadPicture, 0, 0);
+        _staticColorTexture.Apply();
+        material.SetTexture(_cameraTexturePropertyName, _staticColorTexture);
 
         // Enables the secondary camera for the effect.
         StereoPhotoCamera.enabled = true;
 
         // Stores the current camera's up vector.
-        m_CachedCameraUp = Camera.main.transform.TransformDirection(Vector3.up);
+        _cachedCameraUp = Camera.main.transform.TransformDirection(Vector3.up);
         StereoPhotoCamera.transform.SetPositionAndRotation(
-          m_CachedCameraPosition, Camera.main.transform.rotation);
+          _cachedCameraPosition, Camera.main.transform.rotation);
 
         // Re-activates UI elements.
         CarouselObj.SetActive(true);
@@ -301,7 +301,7 @@ public class StereoPhotoGenerator : MonoBehaviour
         {
             for (int x = 0; x < DepthSource.DepthWidth; x++)
             {
-                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + k_DefaultMeshOffset;
+                Vector3 v = new Vector3(x * 0.01f, -y * 0.01f, 0) + _defaultMeshOffset;
                 vertices.Add(v);
                 normals.Add(Vector3.back);
             }
@@ -311,19 +311,19 @@ public class StereoPhotoGenerator : MonoBehaviour
         int[] triangles = GenerateTriangles(DepthSource.DepthWidth, DepthSource.DepthHeight);
 
         // Creates the mesh object and set all template data.
-        m_Mesh = new Mesh
+        _mesh = new Mesh
         {
             indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
         };
 
-        m_Mesh.SetVertices(vertices);
-        m_Mesh.SetNormals(normals);
-        m_Mesh.SetTriangles(triangles, 0);
-        m_Mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
-        m_Mesh.UploadMeshData(true);
+        _mesh.SetVertices(vertices);
+        _mesh.SetNormals(normals);
+        _mesh.SetTriangles(triangles, 0);
+        _mesh.bounds = new Bounds(Vector3.zero, new Vector3(50, 50, 50));
+        _mesh.UploadMeshData(true);
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.sharedMesh = m_Mesh;
+        meshFilter.sharedMesh = _mesh;
 
         // Sets camera intrinsics for depth reprojection.
         Material material = GetComponent<Renderer>().material;
@@ -334,16 +334,16 @@ public class StereoPhotoGenerator : MonoBehaviour
         material.SetFloat("_PrincipalPointY", DepthSource.PrincipalPoint.y);
         material.SetInt("_ImageDimensionsX", DepthSource.ImageDimensions.x);
         material.SetInt("_ImageDimensionsY", DepthSource.ImageDimensions.y);
-        material.SetFloat("_TriangleConnectivityCutOff", k_TriangleConnectivityCutOff);
+        material.SetFloat("_TriangleConnectivityCutOff", _triangleConnectivityCutOff);
 
-        m_Initialized = true;
+        _initialized = true;
     }
 
     private void Update()
     {
         var mesh_renderer = GetComponent<Renderer>();
 
-        if (!m_FreezeMesh)
+        if (!_freezeMesh)
         {
             // Enables the mesh renderer when the capture mode is enabled.
             if (mesh_renderer.enabled)
@@ -357,16 +357,16 @@ public class StereoPhotoGenerator : MonoBehaviour
             {
                 Material material = mesh_renderer.material;
                 material.SetMatrix(
-                  k_VertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
+                  _vertexModelTransformPropertyName, DepthSource.LocalToWorldMatrix);
                 material.SetMatrix(
-                  k_CameraViewMatrixPropertyName, Camera.main.worldToCameraMatrix);
+                  _cameraViewMatrixPropertyName, Camera.main.worldToCameraMatrix);
                 material.SetMatrix(
-                  k_TextureProjectionMatrixPropertyName, Camera.main.projectionMatrix);
+                  _textureProjectionMatrixPropertyName, Camera.main.projectionMatrix);
                 mesh_renderer.enabled = true;
             }
         }
 
-        if (!m_Initialized && DepthSource.Initialized)
+        if (!_initialized && DepthSource.Initialized)
         {
             InitializeMesh();
         }
@@ -374,20 +374,20 @@ public class StereoPhotoGenerator : MonoBehaviour
         if (mesh_renderer.enabled)
         {
             // Computes the parametric equation of the camera path.
-            float theta = Time.realtimeSinceStartup * k_CameraRotationSpeed;
-            StereoPhotoCamera.transform.position = m_CachedCameraPosition
-                + (m_CameraRotationRadius *
-                ((Mathf.Cos(theta) * m_CachedCameraPlaneAxisA) +
-                 (Mathf.Sin(theta) * m_CachedCameraPlaneAxisB)));
-            StereoPhotoCamera.transform.LookAt(m_CachedTargetPosition, m_CachedCameraUp);
+            float theta = Time.realtimeSinceStartup * _cameraRotationSpeed;
+            StereoPhotoCamera.transform.position = _cachedCameraPosition
+                + (_cameraRotationRadius *
+                ((Mathf.Cos(theta) * _cachedCameraPlaneAxisA) +
+                 (Mathf.Sin(theta) * _cachedCameraPlaneAxisB)));
+            StereoPhotoCamera.transform.LookAt(_cachedTargetPosition, _cachedCameraUp);
 
             // Updates the projection matrix for correct uv coordinates.
             Material material = mesh_renderer.material;
             var inverseModelViewMatrix = Matrix4x4.Inverse(
-              StereoPhotoCamera.worldToCameraMatrix * m_CachedModeMatrix);
+              StereoPhotoCamera.worldToCameraMatrix * _cachedModeMatrix);
             var projectionMatrix = StereoPhotoCamera.projectionMatrix *
-              m_CachedModelViewMatrix * inverseModelViewMatrix;
-            material.SetMatrix(k_TextureProjectionMatrixPropertyName, projectionMatrix);
+              _cachedModelViewMatrix * inverseModelViewMatrix;
+            material.SetMatrix(_textureProjectionMatrixPropertyName, projectionMatrix);
         }
     }
 }

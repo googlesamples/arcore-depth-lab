@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="WaterGridManager.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,24 +64,24 @@ public class WaterGridManager : MonoBehaviour
     /// </summary>
     public Material WaterMaterial = null;
 
-    private float m_WaterLevel;
-    private Vector3[] m_Vertices;
-    private Vector3[] m_Normals;
-    private Color[] m_Colors;
-    private MeshFilter m_MeshFilter;
-    private Mesh m_Mesh;
+    private float _waterLevel;
+    private Vector3[] _vertices;
+    private Vector3[] _normals;
+    private Color[] _colors;
+    private MeshFilter _meshFilter;
+    private Mesh _mesh;
 
     private void GenerateWater()
     {
-        m_MeshFilter = GetComponent<MeshFilter>();
-        m_MeshFilter.sharedMesh = null;
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshFilter.sharedMesh = null;
 
-        m_Mesh = new Mesh();
-        m_Mesh.name = "Water";
+        _mesh = new Mesh();
+        _mesh.name = "Water";
 
-        m_Vertices = new Vector3[(Xdim + 1) * (Ydim + 1)];
-        m_Normals = new Vector3[m_Vertices.Length];
-        Vector2[] uv = new Vector2[m_Vertices.Length];
+        _vertices = new Vector3[(Xdim + 1) * (Ydim + 1)];
+        _normals = new Vector3[_vertices.Length];
+        Vector2[] uv = new Vector2[_vertices.Length];
 
         UpdateWater();
         for (int i = 0, y = 0; y <= Ydim; y++)
@@ -104,19 +104,19 @@ public class WaterGridManager : MonoBehaviour
             }
         }
 
-        m_Mesh.uv = uv;
-        m_Mesh.triangles = triangles;
-        m_Mesh.RecalculateNormals();
-        m_Mesh.RecalculateTangents();
+        _mesh.uv = uv;
+        _mesh.triangles = triangles;
+        _mesh.RecalculateNormals();
+        _mesh.RecalculateTangents();
 
-        m_MeshFilter.sharedMesh = m_Mesh;
+        _meshFilter.sharedMesh = _mesh;
         WaterMaterial.SetFloat("_ShowColorOnly", 0);
     }
 
     private void UpdateWater()
     {
         Vector3 center = new Vector3(Xdim * CellSizeInM * 0.5f, 0.0f, Ydim * CellSizeInM * 0.5f);
-        m_Colors = new Color[m_Vertices.Length];
+        _colors = new Color[_vertices.Length];
 
         for (int i = 0, y = 0; y <= Ydim; y++)
         {
@@ -127,19 +127,19 @@ public class WaterGridManager : MonoBehaviour
                 float rndWaveIntensity = Random.Range(0.0001f, WaveIntensity);
                 float up = (Mathf.Sin(Time.time * rndWaveSpeed * i) * rndWaveIntensity) +
                     (WaveIntensity * 0.5f);
-                m_Vertices[i] = new Vector3(x * CellSizeInM, up, y * CellSizeInM) - center;
-                m_Normals[i] = Vector3.up;
-                m_Colors[i] = new Color(up / WaveIntensity, up / WaveIntensity, up / WaveIntensity);
+                _vertices[i] = new Vector3(x * CellSizeInM, up, y * CellSizeInM) - center;
+                _normals[i] = Vector3.up;
+                _colors[i] = new Color(up / WaveIntensity, up / WaveIntensity, up / WaveIntensity);
             }
         }
 
-        m_Mesh.vertices = m_Vertices;
-        m_Mesh.colors = m_Colors;
+        _mesh.vertices = _vertices;
+        _mesh.colors = _colors;
     }
 
     private void Start()
     {
-        m_WaterLevel = -0.5f;
+        _waterLevel = -0.5f;
         GenerateWater();
         UpdateWater();
     }
@@ -150,8 +150,8 @@ public class WaterGridManager : MonoBehaviour
 
         if (InstantPreviewManager.IsProvidingPlatform == false)
         {
-            m_WaterLevel = ARCorePlaneUtil.Instance.GetLowestPlaneY() + WaterDepthInM;
-            transform.position = new Vector3(0.0f, m_WaterLevel, 0.0f);
+            _waterLevel = ARCorePlaneUtil.Instance.GetLowestPlaneY() + WaterDepthInM;
+            transform.position = new Vector3(0.0f, _waterLevel, 0.0f);
         }
     }
 

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------
 // <copyright file="DepthTarget.cs" company="Google LLC">
 //
-// Copyright 2020 Google LLC. All Rights Reserved.
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,11 @@ using UnityEngine;
 /// </summary>
 public class DepthTarget : MonoBehaviour
 {
+    /// <summary>
+    /// Type of depth texture to attach to the material.
+    /// </summary>
+    public bool UseRawDepth = false;
+
     /// <summary>
     /// Flag to set the depth texture as mainTexture.
     /// </summary>
