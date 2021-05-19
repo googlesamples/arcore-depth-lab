@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright file="NoticeHelper.cs" company="Google LLC">
 //
 // Copyright 2020 Google LLC
@@ -19,9 +19,9 @@
 //-----------------------------------------------------------------------
 
 using System.Collections;
-using System.Collections.Generic;
-using GoogleARCore;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 /// <summary>
 /// A class responsible for opening notice URLs.
@@ -37,6 +37,8 @@ public class NoticeHelper : MonoBehaviour
     /// Reference to the depth support panel.
     /// </summary>
     public GameObject DepthWarningPanel;
+
+    private AROcclusionManager _occlusionManager;
 
     /// <summary>
     /// Opens the notice panel.
@@ -90,6 +92,9 @@ public class NoticeHelper : MonoBehaviour
 
     private void Start()
     {
+        _occlusionManager = FindObjectOfType<AROcclusionManager>();
+        Debug.Assert(_occlusionManager);
+
         StartCoroutine(CheckDepthCoroutine());
     }
 
@@ -98,9 +103,9 @@ public class NoticeHelper : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         // Checks whether the user's device supports depth mode.
-        if (!Session.IsDepthModeSupported(DepthMode.Automatic))
-        {
-            OpenDepthWarningPanel();
-        }
+        // if (_occlusionManager.currentEnvironmentDepthMode == EnvironmentDepthMode.Disabled)
+        // {
+        //     OpenDepthWarningPanel();
+        // }
     }
 }

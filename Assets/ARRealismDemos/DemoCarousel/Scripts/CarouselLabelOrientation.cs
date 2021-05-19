@@ -1,4 +1,3 @@
-//-----------------------------------------------------------------------
 // <copyright file="CarouselLabelOrientation.cs" company="Google LLC">
 //
 // Copyright 2020 Google LLC

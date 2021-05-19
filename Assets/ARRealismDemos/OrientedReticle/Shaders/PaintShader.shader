@@ -41,7 +41,7 @@ Shader "ARRealism/PaintShader"
 
         #pragma target 3.0
         #include "UnityCG.cginc"
-        #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+        #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
         float _DepthFloat;
         float _FeatheringAmount;
 

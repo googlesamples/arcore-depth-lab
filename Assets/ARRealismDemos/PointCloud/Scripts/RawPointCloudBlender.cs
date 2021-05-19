@@ -19,9 +19,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using GoogleARCore;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 /// <summary>
 /// Computes a point cloud from the depth map on the CPU.
@@ -51,7 +51,8 @@ public class RawPointCloudBlender : MonoBehaviour
     private const double _minUpdateInvervalInSeconds = 0.07f;
     private static readonly string _confidenceThresholdPropertyName = "_ConfidenceThreshold";
     private bool _initialized;
-    private CameraIntrinsics _cameraIntrinsics;
+    private ARCameraManager _cameraManager;
+    private XRCameraIntrinsics _cameraIntrinsics;
     private Mesh _mesh;
 
     private Vector3[] _vertices = new Vector3[_maxVerticesInBuffer];
@@ -72,6 +73,7 @@ public class RawPointCloudBlender : MonoBehaviour
     private double _updateInvervalInSeconds = _minUpdateInvervalInSeconds;
     private double _lastUpdateTimeSeconds;
     private Material _pointCloudMaterial;
+    private bool _cachedUseRawDepth = false;
 
     /// <summary>
     /// Resets the point cloud renderer.
@@ -87,6 +89,8 @@ public class RawPointCloudBlender : MonoBehaviour
         _mesh = new Mesh();
         _mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         _pointCloudMaterial = GetComponent<Renderer>().material;
+        _cameraManager = FindObjectOfType<ARCameraManager>();
+        _cameraManager.frameReceived += OnCameraFrameReceived;
 
         // Sets the index buffer.
         for (int i = 0; i < _maxVerticesInBuffer; ++i)
@@ -110,23 +114,18 @@ public class RawPointCloudBlender : MonoBehaviour
             _initialized = true;
         }
 
-        if (DepthSource.NewRawDepthAvailable)
+        if (_initialized)
         {
-            // Fetches CPU image.
-            using (var image = Frame.CameraImage.AcquireCameraImageBytes())
+            if (_cachedUseRawDepth != UseRawDepth)
             {
-                if (!image.IsAvailable)
-                {
-                    return;
-                }
-
-                OnImageAvailable(image);
+                DepthSource.SwitchToRawDepth(UseRawDepth);
+                _cachedUseRawDepth = UseRawDepth;
             }
 
             UpdateRawPointCloud();
         }
 
-        transform.position = Camera.main.transform.forward * OffsetFromCamera;
+        transform.position = DepthSource.ARCamera.transform.forward * OffsetFromCamera;
         float normalizedDeltaTime = Mathf.Clamp01(
             (float)(Time.deltaTime - _minUpdateInvervalInSeconds));
         _updateInvervalInSeconds = Mathf.Lerp((float)_minUpdateInvervalInSeconds,
@@ -134,32 +133,41 @@ public class RawPointCloudBlender : MonoBehaviour
             normalizedDeltaTime);
     }
 
+    void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
+    {   
+        if (_cameraManager.TryAcquireLatestCpuImage(out XRCpuImage cameraImage))
+        {
+            using(cameraImage)
+            {
+                if (cameraImage.format == XRCpuImage.Format.AndroidYuv420_888)
+                {
+                    OnImageAvailable(cameraImage);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Converts a new CPU image into byte buffers and caches to be accessed later.
     /// </summary>
     /// <param name="image">The new CPU image to process.</param>
-    private void OnImageAvailable(CameraImageBytes image)
+    private void OnImageAvailable(XRCpuImage image)
     {
-        // Initializes the camera buffer and the composited texture.
         if (_cameraBufferY == null || _cameraBufferU == null || _cameraBufferV == null)
         {
-            _cameraWidth = image.Width;
-            _cameraHeight = image.Height;
-            _rowStrideY = image.YRowStride;
-            _rowStrideUV = image.UVRowStride;
-            _pixelStrideUV = image.UVPixelStride;
-            _cameraBufferY = new byte[image.Width * image.Height];
-            _cameraBufferU = new byte[image.Width * image.Height];
-            _cameraBufferV = new byte[image.Width * image.Height];
+            _cameraWidth = image.width;
+            _cameraHeight = image.height;
+            _rowStrideY = image.GetPlane(0).rowStride;
+            _rowStrideUV = image.GetPlane(1).rowStride;
+            _pixelStrideUV = image.GetPlane(1).pixelStride;
+            _cameraBufferY = new byte[image.GetPlane(0).data.Length];
+            _cameraBufferU = new byte[image.GetPlane(1).data.Length];
+            _cameraBufferV = new byte[image.GetPlane(2).data.Length];
         }
 
-        // Copies raw data into managed camera buffer.
-        System.Runtime.InteropServices.Marshal.Copy(image.Y, _cameraBufferY, 0,
-            image.Height * image.YRowStride);
-        System.Runtime.InteropServices.Marshal.Copy(image.U, _cameraBufferU, 0,
-            image.Height * image.UVRowStride / 2);
-        System.Runtime.InteropServices.Marshal.Copy(image.V, _cameraBufferV, 0,
-            image.Height * image.UVRowStride / 2);
+        image.GetPlane(0).data.CopyTo(_cameraBufferY);
+        image.GetPlane(1).data.CopyTo(_cameraBufferU);
+        image.GetPlane(2).data.CopyTo(_cameraBufferV);
     }
 
     /// <summary>
@@ -187,15 +195,24 @@ public class RawPointCloudBlender : MonoBehaviour
         int colorHeightDepthAspectRatio = (int)(_cameraWidth * depthAspectRatio);
         int colorHeightOffset = (_cameraHeight - colorHeightDepthAspectRatio) / 2;
 
+        short[] depthArray = DepthSource.DepthArray;
+        if (depthArray.Length != DepthSource.DepthWidth * DepthSource.DepthHeight)
+        {
+            // Depth array is not yet available.
+            return;
+        }
+
+        byte[] confidenceArray = DepthSource.ConfidenceArray;
+        bool noConfidenceAvailable = depthArray.Length != confidenceArray.Length;
+
         // Creates point clouds from the depth map.
         for (int y = 0; y < DepthSource.DepthHeight; y++)
         {
             for (int x = 0; x < DepthSource.DepthWidth; x++)
             {
                 int depthIndex = (y * DepthSource.DepthWidth) + x;
-                float depthInM = (UseRawDepth ? DepthSource.RawDepthArray[depthIndex] :
-                    DepthSource.DepthArray[depthIndex]) * DepthSource.MillimeterToMeter;
-                float confidence = DepthSource.ConfidenceArray[depthIndex] / 255f;
+                float depthInM = depthArray[depthIndex] * DepthSource.MillimeterToMeter;
+                float confidence = noConfidenceAvailable ? 1f : confidenceArray[depthIndex] / 255f;
 
                 // Ignore missing depth values to improve runtime performance.
                 if (depthInM == 0f || confidence == 0f)
@@ -245,27 +262,27 @@ public class RawPointCloudBlender : MonoBehaviour
         }
 
         // Assigns graphical buffers.
-        #if UNITY_2019_3_OR_NEWER
-            _mesh.SetVertices(_vertices, 0, _verticesCount);
-            _mesh.SetIndices(_indices, 0, _verticesCount, MeshTopology.Points, 0);
-            _mesh.SetColors(_colors, 0, _verticesCount);
-        #else
-            // Note that we recommend using Unity 2019.3 or above to compile this scene.
-            List<Vector3> vertexList = new List<Vector3>();
-            List<Color32> colorList = new List<Color32>();
-            List<int> indexList = new List<int>();
+#if UNITY_2019_3_OR_NEWER
+        _mesh.SetVertices(_vertices, 0, _verticesCount);
+        _mesh.SetIndices(_indices, 0, _verticesCount, MeshTopology.Points, 0);
+        _mesh.SetColors(_colors, 0, _verticesCount);
+#else
+        // Note that we recommend using Unity 2019.3 or above to compile this scene.
+        List<Vector3> vertexList = new List<Vector3>();
+        List<Color32> colorList = new List<Color32>();
+        List<int> indexList = new List<int>();
 
-            for (int i = 0; i < _verticesCount; ++i)
-            {
-                vertexList.Add(_vertices[i]);
-                indexList.Add(_indices[i]);
-                colorList.Add(_colors[i]);
-            }
+        for (int i = 0; i < _verticesCount; ++i)
+        {
+            vertexList.Add(_vertices[i]);
+            indexList.Add(_indices[i]);
+            colorList.Add(_colors[i]);
+        }
 
-            _mesh.SetVertices(vertexList);
-            _mesh.SetIndices(indexList.ToArray(), MeshTopology.Points, 0);
-            _mesh.SetColors(colorList);
-        #endif // UNITY_2019_3_OR_NEWER
+        _mesh.SetVertices(vertexList);
+        _mesh.SetIndices(indexList.ToArray(), MeshTopology.Points, 0);
+        _mesh.SetColors(colorList);
+#endif // UNITY_2019_3_OR_NEWER
 
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = _mesh;
@@ -291,6 +308,6 @@ public class RawPointCloudBlender : MonoBehaviour
         byte r = (byte)(rFloat * 255f);
         byte g = (byte)(gFloat * 255f);
         byte b = (byte)(bFloat * 255f);
-        return new[] { r, g, b };
+        return new[] {r, g, b};
     }
 }

@@ -106,7 +106,7 @@ public static class Utilities
     /// <returns>The screen position.</returns>
     public static Vector2Int WorldPointToScreenPoint(Vector3 worldPoint)
     {
-        var screenPoint = Camera.main.WorldToScreenPoint(worldPoint);
+        var screenPoint = DepthSource.ARCamera.WorldToScreenPoint(worldPoint);
         return new Vector2Int((int)screenPoint.x, Screen.height - (int)screenPoint.y);
     }
 
@@ -120,7 +120,7 @@ public static class Utilities
         bool isObjectInView = false;
         if (sourceObject != null)
         {
-            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(DepthSource.ARCamera);
             Collider collider = sourceObject.GetComponent<Collider>();
             if (collider == null)
             {

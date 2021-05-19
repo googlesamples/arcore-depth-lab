@@ -45,7 +45,7 @@ Shader "ARRealism/Shadow Receiver Mesh Shader"
 
         #pragma target 3.0
 
-        #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+        #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
 
         uniform float _GlobalShadowIntensity;
         uniform float _MinimumMeshDistance;

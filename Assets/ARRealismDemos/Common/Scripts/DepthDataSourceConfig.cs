@@ -49,8 +49,10 @@ public class DepthDataSourceConfig : ScriptableObject
     /// Unity OnValidate.
     /// </summary>
     public void Awake()
-    {
+    {  
+#if !UNITY_EDITOR
         Type type = Type.GetType(DepthSourceClassName);
         DepthDataSource = (IDepthDataSource)Activator.CreateInstance(type);
+#endif
     }
 }

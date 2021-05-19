@@ -1647,12 +1647,9 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 3
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1664,7 +1661,6 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1751,8 +1747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3e4985fe542445c814ca78b87e6b9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseRawDepth: 0
-  ReprojectIntermediateRawDepth: 1
+  UseSparseDepth: 0
+  ReprojectIntermediateSparseDepth: 1
 --- !u!1 &1423166906558835676
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,12 +1792,9 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 3
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1813,7 +1806,6 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1900,7 +1892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseRawDepth: 0
+  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!1 &1423166906558835678
@@ -1945,7 +1937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseRawDepth: 0
+  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!114 &8431923411226762904
@@ -1960,7 +1952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseRawDepth: 0
+  UseSparseDepth: 0
   SetAsMainTexture: 0
   DepthTargetMaterial: {fileID: 0}
 --- !u!1 &4041119800268225867
@@ -2064,31 +2056,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1428744442911025579}
     m_Modifications:
-    - target: {fileID: 3921207149467806382, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 4fc831af49b398d4696fbcf1eec1e9d4, type: 2}
-    - target: {fileID: 3921207149467806382, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: 4fc831af49b398d4696fbcf1eec1e9d4, type: 2}
-    - target: {fileID: 3921207150180893444, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 478f96c175efd614f9e05b3a0f4e83a5, type: 2}
-    - target: {fileID: 3921207150180893445, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_Name
-      value: RobotParticlesA
-      objectReference: {fileID: 0}
-    - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2103,11 +2070,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
         type: 3}
@@ -2126,6 +2088,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3921207150180893446, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -2139,11 +2111,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3921207150180893445, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
+      propertyPath: m_Name
+      value: RobotParticlesA
+      objectReference: {fileID: 0}
     - target: {fileID: 3921207150180893447, guid: f1cf82b973e05494abbc00340a22a3b3,
         type: 3}
       propertyPath: moveWithTransform
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3921207150180893444, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 478f96c175efd614f9e05b3a0f4e83a5, type: 2}
+    - target: {fileID: 3921207149467806382, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4fc831af49b398d4696fbcf1eec1e9d4, type: 2}
+    - target: {fileID: 3921207149467806382, guid: f1cf82b973e05494abbc00340a22a3b3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4fc831af49b398d4696fbcf1eec1e9d4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1cf82b973e05494abbc00340a22a3b3, type: 3}
 --- !u!1 &3784845655062850501 stripped

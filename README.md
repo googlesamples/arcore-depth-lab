@@ -23,52 +23,78 @@ today.
 
 [<img alt="Get ARCore Depth Lab on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />](https://play.google.com/store/apps/details?id=com.google.ar.unity.arcore_depth_lab)
 
+## Branches
+
+ARCore Depth Lab has two branches: `master` and `arcore_unity_sdk`.
+
+The `master` branch contains a subset of Depth Lab features in v1.1.0 and is
+built upon the recommended
+[AR Foundation 4.2.0 (preview 7)](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/manual/index.html)
+or newer. The `master` branch supports features including oriented 3D reticles,
+depth map visualization, collider with depth mesh, avatar locomotion, raw point
+cloud visualization, recording and playback.
+
+The `arcore_unity_sdk` branch contains the full features of Depth Lab and is
+built upon
+[ARCore SDK for Unity v1.24.0](https://github.com/google-ar/arcore-unity-sdk/releases)
+or newer. We recommend using the `master` branch to build new projects with the
+AR Foundation SDK and refer to this branch when necessary.
+
 ## Sample features
 
-The sample scenes demonstrate three different ways to access depth:
+The sample scenes demonstrate three different ways to access depth. Supported
+features in the `master` branch is labeled with :star:, while the rest features
+can be found in the `arcore_unity_sdk` branch.
 
 1.  **Localized depth**: Sample single depth values at certain texture
     coordinates (CPU).
-    *   Character locomotion on uneven terrain
+    *   Oriented 3D reticles :star:
+    *   Character locomotion on uneven terrain :star:
     *   Collision checking for AR object placement
     *   Laser beam reflections
-    *   Oriented 3D reticles
     *   Rain and snow particle collision
 2.  **Surface depth**: Create a connected mesh representation of the depth data
     (CPU/GPU).
+    *   Point cloud fusion :star:
     *   AR shadow receiver
     *   Paint splat
     *   Physics simulation
     *   Surface retexturing
-    *   Point cloud fusion
 3.  **Dense depth**: Process depth data at every screen pixel (GPU).
+    *   False-color depth map :star:
     *   AR fog
     *   Occlusions
     *   Depth-of-field blur
     *   Environment relighting
-    *   False-color depth map
     *   3D photo
 
 ## Unity project setup
 
-These samples target [**Unity 2021.1.3f**](https://unity3d.com) and require
-[**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
-**v1.24.0** or newer. Download and import
-[`arcore-unity-sdk-1.24.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
-or newer into the sample project. For the first time, please use Unity 2019.4 to
-open the project and install the following packages in `Window` -> `Packages
-Manager`: Multiplayer HLAPI 1.0.8, TextMeshPro 3.0.4, Unity Collaborate 1.3.9,
-and XR Legacy Input Helpers 2.1.7. Note that newer versions are not tested and
-may not work. Close and reopen the project with Unity 2021 and reimport all demo
-shaders to resolve any dependency issues in the Unity editor. This project only
-builds with the Build Platform **Android**. **Instant Preview** is not enabled
-for Depth API yet. Build the project to an Android device instead of using the
+These samples target
+[**Unity 2020.3.6f1**](https://unity3d.com/get-unity/download/archive) and
+require
+[**AR Foundation 4.2.0-pre.7**](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/manual/index.html)
+ or newer,
+[ARCore Extensions](https://developers.google.com/ar/develop/unity-arf) **1.24**
+or newer. Download `arcore-unity-extensions-1.24.0.tgz` from the ARCore
+Extensions for AR Foundation
+[releases page on GitHub](https://github.com/google-ar/arcore-unity-extensions/releases).
+Use Unity 2020.3 to open the project and import the package in `Window` ->
+`Package Manager`, click the plus button, and choose the `Add package from
+tarball...` option from the drop-down menu. Then locate
+`arcore-unity-extensions-1.24.0.tgz` and click Open.
+
+This project only builds with the Build Platform
+**Android**. Build the project to an Android device instead of using the
 **Play** button in the Unity editor.
 
 ## Building samples
 
-Individual scenes can be built and run by just enabling a particular scene, e.g.
-`FogEffect` to try out the depth-aware fog filter.
+Individual scenes can be built and run by enabling a particular scene (e.g.,
+`OrientedReticle` to try out the oriented 3D reticle.) and the
+`ARFDepthComponents` object in the scene. Remember to disable the
+`ARFDepthComponents` object in individual scenes when building all demos with
+the `DemoCarousel` scene.
 
 We also provide a demo user interface that allows users to seamlessly switch
 between examples. Please make sure to set the **Build Platform** to **Android**
@@ -79,11 +105,16 @@ part of the demo user interface.
 `Assets/ARRealismDemos/DemoCarousel/Scenes/DemoCarousel.unity
 Assets/ARRealismDemos/OrientedReticle/Scenes/OrientedReticle.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/DepthEffects.unity
-Assets/ARRealismDemos/MaterialWrap/Scenes/MaterialWrap.unity
-Assets/ARRealismDemos/Splat/Scenes/OrientedSplat.unity
 Assets/ARRealismDemos/Collider/Scenes/Collider.unity
-Assets/ARRealismDemos/LaserBeam/Scenes/LaserBeam.unity
 Assets/ARRealismDemos/AvatarLocomotion/Scenes/AvatarLocomotion.unity
+Assets/ARRealismDemos/PointCloud/Scenes/RawPointClouds.unity`
+
+The following scenes can be found in the `arcore_unity_sdk` branch, but are not
+yet available with the AR Foundation SDK.
+
+`Assets/ARRealismDemos/MaterialWrap/Scenes/MaterialWrap.unity
+Assets/ARRealismDemos/Splat/Scenes/OrientedSplat.unity
+Assets/ARRealismDemos/LaserBeam/Scenes/LaserBeam.unity
 Assets/ARRealismDemos/Relighting/Scenes/PointsRelighting.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/FogEffect.unity
 Assets/ARRealismDemos/SnowParticles/Scenes/ArCoreSnowParticles.unity
@@ -91,29 +122,8 @@ Assets/ARRealismDemos/RainParticles/Scenes/RainParticlesScene.unity
 Assets/ARRealismDemos/DepthEffects/Scenes/DepthOfFieldEffect.unity
 Assets/ARRealismDemos/Water/Scenes/Water.unity
 Assets/ARRealismDemos/CollisionDetection/Scenes/CollisionAwareObjectPlacement.unity
-Assets/ARRealismDemos/PointCloud/Scenes/RawPointClouds.unity
 Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/ScreenSpaceDepthMesh.unity
 Assets/ARRealismDemos/ScreenSpaceDepthMesh/Scenes/StereoPhoto.unity`
-
-## Upcoming breaking change affecting 32-bit-only apps
-
-The project is set up to use the `IL2CPP` scripting backend instead of `Mono` to
-build an `ARM64` app. You may be prompted to locate the Android NDK folder. You
-can download the `NDK` by navigating to `Unity > Preferences > External Tools >
-NDK` and clicking the `Download` button.
-
-In **August 2020**, **Google Play Services for AR** (ARCore) will remove support
-for 32-bit-only ARCore-enabled apps running on 64-bit devices. Support for
-32-bit apps running on 32-bit devices is unaffected.
-
-If you have published a 32-bit-only (`armeabi-v7a`) version of your
-ARCore-enabled app without publishing a corresponding 64-bit (`arm64-v8a`)
-version, you must update your app to include 64-bit native libraries before
-August 2020. 32-bit-only ARCore-enabled apps that are not updated by this time
-may crash when attempting to start an augmented reality (AR) session.
-
-To learn more about this breaking change, and for instructions on how to update
-your app, see https://developers.google.com/ar/64bit.
 
 ## Sample project structure
 
@@ -248,29 +258,6 @@ in placing a surface-aligned texture decal within the physical environment.
 This sample uses a modified GPU occlusion shader to create a flooding effect
 with artificial water in the physical environment.
 
-## Developing your own ARCore Depth-enabled Unity experiences
-
-Please make sure that the Unity scene is properly set up to run ARCore. Provide
-depth data by attaching the `ARCoreSession` to the appropriate configuration.
-Please see the example provided in the
-[ARCore SDK for Unity](https://developers.google.com/ar/develop/unity) package
-to correctly set up an ARCore Depth-enabled Unity scene.
-
-Please follow the steps below to utilize the depth utilities provided in this
-**ARCore Depth Lab** sample package:
-
-1.  Attach at least one `DepthTarget` component to the scene. This makes sure
-    that the `DepthSource` class provides depth data to the scene.
-
-2.  A `DepthSource` component can be explicitly placed within the scene.
-    Otherwise an instance will be created automatically. A few parameters can be
-    customized in the editor when `DepthSource` is explicitly placed in the
-    scene.
-
-3.  The depth texture is directly set to the material of a `MeshRenderer` when
-    the `DepthTarget` script is attached to a `GameObject` with a `Meshrenderer`
-    component.
-
 ## Helper classes
 
 ### `DepthSource`
@@ -330,6 +317,9 @@ or
 ```
 Ruofei Du, Eric Turner, Maksym Dzitsiuk, Luca Prasso, Ivo Duarte, Jason Dourgarian, Joao Afonso, Jose Pascoal, Josh Gladstone, Nuno Cruces, Shahram Izadi, Adarsh Kowdle, Konstantine Tsotsos, and David Kim. 2020. DepthLab: Real-Time 3D Interaction With Depth Maps for Mobile Augmented Reality. Proceedings of the 33rd Annual ACM Symposium on User Interface Software and Technology (UIST '20), 829-843. DOI: http://dx.doi.org/10.1145/3379337.3415881.
 ```
+
+We would like to also thank Levana Chen, Phoenix Huang, and Ted Bisson for
+integrating DepthLab with AR Foundation.
 
 ## Additional information
 

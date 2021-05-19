@@ -18,8 +18,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-// Made with Amplify Shader Editor
-// Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "Google Occlusion/Robot Teleport Transparent Occluded"
 {
     Properties
@@ -46,7 +44,7 @@ Shader "Google Occlusion/Robot Teleport Transparent Occluded"
         CGPROGRAM
         #pragma target 3.0
         #pragma surface surf Standard alpha:blend addshadow fullforwardshadows
-        #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+        #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
         #include "UnityPBSLighting.cginc"
         #include "Lighting.cginc"
 

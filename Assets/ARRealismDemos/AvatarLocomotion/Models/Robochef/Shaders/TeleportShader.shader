@@ -44,7 +44,7 @@ Shader "Google Occlusion/Robot Teleport"
     {
         Tags{ "RenderType" = "Transparent"  "Queue" = "Transparent" "IgnoreProjector" = "True" "IsEmissive" = "true"  }
 
-         Pass
+        Pass
         {
             ZWrite On
             ColorMask 0
@@ -54,7 +54,7 @@ Shader "Google Occlusion/Robot Teleport"
         CGPROGRAM
         #pragma target 3.0
         #pragma surface surf Standard alpha:blend addshadow fullforwardshadows
-        #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+        #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
 
         struct Input
         {
@@ -102,8 +102,8 @@ Shader "Google Occlusion/Robot Teleport"
             float2 screenUV = i.screenPos.xy / i.screenPos.w;
             float2 uv = ArCoreDepth_GetUv(screenUV);
 
-            o.Alpha = lerpResult27.a *
-                ArCoreDepth_GetVisibility(uv, UnityWorldToViewPos(i.worldPos));
+            // o.Alpha = lerpResult27.a *
+            //     ArCoreDepth_GetVisibility(uv, UnityWorldToViewPos(i.worldPos));
 
             clip( temp_output_42_0 - _Cutoff );
         }

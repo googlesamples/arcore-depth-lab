@@ -18,13 +18,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
-using GoogleARCore;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 /// <summary>
 /// This class handles the movement and logic of the 3D carousel.
@@ -65,6 +62,9 @@ public class CarouselMovement : MonoBehaviour
     /// The maximum Y rotation angle for the carousel.
     /// </summary>
     public float MaximumRotation;
+
+    private const string _defaultSceneLabel = "Depth-Lab";
+    private const float _sceneButtonAngle = 4.5f;
 
     private Component[] _buttons;
 
@@ -107,15 +107,30 @@ public class CarouselMovement : MonoBehaviour
     {
         _guiTex = GUICamera.targetTexture;
         _buttons = GetComponentsInChildren<SceneButton>();
+
+        if (_buttons.Length == 0)
+        {
+            // Demo Carousel is the only active scene.
+            ButtonLabel.text = _defaultSceneLabel;
+            gameObject.SetActive(false);
+            return;
+        }
+
         float maxRotation = float.NegativeInfinity;
         float minRotation = float.PositiveInfinity;
 
+        int buttonIndex = 0;
         foreach (SceneButton button in _buttons)
         {
+            // List all scene buttons from left to right based on the index.
             GameObject item = button.gameObject.transform.parent.gameObject;
+            item.transform.localEulerAngles = new Vector3(0, -buttonIndex * _sceneButtonAngle, 0);
+
             float rotation = WrapAngle(item.transform.localEulerAngles.y) * -1;
             maxRotation = Mathf.Max(rotation, maxRotation);
             minRotation = Mathf.Min(rotation, minRotation);
+
+            buttonIndex++;
         }
 
         _negativeHalfNumberOfItens = (int)(minRotation / _carouseltemAngleStep);
@@ -137,14 +152,9 @@ public class CarouselMovement : MonoBehaviour
         }
 
         // Only allow the screen to sleep when not tracking.
-        if (Session.Status != SessionStatus.Tracking)
-        {
-            Screen.sleepTimeout = SleepTimeout.SystemSetting;
-        }
-        else
-        {
-            Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        }
+        Screen.sleepTimeout = ARSession.notTrackingReason == NotTrackingReason.None
+            ? SleepTimeout.NeverSleep
+            : SleepTimeout.SystemSetting;
     }
 
     private bool UpdateMovement()
@@ -169,7 +179,7 @@ public class CarouselMovement : MonoBehaviour
             distanceFromStart /= Screen.width;
             distanceFromStart *= Screen.width * 0.02f; // Small speed boost.
             transform.localEulerAngles = new Vector3(0,
-                        _startCarouselRotation + distanceFromStart, 0);
+                _startCarouselRotation + distanceFromStart, 0);
             _clickHoldTimer += Time.deltaTime;
         }
         else if (Input.GetMouseButtonUp(0) && _touchStarted)
@@ -183,7 +193,7 @@ public class CarouselMovement : MonoBehaviour
                 // make the carousel animate to it.
                 float rescaled_x = (_lastCursorPosition / Screen.width) * _guiTex.width;
                 destiny = GetTappedItem(new Vector2(rescaled_x,
-                                            _guiTex.height / 2));
+                    _guiTex.height / 2));
             }
             else
             {
@@ -298,13 +308,13 @@ public class CarouselMovement : MonoBehaviour
             if (button.gameObject == _centerButton)
             {
                 float scale = button.transform.localScale.x +
-                        (0.25f * (1.12f - button.transform.localScale.x));
+                              (0.25f * (1.12f - button.transform.localScale.x));
                 button.transform.localScale = new Vector3(scale, scale, scale);
             }
             else
             {
                 float scale = button.transform.localScale.x +
-                        (0.1f * (1.0f - button.transform.localScale.x));
+                              (0.1f * (1.0f - button.transform.localScale.x));
                 button.transform.localScale = new Vector3(scale, scale, scale);
             }
         }

@@ -45,6 +45,22 @@ float InverseLerp(in float a, in float b, in float v)
 }
 
 // Returns the greyscale of an RGB color.
-float GetLuminance(in fixed3 color) {
+float GetLuminance(in fixed3 color)
+{
     return saturate(0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b);
+}
+
+float ConvertDistanceToDepth(float d)
+{
+    //d = _UnityCameraForwardScale > 0.0 ? _UnityCameraForwardScale * d : d;
+
+    const float zBufferParamsW = 1.0 / _ProjectionParams.y;
+    const float zBufferParamsY = _ProjectionParams.z * zBufferParamsW;
+    const float zBufferParamsX = 1.0 - zBufferParamsY;
+    const float zBufferParamsZ = zBufferParamsX * _ProjectionParams.w;
+
+    // Clip any distances smaller than the near clip plane, and compute the depth value from the distance.
+    return (d < _ProjectionParams.y)
+               ? 1.0f
+               : ((1.0 / zBufferParamsZ) * ((1.0 / d) - zBufferParamsW));
 }

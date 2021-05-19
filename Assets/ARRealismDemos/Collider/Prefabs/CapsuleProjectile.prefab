@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4976784277843083927}
   - component: {fileID: 4976784277843083926}
   - component: {fileID: 4976784277843084008}
-  - component: {fileID: 4976784277843084011}
   m_Layer: 0
   m_Name: CapsuleProjectile
   m_TagString: Untagged
@@ -55,7 +54,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -64,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1125c5e360104226803dbaa22d5fecb, type: 2}
+  - {fileID: 2100000, guid: 9e15ad6b69a3a405bbd50ffed065c45f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,18 +126,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f6988e7ed4847de9768ab6903f938c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4976784277843084011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4976784277843083921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseRawDepth: 0
-  SetAsMainTexture: 0
-  DepthTargetMaterial: {fileID: 0}

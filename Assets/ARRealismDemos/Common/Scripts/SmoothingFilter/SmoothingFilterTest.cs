@@ -74,7 +74,7 @@ public class SmoothingFilterTest : MonoBehaviour
         Vector2 v2 = Input.mousePosition;
         Vector3 v3 = _detachTestObjects ?
             _prevPos :
-            Camera.main.ScreenToWorldPoint(new Vector3(v2.x, v2.y, TestObjectZOffsetM));
+            DepthSource.ARCamera.ScreenToWorldPoint(new Vector3(v2.x, v2.y, TestObjectZOffsetM));
 
         Vector3 newPosition = v3 + (Random.onUnitSphere * PositionalNoiseM * 0.5f);
         _mouseScroll += Input.mouseScrollDelta.y;

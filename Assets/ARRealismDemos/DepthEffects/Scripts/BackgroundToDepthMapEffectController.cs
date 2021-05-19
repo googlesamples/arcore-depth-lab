@@ -19,8 +19,8 @@
 //-----------------------------------------------------------------------
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 /// <summary>
 /// Triggers when the user presses the "occlusion change" button.
@@ -39,7 +39,7 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     public ShadowReceiverMesh ShadowReceiver;
 
     /// <summary>
-    /// Percentage of the transtion between the camera view and the depth map visualization.
+    /// Percentage of the transition between the camera view and the depth map visualization.
     /// </summary>
     public float Transition = 0;
 
@@ -49,7 +49,7 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     public float CameraViewOpacity = 1;
 
     /// <summary>
-    /// Rendering the depth map, camera view, or the transition betweem them.
+    /// Rendering the depth map, camera view, or the transition between them.
     /// </summary>
     public Material BackgroundToDepthMapMaterial;
 
@@ -73,9 +73,6 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
 
     private static readonly string
     _farFadePortionPropertyName = "_FarFadePortion";
-
-    private static readonly string
-    _applyAntiAliasingPropertyName = "_ApplyAntiAliasing";
 
     private static readonly string
     _halfTransitionHighlightWidtPropertyName = "_HalfTransitionHighlightWidth";
@@ -216,6 +213,8 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // Use smooth depth for depth effects.
+        DepthSource.SwitchToRawDepth(false);
         if (ShadowReceiver != null)
         {
             ShadowReceiver.MaximumMeshDistance = 0;
@@ -245,7 +244,6 @@ public class BackgroundToDepthMapEffectController : MonoBehaviour
         BackgroundToDepthMapMaterial.SetFloat(_farFadePortionPropertyName, _farFadePortion);
         BackgroundToDepthMapMaterial.SetFloat(_halfTransitionHighlightWidtPropertyName,
           _halfTransitionHighlightWidth);
-        BackgroundToDepthMapMaterial.SetFloat(_applyAntiAliasingPropertyName, _applyAntiAliasing);
     }
 
     /// <summary>

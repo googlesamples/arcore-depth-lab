@@ -51,7 +51,7 @@ public class AvatarNavigationHelper
         while ((intermediatePoint - start).sqrMagnitude <= squareLength)
         {
             intermediatePoint = start + (stepCount * stepVector);
-            Vector3 screenPoint = Camera.main.WorldToScreenPoint(intermediatePoint);
+            Vector3 screenPoint = DepthSource.ARCamera.WorldToScreenPoint(intermediatePoint);
             Vector2Int depthXY = DepthSource.ScreenToDepthXY(
                 (int)screenPoint.x, (int)screenPoint.y);
 

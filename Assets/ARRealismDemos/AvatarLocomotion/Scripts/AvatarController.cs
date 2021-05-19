@@ -204,7 +204,7 @@ public class AvatarController : MonoBehaviour
         float elapsedTime = 0f;
 
         // Limits the look rotation because our Andy's origin is at its feet.
-        Vector3 LookAtPos = Camera.main.transform.position - transform.position;
+        Vector3 LookAtPos = DepthSource.ARCamera.transform.position - transform.position;
         LookAtPos.y = 0;
 
         Quaternion sourceRotation = transform.rotation;

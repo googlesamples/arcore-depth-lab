@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
 // <copyright file="OrientedReticle.cs" company="Google LLC">
 //
 // Copyright 2020 Google LLC
@@ -19,7 +19,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -38,16 +37,6 @@ public class OrientedReticle : MonoBehaviour
     /// </summary>
     public Vector2 ScreenPosition = new Vector2(0.5f, 0.5f);
 
-    /// <summary>
-    /// DepthSource instance in scene.
-    /// </summary>
-    public DepthSource DepthSource;
-
-    /// <summary>
-    /// Distance from the camera to the reticle.
-    /// </summary>
-    public float Distance = 1.0f;
-
     // Each valid neighbor is checked whether it is an inlier in depth.  Inliers
     // are defined as within a distance of (outlier_depth_ratio * depth) of a
     // point at 'depth' depth.
@@ -57,12 +46,38 @@ public class OrientedReticle : MonoBehaviour
     // window_radius_pixels is searched.
     private const int _windowRadiusPixels = 2;
 
+    /// <summary>
+    /// Distance from the camera to the reticle.
+    /// </summary>
+    private float _distance = 1.0f;
+
+    public float Distance => _distance;
+
+
+    public Matrix4x4 RotationByPortriat
+    {
+        get
+        {
+            switch (Screen.orientation)
+            {
+                case ScreenOrientation.Portrait:
+                    return Matrix4x4.Rotate(Quaternion.identity);
+                case ScreenOrientation.LandscapeLeft:
+                    return Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
+                case ScreenOrientation.PortraitUpsideDown:
+                    return Matrix4x4.Rotate(Quaternion.Euler(0, 0, 180));
+                case ScreenOrientation.LandscapeRight:
+                    return Matrix4x4.Rotate(Quaternion.Euler(0, 0, 270));
+                default:
+                    return Matrix4x4.Rotate(Quaternion.identity);
+            }
+        }
+    }
+
     private void Start()
     {
-        if (DepthSource == null)
-        {
-            DepthSource = GetComponent<DepthSource>();
-        }
+        // Use smooth depth for oriented reticles.
+        DepthSource.SwitchToRawDepth(false);
     }
 
     private void Update()
@@ -71,12 +86,15 @@ public class OrientedReticle : MonoBehaviour
         {
             float distance = ComputeCenterScreenDistance();
 
-            if (distance > 0)
+            if (distance > DepthSource.InvalidDepthValue)
             {
-                Vector3 translation = Camera.main.ScreenToWorldPoint(new Vector3(
+                Vector3 translation = DepthSource.ARCamera.ScreenToWorldPoint(new Vector3(
                     Screen.width * ScreenPosition.x,
                     Screen.height * ScreenPosition.y,
                     distance));
+
+                // Update distance property for information display.
+                _distance = distance;
 
                 transform.position = translation;
             }
@@ -85,7 +103,8 @@ public class OrientedReticle : MonoBehaviour
             if (orientation != null)
             {
                 transform.rotation = Quaternion.Slerp(orientation.Value,
-                    transform.rotation, Interpolation);
+                    transform.rotation,
+                    Interpolation * Time.deltaTime * Application.targetFrameRate);
             }
         }
         catch (InvalidOperationException)
@@ -98,25 +117,32 @@ public class OrientedReticle : MonoBehaviour
     {
         Vector2 depthMapPoint = ScreenPosition;
 
-        short[] depthMap = DepthSource.DepthArray;
-        float depth_m = DepthSource.GetDepthFromUV(depthMapPoint, depthMap);
-
-        if (depth_m == DepthSource.InvalidDepthValue)
+        if (!DepthSource.Initialized)
         {
+            Debug.LogError("Depth source is not initialized");
+            throw new InvalidOperationException("Depth source is not initialized");
+        }
+
+        short[] depthMap = DepthSource.DepthArray;
+        float depthM = DepthSource.GetDepthFromUV(depthMapPoint, depthMap);
+
+        if (depthM <= DepthSource.InvalidDepthValue)
+        {
+            Debug.LogError("Invalid depth value");
             throw new InvalidOperationException("Invalid depth value");
         }
 
-        Vector3 viewspace_point = DepthSource.ComputeVertex(depthMapPoint, depth_m);
-
-        return viewspace_point.magnitude;
+        Vector3 viewspacePoint = DepthSource.ComputeVertex(depthMapPoint, depthM);
+        return viewspacePoint.magnitude;
     }
 
     private Quaternion? ComputeCenterScreenOrientation()
     {
-        Vector3 normal = ComputeNormalMapFromDepthWeightedMeanGradient(ScreenPosition);
+        Vector3 normal = RotationByPortriat *
+            ComputeNormalMapFromDepthWeightedMeanGradient(ScreenPosition);
 
         // Transforms normal to the world space.
-        normal = Camera.main.transform.TransformDirection(normal);
+        normal = DepthSource.ARCamera.transform.TransformDirection(normal);
 
         Vector3 right = Vector3.right;
         if (normal != Vector3.up)
@@ -177,7 +203,7 @@ public class OrientedReticle : MonoBehaviour
                 float neighbor_confidence = 1.0f;
                 if (neighbor_depth_m == 0.0)
                 {
-                    continue;  // Neighbor does not exist.
+                    continue; // Neighbor does not exist.
                 }
 
                 float neighbor_distance_m = neighbor_depth_m - depth_m;

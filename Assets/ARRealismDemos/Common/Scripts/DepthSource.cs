@@ -19,15 +19,15 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using GoogleARCore;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 /// <summary>
 /// This component should be attached to one active GameObject in the scene.
 /// This centrally keeps depth textures up to date and serves all consumers of depth in the scene.
 /// </summary>
+[RequireComponent(typeof(Camera))]
 public class DepthSource : MonoBehaviour
 {
     /// <summary>
@@ -45,38 +45,33 @@ public class DepthSource : MonoBehaviour
     /// </summary>
     public bool ReprojectIntermediateRawDepth = true;
 
-    private static readonly string _currentDepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
-    private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
-    private static readonly string _occlusionBlendingScale = "_OcclusionBlendingScale";
+    public static readonly string DepthTexturePropertyName = "_CurrentDepthTexture";
+    public static readonly string DisplayTransformPropertyName = "_DisplayTransform";
+    public static readonly string OcclusionBlendingScale = "_OcclusionBlendingScale";
 
     private static Texture2D _depthTexture;
-    private static Texture2D _rawDepthTexture;
     private static Texture2D _confidenceTexture;
-    private static bool _newRawDepthAvailable;
     private static List<DepthTarget> _depthTargets = new List<DepthTarget>();
     private static DepthSource _instance;
     private static Matrix4x4 _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
     private static Matrix4x4 _localToWorldTransform = Matrix4x4.identity;
     private static bool _updateDepth;
-    private static bool _updateRawDepth;
     private static bool _updateConfidence;
     private static bool _alwaysUpdateDepth;
-    private static bool _alwaysUpdateRawDepth;
     private static bool _alwaysUpdateConfidence;
     private static IDepthDataSource _depthDataSource;
+
+    private Camera _camera;
+
+    /// <summary>
+    /// Gets the camera used in AR session.
+    /// </summary>
+    public static Camera ARCamera => _instance == null ? null : _instance._camera;
 
     /// <summary>
     /// Gets a value indicating whether this class is ready to serve its callers.
     /// </summary>
-    public static bool Initialized
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _depthDataSource.Initialized;
-        }
-    }
+    public static bool Initialized => _depthDataSource.Initialized;
 
     /// <summary>
     /// Gets the reference to the singleton object of DepthSource.
@@ -86,14 +81,7 @@ public class DepthSource : MonoBehaviour
     /// <summary>
     /// Gets the reference to the instance of IDepthDataSource.
     /// </summary>
-    public static IDepthDataSource DepthDataSource
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _depthDataSource;
-        }
-    }
+    public static IDepthDataSource DepthDataSource => _depthDataSource;
 
     /// <summary>
     /// Gets the focal length in pixels.
@@ -103,61 +91,22 @@ public class DepthSource : MonoBehaviour
     /// Pixels-to-meters conversion can use SENSOR_INFO_PHYSICAL_SIZE and
     /// SENSOR_INFO_PIXEL_ARRAY_SIZE in the Android CameraCharacteristics API.
     /// </summary>
-    public static Vector2 FocalLength
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _depthDataSource.FocalLength;
-        }
-    }
+    public static Vector2 FocalLength => _depthDataSource.FocalLength;
 
     /// <summary>
     /// Gets the principal point in pixels.
     /// </summary>
-    public static Vector2 PrincipalPoint
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _depthDataSource.PrincipalPoint;
-        }
-    }
+    public static Vector2 PrincipalPoint => _depthDataSource.PrincipalPoint;
 
     /// <summary>
     /// Gets the intrinsic's width and height in pixels.
     /// </summary>
-    public static Vector2Int ImageDimensions
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _depthDataSource.ImageDimensions;
-        }
-    }
+    public static Vector2Int ImageDimensions => _depthDataSource.ImageDimensions;
 
     /// <summary>
     /// Gets the camera to world matrix for transforming depth vertices.
     /// </summary>
-    public static Matrix4x4 LocalToWorldMatrix
-    {
-        get
-        {
-            return _localToWorldTransform;
-        }
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether the current sparse depth map is unique or not.
-    /// </summary>
-    public static bool NewRawDepthAvailable
-    {
-        get
-        {
-            CheckAttachedToScene();
-            return _newRawDepthAvailable;
-        }
-    }
+    public static Matrix4x4 LocalToWorldMatrix => _localToWorldTransform;
 
     /// <summary>
     /// Gets the global reference to the depth texture.
@@ -166,9 +115,7 @@ public class DepthSource : MonoBehaviour
     {
         get
         {
-            CheckAttachedToScene();
-
-            if (!_updateDepth)
+            if (_updateDepth)
             {
                 _depthDataSource.UpdateDepthTexture(ref _depthTexture);
                 _updateDepth = true;
@@ -179,34 +126,13 @@ public class DepthSource : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the global reference to the sparse depth texture.
-    /// </summary>
-    public static Texture2D RawDepthTexture
-    {
-        get
-        {
-            CheckAttachedToScene();
-
-            if (!_updateRawDepth)
-            {
-                _depthDataSource.UpdateRawDepthTexture(ref _rawDepthTexture);
-                _updateRawDepth = true;
-            }
-
-            return _rawDepthTexture;
-        }
-    }
-
-    /// <summary>
     /// Gets the global reference to the confidence texture.
     /// </summary>
     public static Texture2D ConfidenceTexture
     {
         get
         {
-            CheckAttachedToScene();
-
-            if (!(_updateDepth || _updateRawDepth || _updateConfidence))
+            if (_updateDepth || _updateConfidence)
             {
                 _depthDataSource.UpdateConfidenceTexture(ref _confidenceTexture);
                 _updateConfidence = true;
@@ -223,32 +149,12 @@ public class DepthSource : MonoBehaviour
     {
         get
         {
-            CheckAttachedToScene();
-
-            if (!_updateDepth)
+            if (_updateDepth)
             {
                 _depthDataSource.UpdateDepthArray();
             }
 
             return _depthDataSource.DepthArray;
-        }
-    }
-
-    /// <summary>
-    /// Gets the global reference to the CPU sparse depth array.
-    /// </summary>
-    public static short[] RawDepthArray
-    {
-        get
-        {
-            CheckAttachedToScene();
-
-            if (!_updateRawDepth)
-            {
-                _depthDataSource.UpdateRawDepthArray();
-            }
-
-            return _depthDataSource.RawDepthArray;
         }
     }
 
@@ -259,9 +165,7 @@ public class DepthSource : MonoBehaviour
     {
         get
         {
-            CheckAttachedToScene();
-
-            if (!_updateDepth && !_updateRawDepth)
+            if (_updateDepth || _updateConfidence)
             {
                 _depthDataSource.UpdateConfidenceArray();
             }
@@ -292,17 +196,6 @@ public class DepthSource : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether sparse depth should be updated even if there is no
-    /// DepthTarget in the scene.
-    /// </summary>
-    public static bool AlwaysUpdateRawDepth
-    {
-        get => _alwaysUpdateRawDepth;
-
-        set => _alwaysUpdateRawDepth = value;
-    }
-
-    /// <summary>
     /// Gets or sets a value indicating whether depth should be updated even if there is no
     /// DepthTarget in the scene.
     /// </summary>
@@ -319,6 +212,18 @@ public class DepthSource : MonoBehaviour
     public static Matrix4x4 ScreenRotation => _screenRotation;
 
     /// <summary>
+    /// Switch to raw depth otherwise it uses smooth texture.
+    /// </summary>
+    /// <param name="useRawDepth">Indicates whether to use raw depth.</param>
+    public static void SwitchToRawDepth(bool useRawDepth)
+    {
+        if (_depthDataSource != null)
+        {
+            _depthDataSource.SwitchToRawDepth(useRawDepth);
+        }
+    }
+
+    /// <summary>
     /// Returns a copy of the latest depth texture. A new texture is generated unless a texture
     /// is provided.
     /// The provided texture will be resized, if the size is different.
@@ -327,12 +232,10 @@ public class DepthSource : MonoBehaviour
     /// <returns>Returns a texture snapshot with the latest depth data.</returns>
     public static Texture2D GetDepthTextureSnapshot(Texture2D snapshot = null)
     {
-        CheckAttachedToScene();
-
         if (snapshot == null)
         {
             snapshot = new Texture2D(DepthTexture.width, DepthTexture.height,
-                            DepthTexture.format, false);
+                DepthTexture.format, false);
             snapshot.Apply();
         }
         else if (snapshot.width != DepthTexture.width || snapshot.height != DepthTexture.height)
@@ -346,34 +249,6 @@ public class DepthSource : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns a copy of the latest sparse depth texture.
-    /// A new texture is generated unless a texture is provided.
-    /// The provided texture will be resized, if the size is different.
-    /// </summary>
-    /// <param name="snapshot">Texture to hold the snapshot sparse depth data.</param>
-    /// <returns>Returns a texture snapshot with the latest sparse depth data.</returns>
-    public static Texture2D GetRawDepthTextureSnapshot(Texture2D snapshot = null)
-    {
-        CheckAttachedToScene();
-
-        if (snapshot == null)
-        {
-            snapshot = new Texture2D(RawDepthTexture.width, RawDepthTexture.height,
-                            RawDepthTexture.format, false);
-            snapshot.Apply();
-        }
-        else if (snapshot.width != RawDepthTexture.width ||
-            snapshot.height != RawDepthTexture.height)
-        {
-            snapshot.Resize(RawDepthTexture.width, RawDepthTexture.height);
-            snapshot.Apply();
-        }
-
-        Graphics.CopyTexture(RawDepthTexture, snapshot);
-        return snapshot;
-    }
-
-    /// <summary>
     /// Returns a copy of the latest confidence texture.
     /// A new texture is generated unless a texture is provided.
     /// The provided texture will be resized, if the size is different.
@@ -382,16 +257,14 @@ public class DepthSource : MonoBehaviour
     /// <returns>Returns a texture snapshot with the latest confidence data.</returns>
     public static Texture2D GetConfidenceTextureSnapshot(Texture2D snapshot = null)
     {
-        CheckAttachedToScene();
-
         if (snapshot == null)
         {
             snapshot = new Texture2D(ConfidenceTexture.width, ConfidenceTexture.height,
-                            ConfidenceTexture.format, false);
+                ConfidenceTexture.format, false);
             snapshot.Apply();
         }
         else if (snapshot.width != ConfidenceTexture.width ||
-            snapshot.height != ConfidenceTexture.height)
+                 snapshot.height != ConfidenceTexture.height)
         {
             snapshot.Resize(ConfidenceTexture.width, ConfidenceTexture.height);
             snapshot.Apply();
@@ -409,8 +282,6 @@ public class DepthSource : MonoBehaviour
     /// <returns>Returns an array snapshot with the latest depth data.</returns>
     public static short[] GetDepthArraySnapshot(short[] snapshot = null)
     {
-        CheckAttachedToScene();
-
         if (snapshot == null)
         {
             snapshot = new short[DepthArray.Length];
@@ -426,26 +297,6 @@ public class DepthSource : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns a copy of the latest sparse depth array. A new array is generated unless an array
-    /// is provided. The provided array will be resized, if the array length is different.
-    /// </summary>
-    /// <param name="snapshot">Array to hold the snapshot sparse depth data.</param>
-    /// <returns>Returns an array snapshot with the latest sparse depth data.</returns>
-    public static short[] GetRawDepthArraySnapshot(short[] snapshot = null)
-    {
-        CheckAttachedToScene();
-
-        if (snapshot == null)
-        {
-            snapshot = new short[RawDepthArray.Length];
-        }
-
-        Array.Copy(RawDepthArray, snapshot, snapshot.Length);
-
-        return snapshot;
-    }
-
-    /// <summary>
     /// Returns a copy of the latest confidence array. A new array is generated unless an array
     /// is provided. The provided array will be resized, if the array length is different.
     /// </summary>
@@ -453,8 +304,6 @@ public class DepthSource : MonoBehaviour
     /// <returns>Returns an array snapshot with the latest confidence data.</returns>
     public static byte[] GetConfidenceArraySnapshot(byte[] snapshot = null)
     {
-        CheckAttachedToScene();
-
         if (snapshot == null)
         {
             snapshot = new byte[ConfidenceArray.Length];
@@ -463,23 +312,6 @@ public class DepthSource : MonoBehaviour
         Array.Copy(ConfidenceArray, snapshot, snapshot.Length);
 
         return snapshot;
-    }
-
-    /// <summary>
-    /// Provides an aggregate estimate of the depth confidence within the provided screen rectangle,
-    /// corresponding to the depth image returned from the ArFrame.
-    /// </summary>
-    /// <param name="region">
-    /// The screen-space rectangle. Coordinates are expressed in pixels, with (0,0) at the top
-    /// left corner.
-    /// </param>
-    /// <returns>
-    /// Aggregate estimate of confidence within the provided area within range [0,1].
-    /// Confidence >= 0.5 indicates sufficient support for general depth use.
-    /// </returns>
-    public static float GetRegionConfidence(RectInt region)
-    {
-        return _depthDataSource.GetRegionConfidence(region);
     }
 
     /// <summary>
@@ -641,11 +473,10 @@ public class DepthSource : MonoBehaviour
     /// <returns>Returns the depth uv coordinates.</returns>
     public static Vector2 ScreenToDepthUV(Vector2 uv)
     {
-        Vector2 uvTop = Vector2.Lerp(Frame.CameraImage.TextureDisplayUvs.TopLeft,
-            Frame.CameraImage.TextureDisplayUvs.TopRight, uv.x);
-        Vector2 uvBottom = Vector2.Lerp(Frame.CameraImage.TextureDisplayUvs.BottomLeft,
-            Frame.CameraImage.TextureDisplayUvs.BottomRight, uv.x);
-        return Vector2.Lerp(uvTop, uvBottom, uv.y);
+        // UV coordinate: top left is (0, 0)
+        // Screen coordinate: bottom left is (0, 0)
+        var transformed = _depthDataSource.DepthDisplayMatrix * new Vector4(uv.x, 1 - uv.y, 1f, 0f);
+        return new Vector2(transformed.x, transformed.y);
     }
 
     /// <summary>
@@ -670,8 +501,6 @@ public class DepthSource : MonoBehaviour
     /// <param name="target">A DepthTarget instance, which uses depth.</param>
     public static void AddDepthTarget(DepthTarget target)
     {
-        CheckAttachedToScene();
-
         if (!_depthTargets.Contains(target))
         {
             _depthTargets.Add(target);
@@ -758,45 +587,27 @@ public class DepthSource : MonoBehaviour
     /// <param name="target">A DepthTarget instance, which uses depth.</param>
     public static void RemoveDepthTarget(DepthTarget target)
     {
-        CheckAttachedToScene();
-
         if (_depthTargets.Contains(target))
         {
             _depthTargets.Remove(target);
         }
     }
 
-    /// <summary>
-    /// Checks whether this component is part of the scene.
-    /// </summary>
-    private static void CheckAttachedToScene()
-    {
-        if (_instance == null)
-        {
-            if (Camera.main != null)
-            {
-                _instance = Camera.main.gameObject.AddComponent<DepthSource>();
-            }
-        }
-    }
-
     private static void SetDepthTexture(DepthTarget target)
     {
-        Texture2D depthTexture = target.UseRawDepth ? RawDepthTexture : DepthTexture;
-
         if (target.SetAsMainTexture)
         {
-            if (target.DepthTargetMaterial.mainTexture != depthTexture)
+            if (target.DepthTargetMaterial.mainTexture != DepthTexture)
             {
-                target.DepthTargetMaterial.mainTexture = depthTexture;
+                target.DepthTargetMaterial.mainTexture = DepthTexture;
             }
         }
-        else if (target.DepthTargetMaterial.HasProperty(_currentDepthTexturePropertyName) &&
-                 target.DepthTargetMaterial.GetTexture(_currentDepthTexturePropertyName) !=
-            depthTexture)
+        else if (target.DepthTargetMaterial.HasProperty(DepthTexturePropertyName) &&
+                 target.DepthTargetMaterial.GetTexture(DepthTexturePropertyName) !=
+                 DepthTexture)
         {
-            target.DepthTargetMaterial.SetTexture(_currentDepthTexturePropertyName,
-                depthTexture);
+            target.DepthTargetMaterial.SetTexture(DepthTexturePropertyName,
+                DepthTexture);
         }
     }
 
@@ -823,12 +634,23 @@ public class DepthSource : MonoBehaviour
         }
     }
 
-    private void Start()
+    /// <summary>
+    /// Uses Awake instead of Start here to ensure the DepthSource instance is always initialized
+    /// before all other components.
+    /// </summary>
+    private void Awake()
     {
+        _camera = GetComponent<Camera>();
+        Debug.Assert(_camera);
+
         var config = (DepthDataSourceConfig)Resources.Load("DepthDataSourceConfig");
         if (config != null && config.DepthDataSource != null)
         {
             _depthDataSource = config.DepthDataSource;
+        }
+        else
+        {
+            Debug.LogError("Failed to obtain depth data source");
         }
 
         _instance = this;
@@ -836,15 +658,12 @@ public class DepthSource : MonoBehaviour
 
         // Default texture, will be updated each frame.
         _depthTexture = new Texture2D(2, 2);
-        _rawDepthTexture = new Texture2D(2, 2);
         _confidenceTexture = new Texture2D(2, 2);
 
         _depthTexture.filterMode = FilterMode.Bilinear;
-        _rawDepthTexture.filterMode = FilterMode.Point;
         _confidenceTexture.filterMode = FilterMode.Point;
 
         _depthTexture.wrapMode = TextureWrapMode.Clamp;
-        _rawDepthTexture.wrapMode = TextureWrapMode.Clamp;
         _confidenceTexture.wrapMode = TextureWrapMode.Clamp;
 
         foreach (DepthTarget target in _depthTargets)
@@ -860,43 +679,29 @@ public class DepthSource : MonoBehaviour
 
     private void UpdateScreenOrientationOnMaterial(Material material)
     {
-        var uvQuad = Frame.CameraImage.TextureDisplayUvs;
-        material.SetVector(
-            _topLeftRightPropertyName,
-            new Vector4(
-                uvQuad.TopLeft.x, uvQuad.TopLeft.y, uvQuad.TopRight.x, uvQuad.TopRight.y));
-        material.SetVector(
-            _bottomLeftRightPropertyName,
-            new Vector4(uvQuad.BottomLeft.x, uvQuad.BottomLeft.y, uvQuad.BottomRight.x,
-                uvQuad.BottomRight.y));
+        material.SetMatrix(DisplayTransformPropertyName, _depthDataSource.DepthDisplayMatrix);
     }
 
     private void SetAlphaForBlendedOcclusionProperties(Material material)
     {
-        material.SetFloat(_occlusionBlendingScale, 0.5f);
+        material.SetFloat(OcclusionBlendingScale, 0.5f);
     }
 
     private void Update()
     {
         UpdateScreenOrientation();
 
-        _localToWorldTransform = Camera.main.transform.localToWorldMatrix *
-            DepthSource.ScreenRotation;
+        _localToWorldTransform = _camera.transform.localToWorldMatrix * ScreenRotation;
 
-        bool updateSparseDepth = false;
+        if (!_depthDataSource.Initialized)
+        {
+            return;
+        }
+
         bool updateDepth = false;
-
         foreach (DepthTarget target in _depthTargets)
         {
-            if (!target.UseRawDepth && !updateDepth)
-            {
-                updateDepth = true;
-            }
-
-            if (target.UseRawDepth && !updateSparseDepth)
-            {
-                updateSparseDepth = true;
-            }
+            updateDepth = true;
 
             if (target.DepthTargetMaterial != null)
             {
@@ -907,27 +712,7 @@ public class DepthSource : MonoBehaviour
         }
 
         _updateDepth = updateDepth || _alwaysUpdateDepth;
-        _updateRawDepth = updateSparseDepth || _alwaysUpdateRawDepth;
-        _updateConfidence = _updateDepth || _updateRawDepth || _alwaysUpdateConfidence;
-        _newRawDepthAvailable = _depthDataSource.NewRawDepthAvailable();
-
-        if (_updateRawDepth)
-        {
-            // Updates depth from ARCore, only if at least one DepthTarget uses depth.
-            if (ReprojectIntermediateRawDepth)
-            {
-                // Always get the depth frame, reprojected as needed.
-                _depthDataSource.UpdateRawDepthTexture(ref _rawDepthTexture);
-            }
-            else
-            {
-                // Only get new depth frames as they are available.
-                if (_newRawDepthAvailable)
-                {
-                    _depthDataSource.UpdateRawDepthTexture(ref _rawDepthTexture);
-                }
-            }
-        }
+        _updateConfidence = _updateDepth || _alwaysUpdateConfidence;
 
         if (_updateConfidence)
         {

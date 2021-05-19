@@ -18,9 +18,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-
-using GoogleARCore;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 /// <summary>
 /// Attaches and updates the depth texture each frame.
@@ -28,62 +27,48 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class AttachDepthTexture : MonoBehaviour
 {
-    /// <summary>
-    /// Type of depth texture to attach to the material.
-    /// </summary>
-    public bool UseRawDepth = false;
-
-    /// <summary>
-    /// Reproject intermediate sparse depth frames.
-    /// </summary>
-    public bool ReprojectIntermediateRawDepth = true;
-
     private static readonly string _currentDepthTexturePropertyName = "_CurrentDepthTexture";
-    private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
-    private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
-    private Texture2D _depthTexture;
+    private static readonly string _depthDisaplyMatrixName = "_DepthDisplayMatrix";
+    //private static readonly string _topLeftRightPropertyName = "_UvTopLeftRight";
+    //private static readonly string _bottomLeftRightPropertyName = "_UvBottomLeftRight";
     private Material _material;
+    private ARCameraManager _cameraManager;
+    private AROcclusionManager _occlusionManager;
 
     private void Start()
     {
-        // Default texture, will be updated each frame.
-        _depthTexture = new Texture2D(2, 2);
-        _depthTexture.filterMode = FilterMode.Bilinear;
+        _occlusionManager = FindObjectOfType<AROcclusionManager>();
+        Debug.Assert(_occlusionManager);
+
+        _cameraManager = FindObjectOfType<ARCameraManager>();
+        Debug.Assert(_cameraManager);
+
+        _cameraManager.frameReceived += OnCameraFrameReceived;
 
         // Assign the texture to the material.
         _material = GetComponent<Renderer>().sharedMaterial;
-        _material.SetTexture(_currentDepthTexturePropertyName, _depthTexture);
-        UpdateScreenOrientationOnMaterial();
     }
 
     private void UpdateScreenOrientationOnMaterial()
     {
-        var uvQuad = Frame.CameraImage.TextureDisplayUvs;
-        _material.SetVector(
-            _topLeftRightPropertyName,
-            new Vector4(
-                uvQuad.TopLeft.x, uvQuad.TopLeft.y, uvQuad.TopRight.x, uvQuad.TopRight.y));
-        _material.SetVector(
-            _bottomLeftRightPropertyName,
-            new Vector4(uvQuad.BottomLeft.x, uvQuad.BottomLeft.y, uvQuad.BottomRight.x,
-                uvQuad.BottomRight.y));
+        #if DEPTH_LAB_DEV_SCREEN_ORIENTATION
+        //var uvQuad = Frame.CameraImage.TextureDisplayUvs;
+        //_material.SetVector(
+        //    _topLeftRightPropertyName,
+        //    new Vector4(
+        //        uvQuad.TopLeft.x, uvQuad.TopLeft.y, uvQuad.TopRight.x, uvQuad.TopRight.y));
+        //_material.SetVector(
+        //    _bottomLeftRightPropertyName,
+        //    new Vector4(uvQuad.BottomLeft.x, uvQuad.BottomLeft.y, uvQuad.BottomRight.x,
+        //        uvQuad.BottomRight.y));
+        #endif
     }
 
-    private void Update()
+    private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        // Get the latest depth data from ARCore.
-        if (UseRawDepth == true)
-        {
-            if (ReprojectIntermediateRawDepth)
-            {
-                Frame.CameraImage.UpdateRawDepthTexture(ref _depthTexture);
-            }
-        }
-        else
-        {
-            Frame.CameraImage.UpdateDepthTexture(ref _depthTexture);
-        }
-
-        UpdateScreenOrientationOnMaterial();
+        _material.SetTexture(
+            _currentDepthTexturePropertyName, _occlusionManager.environmentDepthTexture);
+        _material.SetMatrix(
+            _depthDisaplyMatrixName, eventArgs.displayMatrix.GetValueOrDefault());
     }
 }

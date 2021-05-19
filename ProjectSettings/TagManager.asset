@@ -3,11 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - ManipulationSystem
-  - ThePenguin
-  - Andy
-  - MaterialWrap
+  tags: []
   layers:
   - Default
   - TransparentFX

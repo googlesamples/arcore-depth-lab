@@ -46,7 +46,7 @@ Category {
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
-            #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+            #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
 
             sampler2D _MainTex;
             fixed4 _TintColor;
@@ -62,7 +62,7 @@ Category {
                 float4 vertex : SV_POSITION;
                 fixed4 color : COLOR;
                 float2 texcoord : TEXCOORD0;
-                float3 worldPos;
+                float3 worldPos : TEXCOORD1;
                 UNITY_FOG_COORDS(1)
                 #ifdef SOFTPARTICLES_ON
                 float4 projPos : TEXCOORD2;
@@ -78,8 +78,9 @@ Category {
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 #ifdef SOFTPARTICLES_ON
-                o.projPos = ComputeScreenPos (o.vertex);
+                o.projPos = ComputeScreenPos(o.vertex);
                 COMPUTE_EYEDEPTH(o.projPos.z);
                 #endif
                 o.texcoord = TRANSFORM_TEX(v.texcoord,_MainTex);

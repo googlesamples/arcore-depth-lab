@@ -46,6 +46,8 @@ public class SceneSwitcher : MonoBehaviour
 
     /// <summary>
     /// The first scene to load.
+    /// Note: if the scene is not enabled in BuildSettings, this value will be reset to null
+    /// during the build.
     /// </summary>
     public string StartScene;
 
@@ -65,42 +67,10 @@ public class SceneSwitcher : MonoBehaviour
     }
 
     /// <summary>
-    /// This method is for moving objects to the base scene.
-    /// Use this for any objects that should stay in the scene after switching scenes.
-    /// </summary>
-    /// <param name="gameObject">Gameobject to move to the base scene.</param>
-    public void MoveObjectToBase(GameObject gameObject)
-    {
-        SceneManager.MoveGameObjectToScene(gameObject, _baseScene);
-        gameObject.transform.SetParent(ActiveObjectsContainer);
-    }
-
-    /// <summary>
-    /// This method is for instantiating objects that should eventually be destroyed
-    /// once there is a scene change.
-    /// </summary>
-    /// <param name="original">Object to instantiate.</param>
-    /// <param name="position">Optional position to instantiate the object.</param>
-    /// <param name="rotation">Optional rotation to instantiate the object.</param>
-    public void InstantiateForCurrentScene(Object original,
-        Vector3 position = new Vector3(), Quaternion rotation = new Quaternion())
-    {
-        // Checks whether 'rotation' is initialized with default '0' values.
-        // Changes 'rotation' to identity, if that's the case.
-        // There is no way to provide a default parameter with any specific value.
-        if (rotation.Equals(new Quaternion()))
-        {
-            rotation = Quaternion.identity;
-        }
-
-        Instantiate(original, position, rotation, ActiveObjectsToDestroy);
-    }
-
-    /// <summary>
     /// Calls the initial scene loading.
     /// </summary>
     /// <returns>Returns WaitForEndOfFrame.</returns>
-    public IEnumerator InitSceneLoad()
+    private IEnumerator InitSceneLoad()
     {
         yield return new WaitForEndOfFrame();
 
@@ -127,17 +97,19 @@ public class SceneSwitcher : MonoBehaviour
     /// <returns>Returns WaitForEndOfFrame.</returns>
     private IEnumerator LoadSceneAsync(string sceneName)
     {
-        if (sceneName == string.Empty)
+        if (string.IsNullOrEmpty(sceneName))
         {
             yield break;
         }
 
         LoadingSpinner.Instance.Show();
-        AsyncOperation Async = new AsyncOperation();
+        AsyncOperation _async = new AsyncOperation();
+
+        Debug.Log("LoadSceneAsync: " + sceneName);
 
         // Checks that the new scene isn't null,
         // we're not trying to reload the same scene or that a scene load is in progress.
-        if (sceneName != _currentScene && _sceneChangeComplete && sceneName != null)
+        if (sceneName != _currentScene && _sceneChangeComplete)
         {
             _sceneChangeComplete = false;
 
@@ -158,21 +130,21 @@ public class SceneSwitcher : MonoBehaviour
                         }
                     }
 
-                    Async = SceneManager.UnloadSceneAsync(currentScene);
+                    _async = SceneManager.UnloadSceneAsync(currentScene);
 
                     // Waits until the old scene is unloaded.
-                    while (!Async.isDone)
+                    while (!_async.isDone)
                     {
                         yield return null;
                     }
                 }
 
                 // Loads new scene.
-                Async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-                LoadingSpinner.Instance.SetLoadingOperation(Async);
+                _async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                LoadingSpinner.Instance.SetLoadingOperation(_async);
 
                 // Waits until new scene is loaded.
-                while (!Async.isDone)
+                while (!_async.isDone)
                 {
                     yield return null;
                 }
@@ -181,6 +153,7 @@ public class SceneSwitcher : MonoBehaviour
                 _currentScene = sceneName;
 
                 _sceneChangeComplete = true;
+                Debug.Log("Loaded the scene.");
             }
         }
         else

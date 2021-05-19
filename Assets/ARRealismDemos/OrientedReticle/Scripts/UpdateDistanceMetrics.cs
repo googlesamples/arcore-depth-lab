@@ -87,7 +87,14 @@ public class UpdateDistanceMetrics : MonoBehaviour
 
     private void Start()
     {
-        _orientedReticle = GetComponent<OrientedReticle>();
+        _orientedReticle = FindObjectOfType<OrientedReticle>();
+        if (_orientedReticle == null)
+        {
+            Debug.LogError("Cannot find OrientedReticle.");
+        }
+
+        gameObject.SetActive(_orientedReticle != null);
+
         _floorHeights.AddLast(float.PositiveInfinity);
     }
 

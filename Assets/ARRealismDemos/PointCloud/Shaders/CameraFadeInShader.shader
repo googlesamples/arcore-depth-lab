@@ -71,18 +71,5 @@ Shader "ARRealism/Camera Fade-in Shader"
         } // Shader: Background to Depth
     } // Subshader
 
-    // Subshader for instant preview.
-    Subshader
-    {
-        Pass
-        {
-            ZWrite Off
-
-            CGPROGRAM
-            #include "Assets/ARRealismDemos/Common/Shaders/PreviewEmptyShader.cginc"
-            ENDCG
-        } // Pass
-    } // Subshader for instant preview.
-
     FallBack Off
 }

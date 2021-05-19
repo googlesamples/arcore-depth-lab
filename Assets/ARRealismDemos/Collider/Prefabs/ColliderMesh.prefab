@@ -48,17 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DepthProcessingCS: {fileID: 7200000, guid: 1a3c6bfde04e04f3db64b65cbdd53731, type: 3}
   CalculateNormals: 0
-  Projectiles: []
-  SceneCamera: {fileID: 0}
+  Projectile: {fileID: 8342818917132623095, guid: a2d8048f503ac4376ae1af3759c7b31a,
+    type: 3}
+  Camera: {fileID: 0}
   ProjectileLifetimeS: 180
   Render: 0
-  UseRawDepth: 0
-  ExtendMeshEdges: 1
-  ForwardOffset: 0.25
-  ColliderMeshReadyEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  ProjectileThrust: 5
 --- !u!64 &7770069181528428458
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -69,9 +63,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 3
   m_Convex: 0
-  m_CookingOptions: 16
+  m_CookingOptions: 0
   m_Mesh: {fileID: 0}
 --- !u!33 &7770069181528428460
 MeshFilter:
@@ -92,12 +86,9 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -109,7 +100,6 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -122,4 +112,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}

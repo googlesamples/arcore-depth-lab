@@ -21,10 +21,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using GoogleARCore;
+using Google.XR.ARCoreExtensions;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 
 /// <summary>
 /// Recorder for saving a dataset into mp4 and loading a dataset for playing back.
@@ -32,14 +33,12 @@ using UnityEngine.UI;
 public class Recorder : MonoBehaviour
 {
     /// <summary>
-    /// Holds the current camera material renderer to obtain live render texture.
+    /// ARCoreExtensions component in Unity Scene.
     /// </summary>
-    public DemoARBackgroundRenderer DemoRenderer;
+    public ARCoreExtensions Extensions;
 
-    /// <summary>
-    /// The ARCore session used by the current scene.
-    /// </summary>
-    public ARCoreSession DepthARCoreSession;
+    private ARRecordingManager _recordingManager;
+    private ARPlaybackManager _playbackManager;
 
     /// <summary>
     /// Button to start recording.
@@ -85,18 +84,6 @@ public class Recorder : MonoBehaviour
     // Default name of the raw point cloud blender.
     private const string _rawPointCloudObjectName = "RawPointCloudBlender";
 
-    // Default name of the collider mesh in the "Collider" scene.
-    private const string _colliderMeshObjectName = "ColliderMesh";
-
-    // Default name of the collider mesh in the "Material Wrap" scene.
-    private const string _materialWrapObjectName = "MaterialWrapMeshes";
-
-    // Default name of the collider mesh in the "Oriented Splat" scene.
-    private const string _orientedSplatObjectName = "Reticle UI";
-
-    // Default name of the laser beam in the "Laser Beam" scene.
-    private const string _laserBeamObjectName = "LaserBeam";
-
     // The status of the recorder.
     private RecorderStatus _status = RecorderStatus.Stopped;
 
@@ -105,6 +92,7 @@ public class Recorder : MonoBehaviour
 
     // Time when recording starts.
     private float _timeWhenRecorderStarts;
+    private ARCoreRecordingConfig _recordingConfig = null;
 
     /// <summary>
     /// Status of the recorder. Only one workflow is enabled at a time:
@@ -166,7 +154,7 @@ public class Recorder : MonoBehaviour
             PlaybackButton.gameObject.SetActive(true);
             StopRecordingButton.gameObject.SetActive(false);
             RecordingTimerText.gameObject.SetActive(false);
-            Session.StopRecording();
+            _recordingManager.StopRecording();
             _status = RecorderStatus.Stopped;
             ResetScenes();
         }
@@ -184,7 +172,6 @@ public class Recorder : MonoBehaviour
             PlaybackButton.gameObject.SetActive(false);
             StopPlayingbackButton.gameObject.SetActive(true);
             RecordButton.gameObject.SetActive(false);
-            _filenameToSave = GetDefaultDatasetName();
             CarouselUIToggle.CarouselVisible(false);
             Carousel3D.gameObject.SetActive(false);
             IEnumerator playbackThread = PlaybackDataset(_filenameToSave);
@@ -217,45 +204,29 @@ public class Recorder : MonoBehaviour
     /// <returns>An event of WaitForSeconds or null.</returns>
     private IEnumerator Record()
     {
-        // Deals with case: Idle -> PrepareRecording -> Recording.
-        var sessionObject = GameObject.Find(_depthArcoreSessionName);
-        if (sessionObject == null)
+        Extensions.Session.enabled = false;
+
+        // It can take up to 10s until AR Foundation unlocked session native pointer.
+        // Before that, the session handle returns IntPtr.Zero and fails StartRecording().
+        RecordingResult result = RecordingResult.SessionNotReady;
+        _recordingConfig.Mp4DatasetFilepath = _filenameToSave;
+
+        yield return new WaitWhile(() =>
         {
-            yield break;
-        }
-
-        DepthARCoreSession = sessionObject.GetComponent<ARCoreSession>();
-        if (DepthARCoreSession == null)
-        {
-            _status = RecorderStatus.Stopped;
-            Debug.LogError("Cannot location ARCore session in DepthLab.");
-            yield break;
-        }
-
-        DepthARCoreSession.enabled = false;
-        ResetScenes();
-
-        // Waits for one frame, so the session is in paused state.
-        yield return null;
-
-        _filenameToSave = GetDefaultDatasetName();
-
-        ARCoreRecordingConfig config = new ARCoreRecordingConfig();
-        config.Mp4DatasetFilepath = _filenameToSave;
-
-        RecordingResult result = Session.StartRecording(config);
+            result = _recordingManager.StartRecording(_recordingConfig);
+            return result == RecordingResult.SessionNotReady;
+        });
 
         if (result != RecordingResult.OK)
         {
-            // Waits for 0.5s for next trial.
-            yield return new WaitForSeconds(0.5f);
+            Extensions.Session.enabled = true;
+            _status = RecorderStatus.Stopped;
+            yield break;
         }
 
-        // Waits for one frame, then start the ARCore session.
+        ResetScenes();
         yield return null;
-
-        DepthARCoreSession.enabled = true;
-
+        Extensions.Session.enabled = true;
         _status = RecorderStatus.Recording;
         _timeWhenRecorderStarts = Time.time;
         RecordingTimerText.gameObject.SetActive(true);
@@ -268,26 +239,27 @@ public class Recorder : MonoBehaviour
     /// <returns>An event of WaitForSeconds or null.</returns>
     private IEnumerator PlaybackDataset(string datasetPath)
     {
-        DepthARCoreSession = GameObject.Find(_depthArcoreSessionName).GetComponent<ARCoreSession>();
-        DepthARCoreSession.enabled = false;
+        // Deal with cases:
+        // - Idle -> PreparePlayback => Playback.
+        // - Playback -> PrepareIdle => Idle.
+        Extensions.Session.enabled = false;
 
-        // Waits for one frame so the session is in paused state.
-        yield return null;
+        // It can take up to 10s until AR Foundation unlocked session native pointer.
+        // Before that, the session handle returns IntPtr.Zero and fails SetPlaybackDataset().
+        PlaybackResult result = PlaybackResult.SessionNotReady;
+        yield return new WaitWhile(() =>
+        {
+            result = _playbackManager.SetPlaybackDataset(datasetPath);
+            return result == PlaybackResult.SessionNotReady;
+        });
 
-        PlaybackResult result = Session.SetPlaybackDataset(datasetPath);
-
-        // Restores to stopped state in case of error.
         if (result != PlaybackResult.OK)
         {
-            DepthARCoreSession.enabled = true;
-            _status = RecorderStatus.Stopped;
             yield break;
         }
 
-        ResetScenes();
         yield return null;
-        DepthARCoreSession.enabled = true;
-
+        Extensions.Session.enabled = true;
         if (datasetPath == null)
         {
             _status = RecorderStatus.Stopped;
@@ -303,10 +275,17 @@ public class Recorder : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        _recordingConfig = ScriptableObject.CreateInstance<ARCoreRecordingConfig>();
+        _filenameToSave = GetDefaultDatasetName();
+        _recordingConfig.Mp4DatasetFilepath = _filenameToSave;
+
         if (System.IO.File.Exists(Application.persistentDataPath + "/" + _defaultDatasetName))
         {
             PlaybackButton.gameObject.SetActive(true);
         }
+
+        _recordingManager = gameObject.AddComponent<ARRecordingManager>();
+        _playbackManager = gameObject.AddComponent<ARPlaybackManager>();
     }
 
     /// <summary>
@@ -317,7 +296,7 @@ public class Recorder : MonoBehaviour
         if (_status == RecorderStatus.Playingback)
         {
             // Checks if the dataset comes to an end when playing back.
-            if (Session.PlaybackStatus != PlaybackStatus.OK)
+            if (_playbackManager.PlaybackStatus != PlaybackStatus.OK)
             {
                 ResetScenes();
                 OnPlaybackButtonTapped();
@@ -334,63 +313,10 @@ public class Recorder : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets virtual objects in the scene.
+    /// Clears objects in the scenes like point clouds and splatting.
     /// </summary>
     private void ResetScenes()
     {
-        // Resets the raw point cloud if it exists.
-        var pointCloudObject = GameObject.Find(_rawPointCloudObjectName);
-        if (pointCloudObject != null)
-        {
-            var pointCloudScript = pointCloudObject.GetComponent<RawPointCloudBlender>();
-            if (pointCloudScript != null)
-            {
-                pointCloudScript.Reset();
-            }
-        }
-
-        // Resets the collider mesh if it exists.
-        var colliderMeshObject = GameObject.Find(_colliderMeshObjectName);
-        if (colliderMeshObject != null)
-        {
-            var depthMeshScript = colliderMeshObject.GetComponent<DepthMeshCollider>();
-            if (depthMeshScript != null)
-            {
-                depthMeshScript.Clear();
-            }
-        }
-
-        // Resets the material warp if it exists.
-        var materialWrapObject = GameObject.Find(_materialWrapObjectName);
-        if (materialWrapObject != null)
-        {
-            var materialWrapScript = materialWrapObject.GetComponent<MaterialWrapController>();
-            if (materialWrapScript != null)
-            {
-                materialWrapScript.ClearAllMeshes();
-            }
-        }
-
-        // Resets the oriented splat if it exists.
-        var orientedSplatObject = GameObject.Find(_orientedSplatObjectName);
-        if (orientedSplatObject != null)
-        {
-            var orientedSplatScript = orientedSplatObject.GetComponent<SplatCannon>();
-            if (orientedSplatScript != null)
-            {
-                orientedSplatScript.Clear();
-            }
-        }
-
-        // Resets the laser beam if it exists.
-        var laserBeamObject = GameObject.Find(_laserBeamObjectName);
-        if (laserBeamObject != null)
-        {
-            var laserBeamScript = laserBeamObject.GetComponent<LaserBeam>();
-            if (laserBeamScript != null)
-            {
-                laserBeamScript.Reset();
-            }
-        }
+        // Reserved for adding scenes.
     }
 }

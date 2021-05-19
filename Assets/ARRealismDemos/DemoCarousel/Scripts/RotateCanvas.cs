@@ -60,36 +60,5 @@ public class RotateCanvas : MonoBehaviour
             default:
                 break;
         }
-
-        // UpdateGlobalButtonOpacity();
-    }
-
-    // Updates the opacity of UI buttons globally.
-    private void UpdateGlobalButtonOpacity()
-    {
-        Button button = transform.GetComponentInParent<Button>();
-        if (button != null)
-        {
-            ColorBlock colors = button.colors;
-
-            Color normalColor = colors.normalColor;
-            normalColor.a = _globalButtonOpacity;
-
-            Color highlightedColor = colors.highlightedColor;
-            highlightedColor.a = _globalButtonOpacity;
-
-            Color pressedColor = colors.pressedColor;
-            pressedColor.a = _globalButtonOpacity;
-
-            Color disabledColor = colors.disabledColor;
-            disabledColor.a = _globalButtonOpacity;
-
-            colors.normalColor = normalColor;
-            colors.highlightedColor = highlightedColor;
-            colors.pressedColor = pressedColor;
-            colors.disabledColor = disabledColor;
-
-            button.colors = colors;
-        }
     }
 }

@@ -49,7 +49,7 @@ Shader "Custom/Particle Occlusion Shader"
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
-        #include "Assets/GoogleARCore/SDK/Materials/ARCoreDepth.cginc"
+        #include "Assets/ARRealismDemos/Common/Shaders/ARCoreDepth.cginc"
 
         struct Input
         {
