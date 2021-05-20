@@ -8,6 +8,7 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
+  fontName: Comfortaa
   fontNames:
   - Comfortaa
   fallbackFontReferences: []

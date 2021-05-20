@@ -51,19 +51,17 @@ The sample scenes demonstrate three different ways to access depth:
 
 ## Unity project setup
 
-These samples target [**Unity 2021.1.3f**](https://unity3d.com) and require
+These samples target [**Unity 2019.4.22f**](https://unity3d.com) and require
 [**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
 **v1.24.0** or newer. Download and import
 [`arcore-unity-sdk-1.24.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
-or newer into the sample project. For the first time, please use Unity 2019.4 to
-open the project and install the following packages in `Window` -> `Packages
-Manager`: Multiplayer HLAPI 1.0.8, TextMeshPro 3.0.4, Unity Collaborate 1.3.9,
-and XR Legacy Input Helpers 2.1.7. Note that newer versions are not tested and
-may not work. Close and reopen the project with Unity 2021 and reimport all demo
-shaders to resolve any dependency issues in the Unity editor. This project only
-builds with the Build Platform **Android**. **Instant Preview** is not enabled
-for Depth API yet. Build the project to an Android device instead of using the
-**Play** button in the Unity editor.
+or newer into the sample project. Please use Unity 2019.4 to open the project
+and install the following packages in `Window` -> `Packages Manager`:
+Multiplayer HLAPI 1.0.8, and XR Legacy Input Helpers 2.1.7. Note that newer
+versions are not tested and may not work. This project only builds with the
+Build Platform **Android**. **Instant Preview** is not enabled for Depth API
+yet. Build the project to an Android device instead of using the **Play** button
+in the Unity editor.
 
 ## Building samples
 

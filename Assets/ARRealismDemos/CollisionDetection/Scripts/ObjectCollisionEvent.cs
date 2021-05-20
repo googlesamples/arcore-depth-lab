@@ -98,6 +98,11 @@ public class ObjectCollisionEvent : CollisionEventInterface
     /// <param name="collisionPercentage">The collision percentage.</param>
     public override void Stop(GameObject collidedObject, float collisionPercentage = 0)
     {
+        if (_manipulatedObject == null || _manipulatedObject != collidedObject)
+        {
+            return;
+        }
+
         var colorToChange = OriginalColor;
         foreach (var mat in _manipulatedObject.GetComponent<Renderer>().materials)
         {

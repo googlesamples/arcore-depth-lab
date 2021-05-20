@@ -27,6 +27,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Manages the depth-aware water effect layer.
 /// </summary>
+[RequireComponent(typeof(MeshFilter))]
 public class WaterGridManager : MonoBehaviour
 {
     /// <summary>
@@ -110,7 +111,11 @@ public class WaterGridManager : MonoBehaviour
         _mesh.RecalculateTangents();
 
         _meshFilter.sharedMesh = _mesh;
-        WaterMaterial.SetFloat("_ShowColorOnly", 0);
+
+        if (WaterMaterial != null)
+        {
+            WaterMaterial.SetFloat("_ShowColorOnly", 0);
+        }
     }
 
     private void UpdateWater()

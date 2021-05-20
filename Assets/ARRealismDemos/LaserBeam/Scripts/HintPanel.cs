@@ -37,8 +37,8 @@ public class HintPanel : MonoBehaviour
     private const float _waitTimeS = 10;
     private const float _showHintTimeS = 5;
 
-    private UnityEngine.UI.Image _panelImage;
-    private UnityEngine.UI.Text _panelText;
+    private Image _panelImage;
+    private Text _panelText;
 
     private float _hintTimer = _showHintTimeS - 1.0f;
     private LaserBeam _laserBeam;
@@ -55,7 +55,13 @@ public class HintPanel : MonoBehaviour
 
     private void Start()
     {
-        LaserBeam[] laserBeams = Object.FindObjectsOfType<LaserBeam>();
+        if (Panel == null)
+        {
+            Debug.LogWarning("Hint Panel is null.");
+            gameObject.SetActive(false);
+        }
+
+        LaserBeam[] laserBeams = FindObjectsOfType<LaserBeam>();
         if (laserBeams.Length > 0)
         {
             _laserBeam = laserBeams[0];

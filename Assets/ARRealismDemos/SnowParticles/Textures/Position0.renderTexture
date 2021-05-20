@@ -12,7 +12,6 @@ RenderTexture:
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
   serializedVersion: 3
   m_Width: 256
   m_Height: 256

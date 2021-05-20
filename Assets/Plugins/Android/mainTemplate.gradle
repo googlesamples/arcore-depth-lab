@@ -38,7 +38,6 @@ android {
     }
 
     defaultConfig {
-        consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
         minSdkVersion **MINSDKVERSION**
         targetSdkVersion **TARGETSDKVERSION**
         ndk {
@@ -46,6 +45,7 @@ android {
         }
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
+        consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
     }
 
     lintOptions {
@@ -53,19 +53,7 @@ android {
     }
 
     aaptOptions {
-        noCompress = ['.unity3d', '.ress', '.resource', '.obb'**STREAMING_ASSETS**] + unityStreamingAssets.tokenize(', ')
-    }**SIGN**
-
-    buildTypes {
-        debug {
-            minifyEnabled **MINIFY_DEBUG**
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD**
-            jniDebuggable true
-        }
-        release {
-            minifyEnabled **MINIFY_RELEASE**
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt'**USER_PROGUARD****SIGNCONFIG**
-        }
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**PACKAGING_OPTIONS**
-**BUILT_APK_LOCATION**
 }**REPOSITORIES****SOURCE_BUILD_SETUP**
+**EXTERNAL_SOURCES**

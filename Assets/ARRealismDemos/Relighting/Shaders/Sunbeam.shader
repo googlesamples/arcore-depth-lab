@@ -68,7 +68,6 @@ Shader "ARRealism/Relighting/Sunbeam"
                 uniform vec4 _UvTopLeftRight;
                 uniform vec4 _UvBottomLeftRight;
 
-                #include "Assets/ARRealismDemos/CombinedDemo/Shaders/MSLightsImageEffectIncludes.glslinc"
                 #include "Assets/ARRealismDemos/Relighting/Shaders/Utilities.glslinc"
                 #include "Assets/ARRealismDemos/Relighting/Shaders/SunbeamCore.glslinc"
 
