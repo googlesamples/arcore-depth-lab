@@ -107,8 +107,8 @@ public class RawPointCloudGenerator : MonoBehaviour
                     DepthSource.DepthArray[depthIndex]) * DepthSource.MillimeterToMeter;
                 float confidence = DepthSource.ConfidenceArray[depthIndex] / 255f;
 
-                // Ignore missing depth values to improve runtime performance.
-                if (depthInM == 0f || confidence == 0f)
+                // Ignore missing depth values to improve runtime performance. //Only for raw depth
+                if ((depthInM == 0f || confidence == 0f) && UseRawDepth)
                 {
                     continue;
                 }
