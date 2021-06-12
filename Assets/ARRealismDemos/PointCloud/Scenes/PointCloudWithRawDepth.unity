@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 128069682}
   - component: {fileID: 128069681}
   - component: {fileID: 128069683}
+  - component: {fileID: 128069685}
   m_Layer: 0
   m_Name: Point cloud from CPU depth data
   m_TagString: Untagged
@@ -196,10 +197,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 128069680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ddbac5279728a64bb6a44ffbd13f993, type: 3}
+  m_Script: {fileID: 11500000, guid: 79e874a0ad35b9d418b287356194f877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseRawDepth: 0
+  UseRawDepth: 1
 --- !u!4 &128069684
 Transform:
   m_ObjectHideFlags: 0
@@ -214,6 +215,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &128069685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128069680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42a5dba022f44d2bbcd45b3a1eb5125, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseRawDepth: 1
+  SetAsMainTexture: 0
+  DepthTargetMaterial: {fileID: 0}
 --- !u!1 &764884809
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,7 +552,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 128069683}
-        m_MethodName: ComputePointCloud
+        m_MethodName: UpdateRawPointCloud
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
