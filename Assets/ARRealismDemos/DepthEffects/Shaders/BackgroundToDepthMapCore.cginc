@@ -43,12 +43,12 @@ fixed4 RenderCameraToDepthMapTransition(in fixed4 cameraColor, in float2 depthUv
     const float kOffsetMeters = 0.1;
     depthMeters = clamp(depthMeters, kOffsetMeters, kMaxRangeMeters - kOffsetMeters);
 
+    // Converts from meters to [0, 1] for visualization. [0, 0.5] corresponds to old scale of
+    // [0, 8] meters while [0.5, 1] corresponds to new scale of [8, 30] meters.
     float depth01 =
-    (depthMeters < kMidRangeMeters) ?
-    0.5 * (depthMeters / kMidRangeMeters) :
-    (0.5 + 0.5 * (depthMeters - kMidRangeMeters) / (kMaxRangeMeters - kMidRangeMeters));
-
-    // depth01 =  depthMeters / 30;
+        (depthMeters < kMidRangeMeters) ?
+        0.5 * (depthMeters / kMidRangeMeters) :
+        (0.5 + 0.5 * (depthMeters - kMidRangeMeters) / (kMaxRangeMeters - kMidRangeMeters));
 
     // Visualizes the depth map with texture sampling.
     fixed4 depthColor = tex2D(_RampTexture, float2(depth01, 0.5));
