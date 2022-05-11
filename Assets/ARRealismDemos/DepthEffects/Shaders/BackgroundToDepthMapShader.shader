@@ -23,7 +23,7 @@ Shader "ARRealism/Background To Depth Map Shader"
         _MainTex ("Main Texture", 2D) = "white" {}
         _RampTexture ("Ramp Texture", 2D) = "white" {}
         _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}
-        _TransitionHighlightColor("Transition highlight color]", Color) = (1,1,1,1)
+        _TransitionHighlightColor("Transition highlight color]", Color) = (1, 1, 1, 1)
         _GammaCorrection("Gamma Correction (1.0 = Enabled)", Range(0.0, 1.0)) = 1.0
         _MinDepth("Min Depth in [0, 1] for visualization", Range(0.0, 1.0)) = 0.0
         _DepthRange("Depth Range in [0, 1] for visualization.", Range(0.01, 1.0)) = 1.0
@@ -49,9 +49,9 @@ Shader "ARRealism/Background To Depth Map Shader"
             #include "Assets/ARRealismDemos/Common/Shaders/DGAA.cginc"
             #include "Assets/ARRealismDemos/Common/Shaders/TurboColormap.cginc"
             #include "Assets/ARRealismDemos/DepthEffects/Shaders/BackgroundToDepthMapCore.cginc"
-            
+
             uniform half _ShowColorOnly;
-            
+
             struct v2f
             {
                 float4 colorUv : TEXCOORD0;

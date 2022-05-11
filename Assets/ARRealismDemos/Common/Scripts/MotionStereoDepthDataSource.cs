@@ -356,7 +356,7 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         // Copies the depth data into the provided CPU data array.
         if (pixelStride == 1)
         {
-            // Pixel stride is 2, used for confidence data.
+            // Pixel stride is 1, used for confidence data.
             Marshal.Copy(planeDataPtr, dataArray as byte[], 0, dataArray.Length);
         }
         else
@@ -468,7 +468,8 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         ref IntPtr depthImageHandle)
     {
         // Get the current depth image.
-        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireDepthImage(
+        // ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireDepthImage(
+        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireDepthImage16Bits(
             sessionHandle,
             frameHandle,
             ref depthImageHandle);
@@ -489,7 +490,8 @@ public class MotionStereoDepthDataSource : IDepthDataSource
         ref IntPtr depthImageHandle)
     {
         // Get the current depth image.
-        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireRawDepthImage(
+        // ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireRawDepthImage(
+        ApiArStatus status = (ApiArStatus)ExternApi.ArFrame_acquireRawDepthImage16Bits(
             sessionHandle,
             frameHandle,
             ref depthImageHandle);
@@ -536,11 +538,11 @@ public class MotionStereoDepthDataSource : IDepthDataSource
     {
 #pragma warning disable 626
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
-        public static extern ApiArStatus ArFrame_acquireDepthImage(
+        public static extern ApiArStatus ArFrame_acquireDepthImage16Bits(
             IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
 
         [AndroidImport(ApiConstants.ARCoreNativeApi)]
-        public static extern ApiArStatus ArFrame_acquireRawDepthImage(
+        public static extern ApiArStatus ArFrame_acquireRawDepthImage16Bits(
             IntPtr sessionHandle, IntPtr frameHandle, ref IntPtr imageHandle);
 
         [AndroidImport(ApiConstants.ARCoreNativeApi)]

@@ -51,17 +51,31 @@ The sample scenes demonstrate three different ways to access depth:
 
 ## Unity project setup
 
-These samples target [**Unity 2019.4.22f**](https://unity3d.com) and require
+These samples target [**Unity 2019.4.36f**](https://unity3d.com) and require
 [**ARCore SDK for Unity**](https://github.com/google-ar/arcore-unity-sdk)
-**v1.24.0** or newer. Download and import
-[`arcore-unity-sdk-1.24.0.unitypackage`](https://github.com/google-ar/arcore-unity-sdk/releases)
-or newer into the sample project. Please use Unity 2019.4 to open the project
+**v1.25.0** or newer. Please use Unity 2019.4.36f1 to open the project
 and install the following packages in `Window` -> `Packages Manager`:
-Multiplayer HLAPI 1.0.8, and XR Legacy Input Helpers 2.1.7. Note that newer
+Multiplayer HLAPI 1.0.8+, and XR Legacy Input Helpers 2.1.7+. Note that newer
 versions are not tested and may not work. This project only builds with the
 Build Platform **Android**. **Instant Preview** is not enabled for Depth API
 yet. Build the project to an Android device instead of using the **Play** button
 in the Unity editor.
+
+Note that ARCore SDK for Unity is no longer supported though our Play Store
+version is built upon that. This commit is mearnt to demonstrate the use case of
+long-range depth API with ARCore 1.31 or newer version. Please refer to
+[v1.1.1](https://github.com/googlesamples/arcore-depth-lab/releases/tag/1.1.1)
+in the Releases page for older version for more compatibility. To use the
+latest long-range-depth API released in ARCore 1.31, please uncheck the Android
+options in `arcore_client.aar` and `arcore_unity.aar` in
+ARCore SDK for Unity folder of `GoogleARCore/SDK/Plugins` and check the Android
+options in `arcore_client.aar` and `arcore_unity.aar` in the folder of
+`Assets/Plugins`.
+
+As ARCore SDK for Unity is deprecated, we update this repositority only for
+algorithmic demonstration purpose. We welcome pull requests to translate the
+interactive scenes in DepthLab legacy SDK to AR Foundation version and/or WebXR
+version.
 
 ## Building samples
 

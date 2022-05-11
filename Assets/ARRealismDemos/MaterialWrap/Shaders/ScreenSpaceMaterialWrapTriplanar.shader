@@ -150,10 +150,7 @@ Shader "MaterialWrap/Screen Space Material Wrap Triplanar"
             // Tests the difference between each of the depth values and the
             // average.
             // If any deviates by the cutoff or more, don't render this triangle.
-            float4 averageDepth = (depths[0] +
-            depths[1] +
-            depths[2] +
-            depths[3]) * 0.25;
+            float4 averageDepth = (depths[0] + depths[1] + depths[2] + depths[3]) * 0.25;
             float4 depthDev = abs(depths - averageDepth);
             float cutoff = _TriangleConnectivityCutOff;
             float4 branch_ = step(cutoff, depthDev);
@@ -185,8 +182,7 @@ Shader "MaterialWrap/Screen Space Material Wrap Triplanar"
                 OUT.customColor = float4((v.normal + 1) * 0.5, 1);
 
                 float depthRange = _NormalizedDepthMax - _NormalizedDepthMin;
-                OUT.normalizedDepth = 1 - (depths[0] - _NormalizedDepthMin) /
-                depthRange;
+                OUT.normalizedDepth = 1 - (depths[0] - _NormalizedDepthMin) / depthRange;
             }
 
             OUT.localCoord = ComputeScreenPos(v.vertex);
@@ -200,7 +196,7 @@ Shader "MaterialWrap/Screen Space Material Wrap Triplanar"
             //float2 screenUV = IN.screenPos.xy / IN.screenPos.w;
             float2 uv = ArCoreDepth_GetUv(IN.localCoord.yz);
             float occlusionBlending =
-                ArCoreDepth_GetVisibility(uv, UnityWorldToViewPos(IN.worldPos));
+            ArCoreDepth_GetVisibility(uv, UnityWorldToViewPos(IN.worldPos));
 
             float3 bf = normalize(abs(IN.localNormal));
             bf /= dot(bf, (float3)1);
@@ -221,7 +217,9 @@ Shader "MaterialWrap/Screen Space Material Wrap Triplanar"
             o.Smoothness = _Glossiness;
             o.Alpha = c2.a;
             if (o.Alpha == 0)
+            {
                 o.Alpha = .05;
+            }
             //o.Alpha *= occlusionBlending;     // Occlusions not working properly
 
             float2 center = (0.5,0.5);
@@ -230,13 +228,20 @@ Shader "MaterialWrap/Screen Space Material Wrap Triplanar"
             float newAlpha = (_ClipRadius/4) - (off.x + off.y);
             newAlpha /= (off.x + off.y) * (_EdgeFuzz);
             if (newAlpha < 0)
+            {
                 newAlpha = 0;
+            }
             if (newAlpha > 1)
+            {
                 newAlpha = 1;
-            if (_EdgeFuzz != 0)
+            }
+
+            if (_EdgeFuzz != 0) {
                 o.Alpha *= newAlpha;
-            else
+            }
+            else {
                 clip((_ClipRadius)/4 - (off.x + (off.y / pow(_AspectRatio,2))));
+            }
         }
         ENDCG
     }

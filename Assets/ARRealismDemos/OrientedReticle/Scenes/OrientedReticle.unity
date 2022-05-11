@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -787,7 +787,7 @@ PrefabInstance:
     - target: {fileID: 8483145580719570693, guid: dc3ef8706298641a7be69af3033a4436,
         type: 3}
       propertyPath: m_Name
-      value: 3dCursor
+      value: 3DCursor
       objectReference: {fileID: 0}
     - target: {fileID: 8483145580719570693, guid: dc3ef8706298641a7be69af3033a4436,
         type: 3}

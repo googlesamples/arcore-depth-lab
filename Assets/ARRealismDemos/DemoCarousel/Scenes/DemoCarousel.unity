@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1111,7 +1111,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1362,7 +1362,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1859,7 +1859,7 @@ RectTransform:
   - {fileID: 1548949525}
   - {fileID: 357518219}
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1896,7 +1896,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -2538,7 +2538,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.8, y: 23.3}
+  m_AnchoredPosition: {x: 0.8, y: 6.3}
   m_SizeDelta: {x: 37.2, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &747381630
@@ -2843,7 +2843,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: https://developers.google.com/ar/discover/supported-devices
+          m_StringArgument: https://developers.google.com/ar/devices
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &792853622
@@ -3700,7 +3700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 54.09, y: 85.40001}
+  m_AnchoredPosition: {x: 54.09, y: 67.6}
   m_SizeDelta: {x: 123.02, y: 14.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1024722194
@@ -3947,7 +3947,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -5381,7 +5381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000033379, y: 66.8}
+  m_AnchoredPosition: {x: 0.0000033379, y: 46.3}
   m_SizeDelta: {x: 248, y: 84.40001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1461088918
@@ -5416,7 +5416,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
-  m_Text: "                                              ___________________________\n\n                           
+  m_Text: "                                               ___________________________\n\n                            
     _____________________"
 --- !u!222 &1461088919
 CanvasRenderer:
@@ -6109,7 +6109,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -6859,8 +6859,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 35.05, y: 50.700012}
-  m_SizeDelta: {x: 95.42, y: 14.7}
+  m_AnchoredPosition: {x: 34.4, y: 32}
+  m_SizeDelta: {x: 94, y: 14.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2111754595
 MonoBehaviour:
@@ -7178,7 +7178,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -124, y: 53}
-  m_SizeDelta: {x: 10, y: 90}
+  m_SizeDelta: {x: 10, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2969367980038395914
 MonoBehaviour:
@@ -7278,12 +7278,18 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
-  m_Text: 'This application runs on Google Play Services for AR
+  m_Text: 'Stay Aware of Your Surroundings.
 
-    (ARCore), which
-    is provided by Google LLC and
+    Parental supervision is required
+    for children to use AR.
 
-    governed by the Google Privacy Policy.'
+    This application runs on Google Play Services for
+    AR
+
+    (ARCore), which is provided by Google LLC and
+
+    governed by the Google
+    Privacy Policy.'
 --- !u!114 &6097762849286710607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7330,7 +7336,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 124, y: 53}
-  m_SizeDelta: {x: 10, y: 90}
+  m_SizeDelta: {x: 10, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7591187199321570392
 CanvasRenderer:
@@ -7394,12 +7400,12 @@ RectTransform:
   - {fileID: 1461088917}
   - {fileID: 747381629}
   m_Father: {fileID: 8928648575067133031}
-  m_RootOrder: 1
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 38.49}
-  m_SizeDelta: {x: 248, y: 124.1}
+  m_AnchoredPosition: {x: 0, y: -40}
+  m_SizeDelta: {x: 248, y: 124}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8506639524371425911
 GameObject:
@@ -7416,7 +7422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &8644509205546029386
 GameObject:
   m_ObjectHideFlags: 0
@@ -7452,7 +7458,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 53}
-  m_SizeDelta: {x: 238, y: 90}
+  m_SizeDelta: {x: 238, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8928648575067133028
 MonoBehaviour:
@@ -7526,13 +7532,13 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1111545223}
-  - {fileID: 8414510663761755859}
   - {fileID: 427024842}
   - {fileID: 313808334}
   - {fileID: 1064976678}
   - {fileID: 322677513}
   - {fileID: 1853516167}
   - {fileID: 437321901}
+  - {fileID: 8414510663761755859}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

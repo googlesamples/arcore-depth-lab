@@ -22,7 +22,7 @@ Shader "ARRealism/Relighting/Points Relighting"
 {
     Properties {
         _NormalizedDepthMin ("Normalized depth minimum", Range(0.0, 5.0)) = 0.0
-        _NormalizedDepthMax ("Normalized depth maximum", Range(0.0, 10.0)) = 8.0
+        _NormalizedDepthMax ("Normalized depth maximum", Range(0.0, 32.0)) = 30.0
         _GlobalDarkness ("Mixture percentage of the global darkness", Range(0.0, 1.0)) = 1.0
         _ShowColorOnly("Only Render Camera", Range(0.0, 1.0)) = 0.0
         _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}

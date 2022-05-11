@@ -42,13 +42,13 @@ public class StereoPhotoGenerator : MonoBehaviour
     public Camera StereoPhotoCamera;
 
     // Specifies the maximum distance between vertices of a single triangle to be rendered.
-    private const float _triangleConnectivityCutOff = 0.5f;
+    private const float _triangleConnectivityCutOff = 3.5f;
 
     // Tests if a value is close to zero.
     private const float _epsilon = 1e-6f;
 
     // Maximum distance of the depth value in meters.
-    private const float _maximumDistance = 4f;
+    private const float _maximumDistance = 30f;
 
     // Minimum rotating radius of the cached camera in meters.
     private const float _cameraRotationRadiusMin = 0.0017f;

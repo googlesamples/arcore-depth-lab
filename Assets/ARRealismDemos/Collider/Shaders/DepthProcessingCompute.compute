@@ -5,10 +5,9 @@
 #define numThreadsY 8
 #define numThreadsZ 1
 
-#define FAR_DEPTH 10
+#define FAR_DEPTH_METERS 32
 
 #define ARCORE_DEPTH_SCALE 0.001  // mm to m
-#define ARCORE_MAX_DEPTH_MM 8192.0
 #define ARCORE_FLOAT_TO_5BITS 31        // (0.0, 1.0) -> (0, 31)
 #define ARCORE_FLOAT_TO_6BITS 63        // (0.0, 1.0) -> (0, 63)
 #define ARCORE_RGB565_RED_SHIFT 2048    // left shift 11 bits
@@ -43,7 +42,6 @@ inline float ArCoreGetDepthMeters(uint3 id)
     float depth = (rawDepth.r * ARCORE_FLOAT_TO_5BITS * ARCORE_RGB565_RED_SHIFT)
                 + (rawDepth.g * ARCORE_FLOAT_TO_6BITS * ARCORE_RGB565_GREEN_SHIFT)
                 + (rawDepth.b * ARCORE_FLOAT_TO_5BITS);
-    depth = min(depth, ARCORE_MAX_DEPTH_MM);
     depth *= ARCORE_DEPTH_SCALE;
     return depth;
 }
@@ -60,7 +58,7 @@ void VertexFromDepth(uint3 id : SV_DispatchThreadID)
     // but rather pushed away to a far distance to be less disruptive.
     if (depth == 0)
     {
-        depth = FAR_DEPTH;
+        depth = FAR_DEPTH_METERS;
     }
 
     float x = (newID.x - PrincipalX) * depth / FocalLengthX;

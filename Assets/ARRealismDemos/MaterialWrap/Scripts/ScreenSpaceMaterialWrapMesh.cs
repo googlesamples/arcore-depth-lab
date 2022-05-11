@@ -36,7 +36,7 @@ public class ScreenSpaceMaterialWrapMesh : MonoBehaviour
     public int CurrentMat = 0;
 
     // Specifies the maximum distance between vertices of a single triangle to be rendered.
-    private const float _triangleConnectivityCutOff = 0.5f;
+    private const float _triangleConnectivityCutOff = 3.0f;
 
     private static readonly Vector3 _defaultMeshOffset = new Vector3(-100, -100, -100);
 

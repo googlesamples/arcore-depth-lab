@@ -25,32 +25,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Add comment here.
+/// Creates and starts the depth pulse. The pulse can either start from the current depth to the
+/// camera or to the horizon.
 /// </summary>
 public class DepthPulseEffect : MonoBehaviour
 {
     /// <summary>
-    /// Add comment here.
+    /// The depth value where the pulse starts fading.
     /// </summary>
     public float StartFadingDepth = _startFadingDepth;
 
     /// <summary>
-    /// Add comment here.
+    /// The maximum distance that the pulse can travel to.
     /// </summary>
     public float MaximumPulseDepth = _maximumPulseDepth;
 
     /// <summary>
-    /// Add comment here.
+    /// The duration of the pulse, in seconds.
     /// </summary>
     public float PulseDurationS = _pulseDurationS;
 
     /// <summary>
-    /// Add comment here.
+    /// The width of the pulse.
     /// </summary>
     public float PulseWidthM = _pulseWidthM;
 
     /// <summary>
-    /// Add comment here.
+    /// The attached mesh which is used to receive the shadow.
     /// </summary>
     public ShadowReceiverMesh ShadowReceiver;
 
@@ -80,7 +81,7 @@ public class DepthPulseEffect : MonoBehaviour
     private Matrix4x4 _screenRotation = Matrix4x4.Rotate(Quaternion.identity);
 
     /// <summary>
-    /// Add comment here.
+    /// Starts generating a new pulse towards the camera. Stops the existing pulse if necessary.
     /// </summary>
     public void StartPulseToCamera()
     {
@@ -93,7 +94,7 @@ public class DepthPulseEffect : MonoBehaviour
     }
 
     /// <summary>
-    /// Add comment here.
+    /// Starts generating a new pulse towards the horizon. Stops the existing pulse if necessary.
     /// </summary>
     public void StartPulseToHorizon()
     {

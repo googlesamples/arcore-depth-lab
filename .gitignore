@@ -1,0 +1,61 @@
+*.apk
+*.orig.meta
+
+# Unity generated
+Builds/
+Temp/
+Library/
+obj/
+Logs/
+
+# UMB generated
+umb-bin/
+umb-logs/
+
+# Never ignore Asset meta data
+![Aa]ssets/**/*.meta
+
+# Visual Studio files
+.vs/
+[Ee]xported[Oo]bj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln*
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Logs
+sysinfo.txt
+crashlytics-build.properties
+ar_realism_demo/Packages/manifest.json
+
+# OS generated
+.gradle/
+.DS_Store*
+._*
+*.suo
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
+
+# Asset store tools plugin
+[Aa]ssets/AssetStoreTools*
+
+
+# Anything in arcore_unity_sdk
+arcore_unity_sdk/

@@ -18,9 +18,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-// Whether or not to use polynomial color optimization or depth-color texture.
-#define APPLY_POLYNOMIAL_COLOR 1
-
 uniform sampler2D _BackgroundTexture;
 uniform sampler2D _RampTexture;
 uniform half _CameraViewOpacity;
@@ -40,24 +37,22 @@ uniform half _Transition;
 fixed4 RenderCameraToDepthMapTransition(in fixed4 cameraColor, in float2 depthUv) {
     float2 depthRange = float2(_MinVisualizationDistance, _MaxVisualizationDistance);
 
-    // Whether or not to apply depth-guided anti-aliasing.
-    float depth = 0;
-    if (_ApplyAntiAliasing > 0.5) {
-        depth = ArCoreGetNormalizedDepthWithDGAA(depthUv, depthRange);
-    }
-    else
-    {
-        depth = ArCoreGetNormalizedDepth(depthUv, depthRange);
-    }
+    float depthMeters = ArCoreDepth_GetMeters(depthUv);
+    const float kMidRangeMeters = 8;
+    const float kMaxRangeMeters = 30;
+    const float kOffsetMeters = 0.1;
+    depthMeters = clamp(depthMeters, kOffsetMeters, kMaxRangeMeters - kOffsetMeters);
 
-    #if APPLY_POLYNOMIAL_COLOR
-        // Visualizes the depth map with faster polynomial interpolation.
-        float normalizedDepth = (depth - _MinDepth) / _DepthRange;
-        fixed4 depthColor = step(0, _Transition) * fixed4(TurboColormap(normalizedDepth * 0.95), 1);
-    #else
-        // Visualizes the depth map with slower texture sampling.
-        fixed4 depthColor = tex2D(_RampTexture, float2(depthColorLookup, 0.5));
-    #endif // APPLY_POLYNOMIAL_COLOR
+    float depth01 =
+    (depthMeters < kMidRangeMeters) ?
+    0.5 * (depthMeters / kMidRangeMeters) :
+    (0.5 + 0.5 * (depthMeters - kMidRangeMeters) / (kMaxRangeMeters - kMidRangeMeters));
+
+    // depth01 =  depthMeters / 30;
+
+    // Visualizes the depth map with texture sampling.
+    fixed4 depthColor = tex2D(_RampTexture, float2(depth01, 0.5));
+    // depthColor = fixed4(depth01, depth01, depth01, 1);
 
     // Fades out the transition region at far depth.
     float fadingStart = 1 - _FarFadePortion;
@@ -67,10 +62,10 @@ fixed4 RenderCameraToDepthMapTransition(in fixed4 cameraColor, in float2 depthUv
     depthColor = depthColor * (GetLuminance(cameraColor) * 0.25 + 0.75);
 
     // Increases depth visualization from the camera viewpoint.
-    float transitionCameraViewOpacity = step(_Transition, depth);
+    float transitionCameraViewOpacity = step(_Transition, depth01);
 
     // Fades to depth at the far back when the transition is almost completed.
-    if (_Transition >= fadingStart && depth >= fadingStart)
+    if (_Transition >= fadingStart && depth01 >= fadingStart)
     {
         transitionCameraViewOpacity = farFadingOpacity;
     }
@@ -79,7 +74,7 @@ fixed4 RenderCameraToDepthMapTransition(in fixed4 cameraColor, in float2 depthUv
 
     // Highlights the area of transition.
     float normalizedTransitionWidth = _HalfTransitionHighlightWidth / _MaxVisualizationDistance;
-    float normalizedDistanceToFront = abs(_Transition - depth) / normalizedTransitionWidth;
+    float normalizedDistanceToFront = abs(_Transition - depth01) / normalizedTransitionWidth;
 
     // Feathers the highlight area.
     float highlightPulse = Gain(1 - normalizedDistanceToFront, 3, 3);

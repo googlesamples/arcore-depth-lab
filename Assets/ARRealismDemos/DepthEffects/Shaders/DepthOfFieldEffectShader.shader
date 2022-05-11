@@ -23,7 +23,7 @@ Shader "ARRealism/Depth Of Field Effect Shader"
         _MainTex ("Main Texture", 2D) = "white" {}
         _GammaCorrection("Gamma Correction (1.0 = Enabled)", Range(0.0, 1.0)) = 1.0
         _NormalizedDepthMin ("Normalized Depth Min", Range(0.0, 5.0)) = 0.0
-        _NormalizedDepthMax ("Normalized Depth Max", Range(0.0, 10.0)) = 8.0
+        _NormalizedDepthMax ("Normalized Depth Max", Range(0.0, 32.0)) = 30.0
         _ShowColorOnly("Only Render Camera", Range(0.0, 1.0)) = 0.0
         _CurrentDepthTexture ("Depth Texture", 2D) = "black" {}
     }
