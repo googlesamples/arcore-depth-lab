@@ -52,7 +52,6 @@ fixed4 RenderCameraToDepthMapTransition(in fixed4 cameraColor, in float2 depthUv
 
     // Visualizes the depth map with texture sampling.
     fixed4 depthColor = tex2D(_RampTexture, float2(depth01, 0.5));
-    // depthColor = fixed4(depth01, depth01, depth01, 1);
 
     // Fades out the transition region at far depth.
     float fadingStart = 1 - _FarFadePortion;
