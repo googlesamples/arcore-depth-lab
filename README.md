@@ -48,29 +48,8 @@ require
 [**AR Foundation 4.2.0-pre.7**](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.2/manual/index.html)
 or newer,
 [ARCore Extensions](https://developers.google.com/ar/develop/unity-arf) **1.24**
-or newer. Download `arcore-unity-extensions-1.24.0.tgz` from the ARCore
-Extensions for AR Foundation
-[releases page on GitHub](https://github.com/google-ar/arcore-unity-extensions/releases).
-
-Choose one of the following approaches to import the ARCore Extensions Package:
-
-1.  Manually update dependencies before launching the project:
-
-    *   Locate `arcore-depth-lab/Packages/manifest.json`.
-    *   Add the dependency of ARCore Extensions SDK with the loca path:
-        `"com.google.ar.core.arfoundation.extensions":
-        "file:{path/to}/arcore-unity-extensions-1.24.0.tgz",`
-    *   Launch the project with Unity Editor 2020.3.
-
-2.  Use Package Manager to import dependent package:
-
-    *   Use Unity 2020.3 to open the project.
-    *   It's expected that a window pops up and shows there are compile errors
-        in this project due to missing Extensions SDK, select **Continue**.
-    *   In Unity editor, navigate to `Window` -> `Package Manager`
-    *   Click the plus button, and choose the `Add package from tarball...`
-        option from the drop-down menu.
-    *   Locate `arcore-unity-extensions-1.24.0.tgz` and click Open.
+or newer. The [ARCore Extensions sources](https://github.com/google-ar/arcore-unity-extensions) 
+are automatically included via the Unity package manager.
 
 This project only builds with the Build Platform **Android**. Build the project
 to an Android device instead of using the **Play** button in the Unity editor.
