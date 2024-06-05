@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ARRealismDemos/PointCloud/Scenes/RawPointClouds.unity
     guid: 9dda67f2895da44a2a949d2298c7ff3a
+  - enabled: 1
+    path: Assets/ARRealismDemos/DepthEffects/Scenes/FogEffect.unity
+    guid: cba38d357e68f4c298a27ebc19c42f6c
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}
